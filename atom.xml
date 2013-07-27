@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[My Code Blog]]></title>
+  <link href="http://prabhakar97.github.io/atom.xml" rel="self"/>
+  <link href="http://prabhakar97.github.io/"/>
+  <updated>2013-07-28T03:19:15+05:30</updated>
+  <id>http://prabhakar97.github.io/</id>
+  <author>
+    <name><![CDATA[Prabhakar Kumar]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Hello world]]></title>
+    <link href="http://prabhakar97.github.io/blog/2013/07/28/hello-world/"/>
+    <updated>2013-07-28T03:12:00+05:30</updated>
+    <id>http://prabhakar97.github.io/blog/2013/07/28/hello-world</id>
+    <content type="html"><![CDATA[<p>This is the <em>first post</em> on this blog. In this blog I will be talking about code implementations of algorithmic puzzles, some ruby, some javascript and some haskell as well. After a few days may be python too will come in. By the way, this post is just for testing purpose.</p>
+]]></content>
+  </entry>
+  
+</feed>
