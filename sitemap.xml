@@ -1,8 +1,20 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
-        <loc>http://prabhakar97.github.io/blog/2013/07/28/hello-world/</loc>
-        <lastmod>2013-07-28T03:18:13+05:30</lastmod>
+        <loc>
+            http://prabhakar97.github.io/blog/2014/01/27/script-to-generate-3d-subtitles-from-srt-files/
+        </loc>
+        <lastmod>2014-01-27T00:37:13+05:30</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://prabhakar97.github.io/blog/2014/01/27/octopress-syntax-highlighting-issue-on-arch-linux/
+        </loc>
+        <lastmod>2014-01-27T00:54:58+05:30</lastmod>
+    </url>
+    <url>
+        <loc>http://prabhakar97.github.io/blog/archives/</loc>
+        <lastmod>2014-01-27T00:54:58+05:30</lastmod>
     </url>
     <url>
         <loc>http://prabhakar97.github.io/robots.txt</loc>
@@ -10,10 +22,6 @@
     </url>
     <url>
         <loc>http://prabhakar97.github.io/</loc>
-        <lastmod>2013-07-28T03:18:13+05:30</lastmod>
-    </url>
-    <url>
-        <loc>http://prabhakar97.github.io/blog/archives/</loc>
-        <lastmod>2013-07-28T03:18:13+05:30</lastmod>
+        <lastmod>2014-01-27T00:54:58+05:30</lastmod>
     </url>
 </urlset>
