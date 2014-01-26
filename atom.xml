@@ -4,7 +4,7 @@
   <title><![CDATA[My Code Blog]]></title>
   <link href="http://prabhakar97.github.io/atom.xml" rel="self"/>
   <link href="http://prabhakar97.github.io/"/>
-  <updated>2014-01-27T00:55:01+05:30</updated>
+  <updated>2014-01-27T01:14:46+05:30</updated>
   <id>http://prabhakar97.github.io/</id>
   <author>
     <name><![CDATA[Prabhakar Kumar]]></name>
@@ -88,6 +88,15 @@ The solution is to use <em>.ass</em> format subtitles with your media player(I r
 
 
 <p>All the movie directories will be populated with corresponding <em>.ass</em> files. Now just run it by <code>mplayer -ass movie_file_name</code>. Use <code>j</code> to cycle through subtitles, <code>f</code> for fullscreen, <code>q</code> to quit mplayer.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Hello World]]></title>
+    <link href="http://prabhakar97.github.io/blog/2013/07/28/hello-world/"/>
+    <updated>2013-07-28T01:11:00+05:30</updated>
+    <id>http://prabhakar97.github.io/blog/2013/07/28/hello-world</id>
+    <content type="html"><![CDATA[<p>Alright fellas, I have switched to Octopress being a ruby lover. I will be posting about code and code and more code in this blog. Mainly there will be lots of scripts that make my daily chores easier, some fixes from my experiences, some puzzle solving and liitle more code.</p>
 ]]></content>
   </entry>
   
