@@ -1,4 +1,4 @@
 User-agent: *
 Disallow: 
 
-Sitemap: http://techbeat.in/sitemap.xml 
+Sitemap: http://www.techbeat.in/sitemap.xml 
