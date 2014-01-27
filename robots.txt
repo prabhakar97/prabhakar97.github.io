@@ -1,4 +1,4 @@
 User-agent: *
 Disallow: 
 
-Sitemap: http://prabhakar97.github.io/sitemap.xml 
+Sitemap: http://techbeat.in/sitemap.xml 
