@@ -2,13 +2,13 @@
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
         <loc>http://prabhakar97.github.io/blog/2013/07/28/hello-world/</loc>
-        <lastmod>2014-01-28T01:05:26+05:30</lastmod>
+        <lastmod>2014-01-28T11:55:00+05:30</lastmod>
     </url>
     <url>
         <loc>
             http://prabhakar97.github.io/blog/2014/01/27/script-to-generate-3d-subtitles-from-srt-files/
         </loc>
-        <lastmod>2014-01-27T00:37:13+05:30</lastmod>
+        <lastmod>2014-01-28T11:55:00+05:30</lastmod>
     </url>
     <url>
         <loc>
@@ -27,20 +27,5 @@
     <url>
         <loc>http://prabhakar97.github.io/blog/archives/</loc>
         <lastmod>2014-01-28T11:55:00+05:30</lastmod>
-=======
-        <lastmod>2014-01-27T00:54:58+05:30</lastmod>
-    </url>
-    <url>
-        <loc>http://prabhakar97.github.io/blog/archives/</loc>
-        <lastmod>2014-01-28T01:05:26+05:30</lastmod>
-    </url>
-    <url>
-        <loc>http://prabhakar97.github.io/robots.txt</loc>
-        <lastmod>2013-07-28T02:32:41+05:30</lastmod>
-    </url>
-    <url>
-        <loc>http://prabhakar97.github.io/</loc>
-        <lastmod>2014-01-28T01:05:26+05:30</lastmod>
->>>>>>> 3953c51112d88781ee227b17c366bd4e12e65652
     </url>
 </urlset>
