@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Prab's Code Blog</title>
+  <title>Earthquake alert system in nodejs - Prab's Code Blog</title>
   <meta name="author" content="Prabhakar Kumar">
 
   
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://prabhakar97.github.io">
+  <link rel="canonical" href="http://prabhakar97.github.io/blog/2015/04/27/earthquake-alert-system-in-nodejs">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Prab's Code Blog" type="application/atom+xml">
@@ -63,15 +63,12 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2015/04/27/earthquake-alert-system-in-nodejs/">Earthquake Alert System in Nodejs</a></h1>
+      <h1 class="entry-title">Earthquake Alert System in Nodejs</h1>
     
     
       <p class="meta">
@@ -94,7 +91,7 @@
   </header>
 
 
-  <div class="entry-content"><p>Afflicted by the recent earthquake in Nepal which took so many lives in India as well, my mind under the shower spawned up an idea of an earthquake alert system that attempts to notify people a few tens of seconds before the quake strikes.
+<div class="entry-content"><p>Afflicted by the recent earthquake in Nepal which took so many lives in India as well, my mind under the shower spawned up an idea of an earthquake alert system that attempts to notify people a few tens of seconds before the quake strikes.
 The premise of the idea is that <em>Electromagnetic waves travel way faster than seismic waves. 300,000 KM/s vs 10 KM/s</em>. Our communication systems (internet, sms) transmit on electronic waves and even after considering some added overhead (like buffers, processing etc) they can win the race with seismic waves easily. For instance, Kathmandu to New Delhi is around 800 kilometers. A quake epicentred in Kathmandu would be felt in Delhi after around 80 seconds. If we find some way to detect the quake in Kathmandu immediately after it strikes and transmit this information over the public communication infrastructure (web, SMS etc.), we could give the people more than a minute to move to safety. I made following assumptions:</p>
 
 <ul>
@@ -233,86 +230,16 @@ I recalled reading about an app called Instapush which provides a REST API to se
 </ul>
 
 </div>
-  
-  
 
 
-    </article>
-  
-  
-    <article>
+  <footer>
+    <p class="meta">
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/04/21/find-below/">Find Below</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
   
 
+<span class="byline author vcard">Posted by <span class="fn">Prabhakar Kumar</span></span>
 
-<time datetime="2015-04-21T03:22:00+05:30" pubdate data-updated="true">Apr 21<span>st</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This is a small piece of snippet that can go into your <code>.zshrc</code> and make your life easier sometimes. This whips up a new command named <code>findbelow</code> for you. This command takes as argument, a string and returns all the files below your current directory whose names contain the entered string as a substring.</p>
-
-<figure class='code'><figcaption><span>findbelow</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>findbelow <span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>  find ./ -regex <span class="s2">&quot;.*/$1.*&quot;</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Bonus</h3>
-
-<p>The below piece of snippet enables you to jump n directories upwards from your current <code>pwd</code> by typing <code>u n</code>. For example: <code>u 5</code> will take you 5 directories up from your current position.</p>
-
-<figure class='code'><figcaption><span>u</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>u <span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>  <span class="nb">set</span> -A ud
-</span><span class='line'>  ud<span class="o">[</span>1+<span class="k">${</span><span class="nv">1</span><span class="p">-1</span><span class="k">}</span><span class="o">]=</span>
-</span><span class='line'>  <span class="nb">cd</span> <span class="k">${</span><span class="p">(j:../:)ud</span><span class="k">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This has been tested on zsh.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/03/01/metaprogramming-101-in-ruby/">Metaprogramming 101 in Ruby</a></h1>
-    
-    
-      <p class="meta">
-        
 
 
 
@@ -324,243 +251,43 @@ I recalled reading about an app called Instapush which provides a REST API to se
   
 
 
-<time datetime="2014-03-01T23:36:00+05:30" pubdate data-updated="true">Mar 1<span>st</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Metaprogramming is fun! Dynamically modifying a program garners a lot of power to the programmer. In this post I show an example situation which is beautifully solved by metaprogramming.
-I am a Ruby dilettante.</p>
-
-<h4>The situation</h4>
-
-<p>I wanted to develop a plugin framework for a side project of mine. There is a higher level class, which should delegate methods calls on itself to the plugin implementer class.
-Although, OOPS has a standard solution for this situation using interfaces but here is the beauty and elegance of metaprogramming in ruby.
-The code below is the constructor of the higher level class which checks the passed plugin object for interface&rsquo;s implementation and then defines those methods in itself delegating the actual calls to the passed plugin object.</p>
-
-<h4>The solution</h4>
-
-<figure class='code'><figcaption><span>Dynamically defining methods</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">provider</span><span class="p">)</span>
-</span><span class='line'>  <span class="c1"># Check whether the interface is implemented or not</span>
-</span><span class='line'>  <span class="n">interface</span> <span class="o">=</span> <span class="o">[</span>
-</span><span class='line'>    <span class="ss">:get</span><span class="p">,</span> <span class="ss">:put</span><span class="p">,</span> <span class="ss">:entries</span><span class="p">,</span> <span class="ss">:move</span><span class="p">,</span> <span class="ss">:rm!</span><span class="p">,</span> <span class="ss">:mkdir</span><span class="p">,</span> <span class="ss">:file?</span><span class="p">,</span> <span class="ss">:directory?</span><span class="p">,</span> <span class="ss">:exists?</span><span class="p">,</span> <span class="ss">:makedirs</span>
-</span><span class='line'>  <span class="o">]</span>
-</span><span class='line'>  <span class="n">interface</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">method</span><span class="o">|</span>
-</span><span class='line'>    <span class="k">raise</span> <span class="s2">&quot;Plugin is not supported&quot;</span> <span class="k">unless</span> <span class="n">provider</span><span class="o">.</span><span class="n">respond_to?</span><span class="p">(</span><span class="nb">method</span><span class="p">)</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>  <span class="vi">@provider</span> <span class="o">=</span> <span class="n">provider</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="c1"># Define the methods supported by provider in this class too</span>
-</span><span class='line'>  <span class="n">interface</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">method</span><span class="o">|</span>
-</span><span class='line'>    <span class="nb">self</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="ss">:define_method</span><span class="p">,</span> <span class="nb">method</span><span class="p">)</span> <span class="k">do</span> <span class="o">|*</span><span class="n">splat</span><span class="o">|</span>
-</span><span class='line'>      <span class="vi">@provider</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="nb">method</span><span class="p">,</span> <span class="o">*</span><span class="n">splat</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Boy, so simple it is with ruby! And yeah, I love splat operator!</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
+<time datetime="2015-04-27T01:01:00+05:30" pubdate data-updated="true">Apr 27<span>th</span>, 2015</time>
       
-  <header>
+
+
+    </p>
     
-      <h1 class="entry-title"><a href="/blog/2014/01/27/octopress-syntax-highlighting-issue-on-arch-linux/">Octopress Syntax Highlighting Issue on Arch Linux</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
+      <div class="sharing">
   
-
-
-<time datetime="2014-01-27T00:39:00+05:30" pubdate data-updated="true">Jan 27<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>If you run Arch Linux and are trying to run <code>rake generate</code> on a Octopress blog, with a post that uses some code and syntax highlighting markdown over it; you will probably see this error:</p>
-
-<pre><code>/plugins/pygments_code.rb:27:in `rescue in pygments': Pygments can't parse unknown language: ruby. (RuntimeError)
-</code></pre>
-
-<p>This happens because Arch uses <code>python3</code> as default python, while the world hasn&rsquo;t yet made up their mind to switch. The <em>Pygments</em> gem that Octopress uses, uses <code>python2</code> syntax which Arch&rsquo;s <code>python3</code> doesn&rsquo;t undertand fully and hence raises an error. To fix this, just open this file:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>~/.rbenv/versions/2.1.0/lib/ruby/gems/2.1.0/gems/pygments.rb-0.3.4/lib/pygments/mentos.py
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Use your own version, instead of <code>2.1.0</code> that I am using. Change the first line:</p>
-
-<figure class='code'><figcaption><span>mentos.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c">#!/usr/bin/env python </span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>to</p>
-
-<figure class='code'><figcaption><span>mentos.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c">#!/usr/bin/env python2 </span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>After this, your <code>rake generate</code> should succeed. Oh, and yes, this file path is for <code>rbenv</code>. If you use <code>rvm</code> figure out your own path using the command <code>find ~/ -name mentos.py</code>.</p>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://prabhakar97.github.io/blog/2015/04/27/earthquake-alert-system-in-nodejs/" data-via="prab97" data-counturl="http://prabhakar97.github.io/blog/2015/04/27/earthquake-alert-system-in-nodejs/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
 </div>
-  
-  
 
-
-    </article>
-  
-  
-    <article>
+    
+    <p class="meta">
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/27/script-to-generate-3d-subtitles-from-srt-files/">Ruby Script to Generate 3D Subtitles From Srt Files</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-27T00:09:00+05:30" pubdate data-updated="true">Jan 27<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>So, you&rsquo;ve got a bunch of 3D movies with SRT subtitles which your 3D TV can play from a USB storage and show the subtitles correctly but can not if you are running the movie on your laptop and sending the display to TV over HDMI; for obvious reasons.
-The solution is to use <em>.ass</em> format subtitles with your media player(I recommed mplayer/smplayer). Just run this script from a directory that contains all your movies in separate directories under that directory. Make sure, <code>srt</code> file is present in each 3D movie directory and has the same name as the movie file. Also make sure, the directories for 3D movies have 3D in their names somewhere. Moreover, you must have the program <code>sub3dtool</code> installed. Get it from <a href="https://code.google.com/p/sub3dtool/">here</a>. After you run the script, all your 3D movie directories will be populated with .ass files automatically. Remember, VLC media player does not play well with <code>.ass</code> subtitles. It skips many dialogues.</p>
-
-<figure class='code'><figcaption><span>Convert SRT subtitles into ASS</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Dir</span><span class="o">.</span><span class="n">entries</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">file</span><span class="o">|</span>
-</span><span class='line'>  <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">include?</span> <span class="s2">&quot;3D&quot;</span>
-</span><span class='line'>    <span class="nb">puts</span> <span class="s2">&quot;3D movie found - </span><span class="si">#{</span><span class="n">file</span><span class="si">}</span><span class="s2">. Going ahead to generate .ass subtitle for it&quot;</span>
-</span><span class='line'>    <span class="no">Dir</span><span class="o">.</span><span class="n">entries</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">file1</span><span class="o">|</span>
-</span><span class='line'>      <span class="k">if</span> <span class="n">file1</span><span class="o">.</span><span class="n">include?</span> <span class="s2">&quot;.srt&quot;</span>
-</span><span class='line'>        <span class="nb">puts</span> <span class="s2">&quot;Found srt file: </span><span class="si">#{</span><span class="n">file1</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span class='line'>        <span class="n">outfile_name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">file1</span><span class="o">[</span><span class="mi">0</span><span class="p">,</span><span class="n">file1</span><span class="o">.</span><span class="n">length</span><span class="o">-</span><span class="mi">3</span><span class="o">]</span><span class="si">}</span><span class="s2">ass&quot;</span>
-</span><span class='line'>        <span class="nb">puts</span> <span class="s2">&quot;Out file name : </span><span class="si">#{</span><span class="n">outfile_name</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span class='line'>        <span class="sb">`sub3dtool &quot;</span><span class="si">#{</span><span class="n">file</span><span class="si">}</span><span class="sb">/</span><span class="si">#{</span><span class="n">file1</span><span class="si">}</span><span class="sb">&quot; --3dsbs -o &quot;</span><span class="si">#{</span><span class="n">file</span><span class="si">}</span><span class="sb">/</span><span class="si">#{</span><span class="n">outfile_name</span><span class="si">}</span><span class="sb">&quot;`</span>
-</span><span class='line'>        <span class="nb">puts</span> <span class="s2">&quot;Generated successfully&quot;</span>
-</span><span class='line'>      <span class="k">end</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>All the movie directories will be populated with corresponding <em>.ass</em> files. Now just run it by <code>mplayer -ass movie_file_name</code>. Use <code>j</code> to cycle through subtitles, <code>f</code> for fullscreen, <code>q</code> to quit mplayer.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
+        <a class="basic-alignment left" href="/blog/2015/04/21/find-below/" title="Previous Post: Find below">&laquo; Find below</a>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/07/28/hello-world/">Hello World</a></h1>
-    
-    
-      <p class="meta">
-        
+      
+    </p>
+  </footer>
+</article>
 
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-07-28T01:11:00+05:30" pubdate data-updated="true">Jul 28<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Alright fellas, I have switched to Octopress being a ruby lover. I will be posting about code and code and more code in this blog. Mainly there will be lots of scripts that make my daily chores easier, some fixes from my experiences, some puzzle solving and liitle more code.</p>
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 </div>
-  
-  
+  </section>
 
 
-    </article>
-  
-  <div class="pagination">
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
 </div>
+
 <aside class="sidebar">
   
     <section>
@@ -593,7 +320,7 @@ The solution is to use <em>.ass</em> format subtitles with your media player(I r
 <section>
   <h1>GitHub Repos</h1>
   <ul id="gh_repos">
-    <li class="loading">Status updating&#8230;</li>
+    <li class="loading">Status updating...</li>
   </ul>
   
   <a href="https://github.com/prabhakar97">@prabhakar97</a> on GitHub
@@ -635,6 +362,7 @@ The solution is to use <em>.ass</em> format subtitles with your media player(I r
   
 </aside>
 
+
     </div>
   </div>
   <footer role="contentinfo"><p>
@@ -649,7 +377,10 @@ The solution is to use <em>.ass</em> format subtitles with your media player(I r
       var disqus_shortname = 'techbite';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://prabhakar97.github.io/blog/2015/04/27/earthquake-alert-system-in-nodejs/';
+        var disqus_url = 'http://prabhakar97.github.io/blog/2015/04/27/earthquake-alert-system-in-nodejs/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
