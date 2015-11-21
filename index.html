@@ -102,7 +102,7 @@ initialize the logger and pass it a class instance. All our log lines are tagged
 classname. That&rsquo;s cool for debugging purposes.</p>
 
 <p>How to get that behavior in Rails? There is
-one quick and dirty way. Just prepend to the log message __LINE__ and __FILE__ which
+one quick and dirty way. Just prepend to the log message <code>__LINE__</code> and <code>__FILE__</code> which
 contain the line the code is executing and the file it is in, respectively.</p>
 
 <figure class='code'><figcaption><span>Logger</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -110,24 +110,23 @@ contain the line the code is executing and the file it is in, respectively.</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>This just works. But shows the full file path which is kind of overkill. The below one
-improves it to include just the filename.</p>
+<p>This just works. But shows the full file path which is kind of overkill because it produces very long log lines. The below one improves it to include just the filename.</p>
 
 <figure class='code'><figcaption><span>Logger</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[</span><span class="si">#{</span><span class="bp">__FILE__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">last</span><span class="si">}</span><span class="s2">:</span><span class="si">#{</span><span class="bp">__LINE__</span><span class="si">}</span><span class="s2">] The log message&quot;</span><span class="p">)</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Ok, this gets the job done but makes our log statements ugly. And we can&rsquo;t assign the stuff
-on the left that produces file and line output into a variable, because they will refer to
-the line where variable is assigned, so the log statement will contain wrong value for
+<p>Ok, this gets the job done but makes our log statements ugly in the code. And it isn&rsquo;t DRY. If
+we try to make it DRY, we can&rsquo;t. Because we can&rsquo;t assign the stuff
+on the left that produces file and line number strings, into a variable, because they will refer to the line where variable is assigned, so the log statement will contain wrong value for
 line number.</p>
 
 <p>There is another way that involves ActiveSupport&rsquo;s TaggedLogging. If you use a Tagged logger,
 you can associate a tag with every log message. That&rsquo;s cool too, especially for searching
 through certain events in logs. TaggedLogging can be used to add file and line number, but
 the usage would be similar to the above example. How about doing something that works
-seamlessly behind the scenes?</p>
+seamlessly behind the scenes and is DRY?</p>
 
 <p>After some research, I wrote a class (ok, I assembled it from here and there), whose instance
 can be assigned to Rails log formatter. Here it is. Just put this class in your main
