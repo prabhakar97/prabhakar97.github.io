@@ -1,0 +1,403 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Include filename and line number in Rails logger - Prab's Code Blog</title>
+  <meta name="author" content="Prabhakar Kumar">
+
+  
+  <meta name="description" content="Rails logging is straightforward and works out of the box. But, sometimes I feel it would
+be really awesome if the log lines would contain the line &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://prabhakar97.github.io/blog/2015/11/21/include-filename-and-line-number-in-rails-logger">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Prab's Code Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+  
+
+</head>
+
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Prab's Code Blog</a></h1>
+  
+    <h2>Because talk is cheap, show me the code!</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:prabhakar97.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Include Filename and Line Number in Rails Logger</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-11-21T23:50:00+05:30" pubdate data-updated="true">Nov 21<span>st</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Rails logging is straightforward and works out of the box. But, sometimes I feel it would
+be really awesome if the log lines would contain the line number and file name which emit
+the log. If you have experience with log4j in Java, you should be able to recall that we
+initialize the logger and pass it a class instance. All our log lines are tagged with the
+classname. That&rsquo;s cool for debugging purposes.</p>
+
+<p>How to get that behavior in Rails? There is
+one quick and dirty way. Just prepend to the log message __LINE__ and __FILE__ which
+contain the line the code is executing and the file it is in, respectively.</p>
+
+<figure class='code'><figcaption><span>Logger</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[</span><span class="si">#{</span><span class="bp">__FILE__</span><span class="si">}</span><span class="s2">:</span><span class="si">#{</span><span class="bp">__LINE__</span><span class="si">}</span><span class="s2">] The log message&quot;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This just works. But shows the full file path which is kind of overkill. The below one
+improves it to include just the filename.</p>
+
+<figure class='code'><figcaption><span>Logger</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[</span><span class="si">#{</span><span class="bp">__FILE__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">last</span><span class="si">}</span><span class="s2">:</span><span class="si">#{</span><span class="bp">__LINE__</span><span class="si">}</span><span class="s2">] The log message&quot;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Ok, this gets the job done but makes our log statements ugly. And we can&rsquo;t assign the stuff
+on the left that produces file and line output into a variable, because they will refer to
+the line where variable is assigned, so the log statement will contain wrong value for
+line number.</p>
+
+<p>There is another way that involves ActiveSupport&rsquo;s TaggedLogging. If you use a Tagged logger,
+you can associate a tag with every log message. That&rsquo;s cool too, especially for searching
+through certain events in logs. TaggedLogging can be used to add file and line number, but
+the usage would be similar to the above example. How about doing something that works
+seamlessly behind the scenes?</p>
+
+<p>After some research, I wrote a class (ok, I assembled it from here and there), whose instance
+can be assigned to Rails log formatter. Here it is. Just put this class in your main
+application module and assign it&rsquo;s instance to rails log formatter. Apart from filename
+and line number, I have also edited the log line to have some other stuff displayed in fancy
+colors. Also, I don&rsquo;t print filename and line if the filename is logger.rb or starts with
+log_. That&rsquo;s because it would create so much spam due to Rails internal log files or
+files from various gems.
+Use it and change it to your liking.</p>
+
+<figure class='code'><figcaption><span>application.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">ApplicationName</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">class</span> <span class="nc">QLogFormatter</span>
+</span><span class='line'>    <span class="no">HOSTNAME</span> <span class="o">=</span> <span class="no">Socket</span><span class="o">.</span><span class="n">gethostname</span>
+</span><span class='line'>    <span class="no">SEVERITY_TO_COLOR_MAP</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>      <span class="s1">&#39;DEBUG&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;35&#39;</span><span class="p">,</span>
+</span><span class='line'>      <span class="s1">&#39;INFO&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;32&#39;</span><span class="p">,</span>
+</span><span class='line'>      <span class="s1">&#39;WARN&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;33&#39;</span><span class="p">,</span>
+</span><span class='line'>      <span class="s1">&#39;ERROR&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;31&#39;</span><span class="p">,</span>
+</span><span class='line'>      <span class="s1">&#39;FATAL&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;31&#39;</span><span class="p">,</span>
+</span><span class='line'>      <span class="s1">&#39;UNKNOWN&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;37&#39;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">severity</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">progname</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">return</span> <span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">blank?</span> <span class="o">||</span> <span class="n">msg</span><span class="o">.</span><span class="n">strip</span><span class="o">.</span><span class="n">blank?</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">formatted_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-%d %H:%M:%S.&quot;</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">time</span><span class="o">.</span><span class="n">usec</span><span class="o">.</span><span class="n">to_s</span><span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="mi">2</span><span class="o">]</span>
+</span><span class='line'>      <span class="n">color</span> <span class="o">=</span> <span class="no">SEVERITY_TO_COLOR_MAP</span><span class="o">[</span><span class="n">severity</span><span class="o">]</span>
+</span><span class='line'>      <span class="n">callee</span> <span class="o">=</span> <span class="nb">caller</span><span class="o">[</span><span class="mi">5</span><span class="o">].</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">last</span>
+</span><span class='line'>      <span class="n">callee</span> <span class="o">=</span> <span class="n">callee</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span><span class="o">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="o">].</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">log_line</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[0;37m</span><span class="si">#{</span><span class="no">HOSTNAME</span><span class="si">}</span><span class="s2">@</span><span class="si">#{</span><span class="n">formatted_time</span><span class="si">}</span><span class="se">\033</span><span class="s2">[0m [</span><span class="se">\033</span><span class="s2">[01;</span><span class="si">#{</span><span class="n">color</span><span class="si">}</span><span class="s2">m</span><span class="si">#{</span><span class="n">severity</span><span class="si">}</span><span class="se">\033</span><span class="s2">[0m]&quot;</span>
+</span><span class='line'>      <span class="k">unless</span> <span class="p">(</span><span class="n">callee</span><span class="o">.</span><span class="n">start_with?</span><span class="p">(</span><span class="s1">&#39;logger&#39;</span><span class="p">)</span> <span class="o">||</span> <span class="n">callee</span><span class="o">.</span><span class="n">start_with?</span><span class="p">(</span><span class="s1">&#39;log_&#39;</span><span class="p">))</span>
+</span><span class='line'>        <span class="n">log_line</span> <span class="o">+=</span> <span class="s2">&quot;[</span><span class="se">\033</span><span class="s2">[01;36m</span><span class="si">#{</span><span class="n">callee</span><span class="si">}</span><span class="se">\033</span><span class="s2">[0m]&quot;</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>      <span class="n">log_line</span> <span class="o">+=</span> <span class="s2">&quot; </span><span class="si">#{</span><span class="n">msg</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">class</span> <span class="nc">Application</span> <span class="o">&lt;</span> <span class="ss">Rails</span><span class="p">:</span><span class="ss">:Application</span>
+</span><span class='line'>    <span class="c1"># All your other configs</span>
+</span><span class='line'>    <span class="n">config</span><span class="o">.</span><span class="n">log_formatter</span> <span class="o">=</span> <span class="no">QLogFormatter</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Prabhakar Kumar</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-11-21T23:50:00+05:30" pubdate data-updated="true">Nov 21<span>st</span>, 2015</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://prabhakar97.github.io/blog/2015/11/21/include-filename-and-line-number-in-rails-logger/" data-via="prab97" data-counturl="http://prabhakar97.github.io/blog/2015/11/21/include-filename-and-line-number-in-rails-logger/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/04/27/earthquake-alert-system-in-nodejs/" title="Previous Post: Earthquake alert system in nodejs">&laquo; Earthquake alert system in nodejs</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/11/21/include-filename-and-line-number-in-rails-logger/">Include filename and line number in Rails logger</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/04/27/earthquake-alert-system-in-nodejs/">Earthquake alert system in nodejs</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/04/21/find-below/">Find below</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/03/01/metaprogramming-101-in-ruby/">Metaprogramming 101 in Ruby</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/27/octopress-syntax-highlighting-issue-on-arch-linux/">Octopress syntax highlighting issue on Arch Linux</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/prabhakar97">@prabhakar97</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'prabhakar97',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/prabhakar97@gmail.com?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Prabhakar Kumar -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'techbite';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://prabhakar97.github.io/blog/2015/11/21/include-filename-and-line-number-in-rails-logger/';
+        var disqus_url = 'http://prabhakar97.github.io/blog/2015/11/21/include-filename-and-line-number-in-rails-logger/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
