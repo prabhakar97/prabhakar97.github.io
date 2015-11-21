@@ -9,8 +9,7 @@
   <meta name="author" content="Prabhakar Kumar">
 
   
-  <meta name="description" content="Rails logging is straightforward and works out of the box. But, sometimes I feel it would
-be really awesome if the log lines would contain the line &hellip;">
+  <meta name="description" content="Unicorn is a cool application server for Rails. If you have a high traffic website, you would like to restart Unicorn without any downtime, upon a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +65,105 @@ be really awesome if the log lines would contain the line &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/11/22/start-slash-restart-unicorn-safely-without-downtime/">Start/restart Unicorn Safely Without Downtime</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-11-22T00:42:00+05:30" pubdate data-updated="true">Nov 22<span>nd</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://unicorn.bogomips.org/">Unicorn</a> is a cool application server for Rails. If you have a high traffic website, you would like to restart Unicorn without any downtime, upon a new
+code deployment or a Gem update which updates unicorn. I wrote an script, exactly for this purpose after learning signal handling basics of Unicorn. Here&rsquo;s the script. The comments
+are self-explanatory and fairly give the idea of what is happening.</p>
+
+<figure class='code'><figcaption><span>start_uniorn</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c">#!/bin/bash</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># Check if unicorn is already running</span>
+</span><span class='line'><span class="nv">unicorn_pid</span><span class="o">=</span><span class="k">$(</span>ps -ef | grep <span class="s2">&quot;unicorn_rails master&quot;</span> | grep -v grep | awk <span class="s1">&#39;{print $2}&#39;</span><span class="k">)</span>
+</span><span class='line'><span class="k">if</span> <span class="o">[[</span> ! -z <span class="nv">$unicorn_pid</span> <span class="o">]]</span>; <span class="k">then</span>
+</span><span class='line'><span class="k">  </span><span class="nb">echo</span> <span class="s2">&quot;Unicorn is already running. Sending USR2 to it&quot;</span>
+</span><span class='line'>  <span class="nb">kill</span> -USR2 <span class="nv">$unicorn_pid</span>
+</span><span class='line'>  <span class="c"># Wait till new master comes up so two instances of workers are there</span>
+</span><span class='line'>  <span class="k">while</span> <span class="o">[[</span> <span class="k">$(</span>ps -ef | grep <span class="s1">&#39;unicorn_rails worker\[0\]&#39;</span> | grep -v grep | wc -l<span class="k">)</span> -ne 2 <span class="o">]]</span>; <span class="k">do</span>
+</span><span class='line'><span class="k">    </span><span class="nb">echo</span> <span class="s2">&quot;Waiting till new master comes up and spawns new workers&quot;</span>
+</span><span class='line'>    sleep 1
+</span><span class='line'>  <span class="k">done</span>
+</span><span class='line'>  <span class="c"># Send WINCH to old master</span>
+</span><span class='line'>  <span class="nb">echo</span> <span class="s2">&quot;Winching ID $unicorn_pid&quot;</span>
+</span><span class='line'>  <span class="nb">kill</span> -WINCH <span class="nv">$unicorn_pid</span>
+</span><span class='line'>  <span class="c"># Wait till old workers die</span>
+</span><span class='line'>  <span class="k">while</span> <span class="o">[[</span> <span class="k">$(</span>ps -ef | grep <span class="s1">&#39;unicorn_rails worker\[0\]&#39;</span> | grep -v grep | wc -l<span class="k">)</span> -ne 1 <span class="o">]]</span>; <span class="k">do</span>
+</span><span class='line'><span class="k">    </span><span class="nb">echo</span> <span class="s2">&quot;Waiting till old workers die&quot;</span>
+</span><span class='line'>    sleep 1
+</span><span class='line'>  <span class="k">done</span>
+</span><span class='line'><span class="k">  </span><span class="nb">echo</span> <span class="s2">&quot;Killing ID $unicorn_pid&quot;</span>
+</span><span class='line'>  <span class="nb">kill</span> -QUIT <span class="nv">$unicorn_pid</span>
+</span><span class='line'><span class="k">else</span>
+</span><span class='line'><span class="k">  </span><span class="nb">echo</span> <span class="s2">&quot;Start fresh copy of unicorn&quot;</span>
+</span><span class='line'>  unicorn_rails -c config/unicorn.rb -D
+</span><span class='line'><span class="k">fi</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Unicorn provides the facility to reload without losing connected clients. The process can be initiated by sending a <code>USR2</code> signal to the unicorn master process. Upon recieving this, unicorn will
+spawn a new master process and name the old process as <code>unicorn master (old)</code>. The new master process will also spawn it&rsquo;s own new workers. Once you are sure that the new workers have been
+spawned, you can send a <code>WINCH</code> signal to old unicorn master upon receipt of which, old unicorn will shutdown it&rsquo;s workers gracefully. Gracefully here means that the workers will die once
+they are done serving their connected clients. Once the old master has shut down all it&rsquo;s workers, we send a QUIT signal to the old master which then dies peacefully. And now we have the new
+unicorn loaded with new code and/or new binary. The explanation of signal behavior can be found <a href="http://unicorn.bogomips.org/SIGNALS.html">here</a>.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -710,6 +808,10 @@ The solution is to use <em>.ass</em> format subtitles with your media player(I r
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/11/22/start-slash-restart-unicorn-safely-without-downtime/">Start/restart unicorn safely without downtime</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/11/21/include-filename-and-line-number-in-rails-logger/">Include filename and line number in Rails logger</a>
       </li>
     
@@ -723,10 +825,6 @@ The solution is to use <em>.ass</em> format subtitles with your media player(I r
     
       <li class="post">
         <a href="/blog/2014/03/01/metaprogramming-101-in-ruby/">Metaprogramming 101 in Ruby</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/01/27/octopress-syntax-highlighting-issue-on-arch-linux/">Octopress syntax highlighting issue on Arch Linux</a>
       </li>
     
   </ul>

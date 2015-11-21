@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Metaprogramming 101 in Ruby - Prab's Code Blog</title>
+  <title>Start/restart unicorn safely without downtime - Prab's Code Blog</title>
   <meta name="author" content="Prabhakar Kumar">
 
   
-  <meta name="description" content="Metaprogramming is fun! Dynamically modifying a program garners a lot of power to the programmer. In this post I show an example situation which is &hellip;">
+  <meta name="description" content="Unicorn is a cool application server for Rails. If you have a high traffic website, you would like to restart Unicorn without any downtime, upon a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://prabhakar97.github.io/blog/2014/03/01/metaprogramming-101-in-ruby">
+  <link rel="canonical" href="http://prabhakar97.github.io/blog/2015/11/22/start-slash-restart-unicorn-safely-without-downtime">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Prab's Code Blog" type="application/atom+xml">
@@ -68,7 +68,7 @@
   
   <header>
     
-      <h1 class="entry-title">Metaprogramming 101 in Ruby</h1>
+      <h1 class="entry-title">Start/restart Unicorn Safely Without Downtime</h1>
     
     
       <p class="meta">
@@ -84,25 +84,18 @@
   
 
 
-<time datetime="2014-03-01T23:36:00+05:30" pubdate data-updated="true">Mar 1<span>st</span>, 2014</time>
+<time datetime="2015-11-22T00:42:00+05:30" pubdate data-updated="true">Nov 22<span>nd</span>, 2015</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Metaprogramming is fun! Dynamically modifying a program garners a lot of power to the programmer. In this post I show an example situation which is beautifully solved by metaprogramming.
-I am a Ruby dilettante.</p>
+<div class="entry-content"><p><a href="http://unicorn.bogomips.org/">Unicorn</a> is a cool application server for Rails. If you have a high traffic website, you would like to restart Unicorn without any downtime, upon a new
+code deployment or a Gem update which updates unicorn. I wrote an script, exactly for this purpose after learning signal handling basics of Unicorn. Here&rsquo;s the script. The comments
+are self-explanatory and fairly give the idea of what is happening.</p>
 
-<h4>The situation</h4>
-
-<p>I wanted to develop a plugin framework for a side project of mine. There is a higher level class, which should delegate methods calls on itself to the plugin implementer class.
-Although, OOPS has a standard solution for this situation using interfaces but here is the beauty and elegance of metaprogramming in ruby.
-The code below is the constructor of the higher level class which checks the passed plugin object for interface&rsquo;s implementation and then defines those methods in itself delegating the actual calls to the passed plugin object.</p>
-
-<h4>The solution</h4>
-
-<figure class='code'><figcaption><span>Dynamically defining methods</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>start_uniorn</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -119,27 +112,49 @@ The code below is the constructor of the higher level class which checks the pas
 <span class='line-number'>15</span>
 <span class='line-number'>16</span>
 <span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">provider</span><span class="p">)</span>
-</span><span class='line'>  <span class="c1"># Check whether the interface is implemented or not</span>
-</span><span class='line'>  <span class="n">interface</span> <span class="o">=</span> <span class="o">[</span>
-</span><span class='line'>    <span class="ss">:get</span><span class="p">,</span> <span class="ss">:put</span><span class="p">,</span> <span class="ss">:entries</span><span class="p">,</span> <span class="ss">:move</span><span class="p">,</span> <span class="ss">:rm!</span><span class="p">,</span> <span class="ss">:mkdir</span><span class="p">,</span> <span class="ss">:file?</span><span class="p">,</span> <span class="ss">:directory?</span><span class="p">,</span> <span class="ss">:exists?</span><span class="p">,</span> <span class="ss">:makedirs</span>
-</span><span class='line'>  <span class="o">]</span>
-</span><span class='line'>  <span class="n">interface</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">method</span><span class="o">|</span>
-</span><span class='line'>    <span class="k">raise</span> <span class="s2">&quot;Plugin is not supported&quot;</span> <span class="k">unless</span> <span class="n">provider</span><span class="o">.</span><span class="n">respond_to?</span><span class="p">(</span><span class="nb">method</span><span class="p">)</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>  <span class="vi">@provider</span> <span class="o">=</span> <span class="n">provider</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c">#!/bin/bash</span>
 </span><span class='line'>
-</span><span class='line'>  <span class="c1"># Define the methods supported by provider in this class too</span>
-</span><span class='line'>  <span class="n">interface</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">method</span><span class="o">|</span>
-</span><span class='line'>    <span class="nb">self</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="ss">:define_method</span><span class="p">,</span> <span class="nb">method</span><span class="p">)</span> <span class="k">do</span> <span class="o">|*</span><span class="n">splat</span><span class="o">|</span>
-</span><span class='line'>      <span class="vi">@provider</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="nb">method</span><span class="p">,</span> <span class="o">*</span><span class="n">splat</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
+</span><span class='line'><span class="c"># Check if unicorn is already running</span>
+</span><span class='line'><span class="nv">unicorn_pid</span><span class="o">=</span><span class="k">$(</span>ps -ef | grep <span class="s2">&quot;unicorn_rails master&quot;</span> | grep -v grep | awk <span class="s1">&#39;{print $2}&#39;</span><span class="k">)</span>
+</span><span class='line'><span class="k">if</span> <span class="o">[[</span> ! -z <span class="nv">$unicorn_pid</span> <span class="o">]]</span>; <span class="k">then</span>
+</span><span class='line'><span class="k">  </span><span class="nb">echo</span> <span class="s2">&quot;Unicorn is already running. Sending USR2 to it&quot;</span>
+</span><span class='line'>  <span class="nb">kill</span> -USR2 <span class="nv">$unicorn_pid</span>
+</span><span class='line'>  <span class="c"># Wait till new master comes up so two instances of workers are there</span>
+</span><span class='line'>  <span class="k">while</span> <span class="o">[[</span> <span class="k">$(</span>ps -ef | grep <span class="s1">&#39;unicorn_rails worker\[0\]&#39;</span> | grep -v grep | wc -l<span class="k">)</span> -ne 2 <span class="o">]]</span>; <span class="k">do</span>
+</span><span class='line'><span class="k">    </span><span class="nb">echo</span> <span class="s2">&quot;Waiting till new master comes up and spawns new workers&quot;</span>
+</span><span class='line'>    sleep 1
+</span><span class='line'>  <span class="k">done</span>
+</span><span class='line'>  <span class="c"># Send WINCH to old master</span>
+</span><span class='line'>  <span class="nb">echo</span> <span class="s2">&quot;Winching ID $unicorn_pid&quot;</span>
+</span><span class='line'>  <span class="nb">kill</span> -WINCH <span class="nv">$unicorn_pid</span>
+</span><span class='line'>  <span class="c"># Wait till old workers die</span>
+</span><span class='line'>  <span class="k">while</span> <span class="o">[[</span> <span class="k">$(</span>ps -ef | grep <span class="s1">&#39;unicorn_rails worker\[0\]&#39;</span> | grep -v grep | wc -l<span class="k">)</span> -ne 1 <span class="o">]]</span>; <span class="k">do</span>
+</span><span class='line'><span class="k">    </span><span class="nb">echo</span> <span class="s2">&quot;Waiting till old workers die&quot;</span>
+</span><span class='line'>    sleep 1
+</span><span class='line'>  <span class="k">done</span>
+</span><span class='line'><span class="k">  </span><span class="nb">echo</span> <span class="s2">&quot;Killing ID $unicorn_pid&quot;</span>
+</span><span class='line'>  <span class="nb">kill</span> -QUIT <span class="nv">$unicorn_pid</span>
+</span><span class='line'><span class="k">else</span>
+</span><span class='line'><span class="k">  </span><span class="nb">echo</span> <span class="s2">&quot;Start fresh copy of unicorn&quot;</span>
+</span><span class='line'>  unicorn_rails -c config/unicorn.rb -D
+</span><span class='line'><span class="k">fi</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Boy, so simple it is with ruby! And yeah, I love splat operator!</p>
+<p>Unicorn provides the facility to reload without losing connected clients. The process can be initiated by sending a <code>USR2</code> signal to the unicorn master process. Upon recieving this, unicorn will
+spawn a new master process and name the old process as <code>unicorn master (old)</code>. The new master process will also spawn it&rsquo;s own new workers. Once you are sure that the new workers have been
+spawned, you can send a <code>WINCH</code> signal to old unicorn master upon receipt of which, old unicorn will shutdown it&rsquo;s workers gracefully. Gracefully here means that the workers will die once
+they are done serving their connected clients. Once the old master has shut down all it&rsquo;s workers, we send a QUIT signal to the old master which then dies peacefully. And now we have the new
+unicorn loaded with new code and/or new binary. The explanation of signal behavior can be found <a href="http://unicorn.bogomips.org/SIGNALS.html">here</a>.</p>
 </div>
 
 
@@ -162,7 +177,7 @@ The code below is the constructor of the higher level class which checks the pas
   
 
 
-<time datetime="2014-03-01T23:36:00+05:30" pubdate data-updated="true">Mar 1<span>st</span>, 2014</time>
+<time datetime="2015-11-22T00:42:00+05:30" pubdate data-updated="true">Nov 22<span>nd</span>, 2015</time>
       
 
 
@@ -170,7 +185,7 @@ The code below is the constructor of the higher level class which checks the pas
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://prabhakar97.github.io/blog/2014/03/01/metaprogramming-101-in-ruby/" data-via="prab97" data-counturl="http://prabhakar97.github.io/blog/2014/03/01/metaprogramming-101-in-ruby/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://prabhakar97.github.io/blog/2015/11/22/start-slash-restart-unicorn-safely-without-downtime/" data-via="prab97" data-counturl="http://prabhakar97.github.io/blog/2015/11/22/start-slash-restart-unicorn-safely-without-downtime/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -183,10 +198,8 @@ The code below is the constructor of the higher level class which checks the pas
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/01/27/octopress-syntax-highlighting-issue-on-arch-linux/" title="Previous Post: Octopress syntax highlighting issue on Arch Linux">&laquo; Octopress syntax highlighting issue on Arch Linux</a>
+        <a class="basic-alignment left" href="/blog/2015/11/21/include-filename-and-line-number-in-rails-logger/" title="Previous Post: Include filename and line number in Rails logger">&laquo; Include filename and line number in Rails logger</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2015/04/21/find-below/" title="Next Post: Find below">Find below &raquo;</a>
       
     </p>
   </footer>
@@ -291,8 +304,8 @@ The code below is the constructor of the higher level class which checks the pas
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://prabhakar97.github.io/blog/2014/03/01/metaprogramming-101-in-ruby/';
-        var disqus_url = 'http://prabhakar97.github.io/blog/2014/03/01/metaprogramming-101-in-ruby/';
+        var disqus_identifier = 'http://prabhakar97.github.io/blog/2015/11/22/start-slash-restart-unicorn-safely-without-downtime/';
+        var disqus_url = 'http://prabhakar97.github.io/blog/2015/11/22/start-slash-restart-unicorn-safely-without-downtime/';
         var disqus_script = 'embed.js';
       
     (function () {
