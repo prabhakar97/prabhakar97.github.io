@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: functional programming - Prab's Code Blog</title>
+  <title>Prab's Code Blog</title>
   <meta name="author" content="Prabhakar Kumar">
 
   
-  <meta name="description" content="Category: functional programming">
+  <meta name="description" content="If you run Arch Linux and are trying to run rake generate on a Octopress blog, with a post that uses some code and syntax highlighting markdown over &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://prabhakar97.github.io/blog/categories/functional-programming">
+  <link rel="canonical" href="http://prabhakar97.github.io/posts/7">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Prab's Code Blog" type="application/atom+xml">
@@ -66,40 +66,81 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div>
-<article role="article">
+      <div class="blog-index">
   
+  
+  
+    <article>
+      
   <header>
-    <h1 class="entry-title">Category: Functional Programming</h1>
+    
+      <h1 class="entry-title"><a href="/blog/2014/01/27/octopress-syntax-highlighting-issue-on-arch-linux/">Octopress Syntax Highlighting Issue on Arch Linux</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-27T00:39:00-05:00" pubdate data-updated="true"></time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
+  <div class="entry-content"><p>If you run Arch Linux and are trying to run <code>rake generate</code> on a Octopress blog, with a post that uses some code and syntax highlighting markdown over it; you will probably see this error:</p>
 
-  
-  <h2>2016</h2>
+<pre><code>/plugins/pygments_code.rb:27:in `rescue in pygments': Pygments can't parse unknown language: ruby. (RuntimeError)
+</code></pre>
 
-<article>
-  
-<h1><a href="/blog/2016/05/13/getting-started-with-haskell/">Functional Programming Series - Part 1</a></h1>
-<time datetime="2016-05-13T20:02:00-04:00" pubdate><span class='month'>May</span> <span class='day'>13</span> <span class='year'>2016</span></time>
+<p>This happens because Arch uses <code>python3</code> as default python, while the world hasn&rsquo;t yet made up their mind to switch. The <em>Pygments</em> gem that Octopress uses, uses <code>python2</code> syntax which Arch&rsquo;s <code>python3</code> doesn&rsquo;t undertand fully and hence raises an error. To fix this, just open this file:</p>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/functional-programming/'>functional programming</a>, <a class='category' href='/blog/categories/haskell/'>haskell</a>, <a class='category' href='/blog/categories/recursion/'>recursion</a></span>
-</footer>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>~/.rbenv/versions/2.1.0/lib/ruby/gems/2.1.0/gems/pygments.rb-0.3.4/lib/pygments/mentos.py
+</span></code></pre></td></tr></table></div></figure>
 
 
-</article>
+<p>Use your own version, instead of <code>2.1.0</code> that I am using. Change the first line:</p>
 
+<figure class='code'><figcaption><span>mentos.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c">#!/usr/bin/env python </span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>to</p>
+
+<figure class='code'><figcaption><span>mentos.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c">#!/usr/bin/env python2 </span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>After this, your <code>rake generate</code> should succeed. Oh, and yes, this file path is for <code>rbenv</code>. If you use <code>rvm</code> figure out your own path using the command <code>find ~/ -name mentos.py</code>.</p>
 </div>
-
   
-</article>
+  
 
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="8">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="6">Newer &rarr;</a>
+    
+  </div>
 </div>
-
 <aside class="sidebar">
   
     <section>
@@ -140,7 +181,6 @@
 
   
 </aside>
-
 
     </div>
   </div>

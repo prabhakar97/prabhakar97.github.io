@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Start/restart unicorn safely without downtime - Prab's Code Blog</title>
+  <title>Prab's Code Blog</title>
   <meta name="author" content="Prabhakar Kumar">
 
   
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://prabhakar97.github.io/blog/2015/11/22/start-slash-restart-unicorn-safely-without-downtime">
+  <link rel="canonical" href="http://prabhakar97.github.io/posts/2">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Prab's Code Blog" type="application/atom+xml">
@@ -66,12 +66,15 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div>
-<article class="hentry" role="article">
+      <div class="blog-index">
   
+  
+  
+    <article>
+      
   <header>
     
-      <h1 class="entry-title">Start/restart Unicorn Safely Without Downtime</h1>
+      <h1 class="entry-title"><a href="/blog/2015/11/22/start-slash-restart-unicorn-safely-without-downtime/">Start/restart Unicorn Safely Without Downtime</a></h1>
     
     
       <p class="meta">
@@ -94,7 +97,7 @@
   </header>
 
 
-<div class="entry-content"><p><a href="http://unicorn.bogomips.org/">Unicorn</a> is a cool application server for Rails. If you have a high traffic website, you would like to restart Unicorn without any downtime, upon a new
+  <div class="entry-content"><p><a href="http://unicorn.bogomips.org/">Unicorn</a> is a cool application server for Rails. If you have a high traffic website, you would like to restart Unicorn without any downtime, upon a new
 code deployment or a Gem update which updates unicorn. I wrote an script, exactly for this purpose after learning signal handling basics of Unicorn. Here&rsquo;s the script. The comments
 are self-explanatory and fairly give the idea of what is happening.</p>
 
@@ -159,71 +162,22 @@ spawned, you can send a <code>WINCH</code> signal to old unicorn master upon rec
 they are done serving their connected clients. Once the old master has shut down all it&rsquo;s workers, we send a QUIT signal to the old master which then dies peacefully. And now we have the new
 unicorn loaded with new code and/or new binary. The explanation of signal behavior can be found <a href="http://unicorn.bogomips.org/SIGNALS.html">here</a>.</p>
 </div>
-
-
-  <footer>
-    <p class="meta">
-      
   
-
-<span class="byline author vcard">Posted by <span class="fn">Prabhakar Kumar</span></span>
-
-      
-
-
-
-
-
-
-
-
   
 
 
-<time datetime="2015-11-22T00:42:00-05:00" pubdate data-updated="true"></time>
-      
-
-<span class="categories">
+    </article>
   
-    <a class='category' href='/blog/categories/rails/'>rails</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>
-  
-</span>
-
-
-    </p>
+  <div class="pagination">
     
-      <div class="sharing">
-  
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://prabhakar97.github.io/blog/2015/11/22/start-slash-restart-unicorn-safely-without-downtime/" data-via="prab97" data-counturl="http://prabhakar97.github.io/blog/2015/11/22/start-slash-restart-unicorn-safely-without-downtime/" >Tweet</a>
-  
-  
-  <div class="g-plusone" data-size="medium"></div>
-  
-  
-    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
-  
-</div>
-
+      <a class="prev" href="3">&larr; Older</a>
     
-    <p class="meta">
-      
-        <a class="basic-alignment left" href="/blog/2015/11/21/include-filename-and-line-number-in-rails-logger/" title="Previous Post: Include filename and line number in Rails logger">&laquo; Include filename and line number in Rails logger</a>
-      
-      
-        <a class="basic-alignment right" href="/blog/2016/05/13/getting-started-with-haskell/" title="Next Post: Functional Programming Series - Part 1">Functional Programming Series - Part 1 &raquo;</a>
-      
-    </p>
-  </footer>
-</article>
-
-  <section>
-    <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="1">Newer &rarr;</a>
+    
+  </div>
 </div>
-  </section>
-
-</div>
-
 <aside class="sidebar">
   
     <section>
@@ -265,7 +219,6 @@ unicorn loaded with new code and/or new binary. The explanation of signal behavi
   
 </aside>
 
-
     </div>
   </div>
   <footer role="contentinfo"><p>
@@ -280,10 +233,7 @@ unicorn loaded with new code and/or new binary. The explanation of signal behavi
       var disqus_shortname = 'techbite';
       
         
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://prabhakar97.github.io/blog/2015/11/22/start-slash-restart-unicorn-safely-without-downtime/';
-        var disqus_url = 'http://prabhakar97.github.io/blog/2015/11/22/start-slash-restart-unicorn-safely-without-downtime/';
-        var disqus_script = 'embed.js';
+        var disqus_script = 'count.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
