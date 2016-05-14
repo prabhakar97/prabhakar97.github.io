@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Find below - Prab's Code Blog</title>
+  <title>The brag page - Prab's Code Blog</title>
   <meta name="author" content="Prabhakar Kumar">
 
   
-  <meta name="description" content="This is a small piece of snippet that can go into your .zshrc and make your life easier sometimes. This whips up a new command named findbelow for &hellip;">
+  <meta name="description" content="The Brag Page I am a software engineer who loves building and scaling large scale systems from scratch using modern technologies. I am good at &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://prabhakar97.github.io/blog/2015/04/21/find-below">
+  <link rel="canonical" href="http://prabhakar97.github.io/about">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Prab's Code Blog" type="application/atom+xml">
@@ -67,15 +67,50 @@
   <div id="main">
     <div id="content">
       <div>
-<article class="hentry" role="article">
+<article role="article">
   
   <header>
-    
-      <h1 class="entry-title">Find Below</h1>
-    
-    
+    <h1 class="entry-title">The Brag Page</h1>
+    <p class="meta">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-05-14T12:15:00-04:00" pubdate data-updated="true"></time></p>
+  </header>
+  
+  <p>I am a software engineer who loves building and scaling large scale systems from scratch using modern technologies. I am good at architecting, designing and implementing
+backend infrastructure (workflows, services, asynchronous batch jobs) in Java and fronting them with portals in Ruby on Rails. I have a pretty good background in Computer
+Science, in part due to my masters degree from IIT Madras and rest of it due to my passion in computers since childhood. I started my career as an SDE in 2013 with Amazon
+and I love my company for giving me opportunity to hone my skills by applying them in real world scenarios.</p>
+
+<p>I am a fan of Arch Linux and I love to tinker with my OS in free time. I am a fan of vim and prefer it for everything non-java. For Java, I use IntelliJ Idea which is
+an amazing IDE.</p>
+
+<p>I am a fan of the novel <a href="https://www.amazon.com/dp/0671042262">The Blue Nowhere</a> by Jeffrey Deaver.</p>
+
+<p>My <a href="http://www.lg.com/us/tvs/lg-42LA6200-led-tv">LG 42LA6200 3D TV</a> and my 2015 Hyundai Elantra car are two of my prized possessions.</p>
+
+<p>Cooking and photography are two of my hobbies. I am good with Indian food (spicy curries specially). I have
+a <a href="http://www.nikonusa.com/en/nikon-products/product/dslr-cameras/d5300.html">Nikon D5300 DSLR</a> to quench my photography thirst. I have two additional lenses apart from
+the 18-55 Nikkor kit lens that came with the unit. <a href="http://www.amazon.com/dp/B003ZSHNCC">Nikkor 300mm telephoto lens</a> and a <a href="https://www.amazon.com/dp/B00M21QO8C">35mm Prime Lens</a>.
+You may take a look at <a href="https://www.flickr.com/photos/prabhakar97/">my photostream on Flickr</a>.</p>
+
+<p>During my early undergrad college days I along with a friend named Vikalp Chauhan used to run a social network for mobile phones targeted for Indian users.
+The site can still be accessed at <a href="http://indifun.in">Indifun</a>.</p>
+
+  
+    <footer>
       <p class="meta">
         
+        
 
 
 
@@ -87,79 +122,13 @@
   
 
 
-<time datetime="2015-04-21T03:22:00-04:00" pubdate data-updated="true"></time>
+<time datetime="2016-05-14T12:15:00-04:00" pubdate data-updated="true"></time>
         
       </p>
-    
-  </header>
-
-
-<div class="entry-content"><p>This is a small piece of snippet that can go into your <code>.zshrc</code> and make your life easier sometimes. This whips up a new command named <code>findbelow</code> for you. This command takes as argument, a string and returns all the files below your current directory whose names contain the entered string as a substring.</p>
-
-<figure class='code'><figcaption><span>findbelow</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>findbelow <span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>  find ./ -regex <span class="s2">&quot;.*/$1.*&quot;</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Bonus</h3>
-
-<p>The below piece of snippet enables you to jump n directories upwards from your current <code>pwd</code> by typing <code>u n</code>. For example: <code>u 5</code> will take you 5 directories up from your current position.</p>
-
-<figure class='code'><figcaption><span>u</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>u <span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>  <span class="nb">set</span> -A ud
-</span><span class='line'>  ud<span class="o">[</span>1+<span class="k">${</span><span class="nv">1</span><span class="p">-1</span><span class="k">}</span><span class="o">]=</span>
-</span><span class='line'>  <span class="nb">cd</span> <span class="k">${</span><span class="p">(j:../:)ud</span><span class="k">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This has been tested on zsh.</p>
-</div>
-
-
-  <footer>
-    <p class="meta">
       
+        <div class="sharing">
   
-
-<span class="byline author vcard">Posted by <span class="fn">Prabhakar Kumar</span></span>
-
-      
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-04-21T03:22:00-04:00" pubdate data-updated="true"></time>
-      
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/linux/'>linux</a>, <a class='category' href='/blog/categories/shell/'>shell</a>
-  
-</span>
-
-
-    </p>
-    
-      <div class="sharing">
-  
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://prabhakar97.github.io/blog/2015/04/21/find-below/" data-via="prab97" data-counturl="http://prabhakar97.github.io/blog/2015/04/21/find-below/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://prabhakar97.github.io/about/index.html" data-via="prab97" data-counturl="http://prabhakar97.github.io/about/index.html" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -169,16 +138,9 @@
   
 </div>
 
-    
-    <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/03/01/metaprogramming-101-in-ruby/" title="Previous Post: Metaprogramming 101 in Ruby">&laquo; Metaprogramming 101 in Ruby</a>
-      
-      
-        <a class="basic-alignment right" href="/blog/2015/04/27/earthquake-alert-system-in-nodejs/" title="Next Post: Earthquake alert system in nodejs">Earthquake alert system in nodejs &raquo;</a>
-      
-    </p>
-  </footer>
+    </footer>
+  
 </article>
 
   <section>
@@ -246,8 +208,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://prabhakar97.github.io/blog/2015/04/21/find-below/';
-        var disqus_url = 'http://prabhakar97.github.io/blog/2015/04/21/find-below/';
+        var disqus_identifier = 'http://prabhakar97.github.io/about/index.html';
+        var disqus_url = 'http://prabhakar97.github.io/about/index.html';
         var disqus_script = 'embed.js';
       
     (function () {

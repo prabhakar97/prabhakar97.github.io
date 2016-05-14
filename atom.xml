@@ -4,7 +4,7 @@
   <title><![CDATA[Prab's Code Blog]]></title>
   <link href="http://prabhakar97.github.io/atom.xml" rel="self"/>
   <link href="http://prabhakar97.github.io/"/>
-  <updated>2015-11-22T00:54:00+05:30</updated>
+  <updated>2016-05-14T12:52:55-04:00</updated>
   <id>http://prabhakar97.github.io/</id>
   <author>
     <name><![CDATA[Prabhakar Kumar]]></name>
@@ -14,9 +14,108 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Functional Programming Series - Part 1]]></title>
+    <link href="http://prabhakar97.github.io/blog/2016/05/13/getting-started-with-haskell/"/>
+    <updated>2016-05-13T20:02:00-04:00</updated>
+    <id>http://prabhakar97.github.io/blog/2016/05/13/getting-started-with-haskell</id>
+    <content type="html"><![CDATA[<p>I have been intrigued by functional programming for past couple of years, but never quite prioritized it bigtime. Recently I came across this amazing talk which inspired me
+to go all-in to learn FP.</p>
+
+<div class="embed-video-container"><iframe src="//www.youtube.com/embed/E8I19uA-wGY" allowfullscreen></iframe></div>
+
+
+<p>I chose Haskell as my preferred language and started with the book <a href="http://www.amazon.com/dp/0954300696">The Haskell Road to Logic, Maths and Programming</a>. The reason was
+primarily because this book induces functional thinking without being too theoretical.</p>
+
+<p>I started solving exercises from the book. This post and a few subsequent ones will document my solutions to some of the exercise problems. These solutions may not be most concise
+or efficient because I am just beginning to learn Haskell.</p>
+
+<p><code>Define a method removeFst which removes the first instance of an element from a list</code></p>
+
+<figure class='code'><figcaption><span>removeFst.hs</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='hs'><span class='line'><span class="nf">removeFst</span> <span class="ow">::</span> <span class="p">(</span><span class="kt">Eq</span> <span class="n">a</span><span class="p">)</span> <span class="ow">=&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span>
+</span><span class='line'><span class="nf">removeFst</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="n">y</span> <span class="ow">=</span> <span class="kr">if</span> <span class="n">x</span> <span class="o">==</span> <span class="n">y</span>
+</span><span class='line'>                      <span class="kr">then</span> <span class="n">xs</span>
+</span><span class='line'>                        <span class="kr">else</span> <span class="n">x</span> <span class="kt">:</span> <span class="n">removeFst</span> <span class="n">xs</span> <span class="n">y</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>Define a function which counts number of instances of an element in a list</code></p>
+
+<figure class='code'><figcaption><span>countChars.hs</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='hs'><span class='line'><span class="nf">countChars</span> <span class="ow">::</span> <span class="kt">Char</span> <span class="ow">-&gt;</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">Int</span>
+</span><span class='line'><span class="nf">countChars</span> <span class="n">y</span> <span class="kt">[]</span> <span class="ow">=</span> <span class="mi">0</span>
+</span><span class='line'><span class="nf">countChars</span> <span class="n">y</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="o">|</span> <span class="n">y</span> <span class="o">==</span> <span class="n">x</span> <span class="ow">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">countChars</span> <span class="n">y</span> <span class="n">xs</span>
+</span><span class='line'>                    <span class="o">|</span> <span class="n">otherwise</span> <span class="ow">=</span> <span class="n">countChars</span> <span class="n">y</span> <span class="n">xs</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>Define a function named blowUp that takes an string and creates a new string from it by repeating ith character in i times. For example: abcdef should return abbcccddddeeeeeffffff</code></p>
+
+<figure class='code'><figcaption><span>blowUp.hs</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='hs'><span class='line'><span class="nf">blowUp</span> <span class="ow">::</span> <span class="kt">Int</span> <span class="ow">-&gt;</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">String</span>
+</span><span class='line'><span class="nf">blowUp</span> <span class="n">n</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="ow">=</span> <span class="n">take</span> <span class="n">n</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">x</span><span class="o">..</span><span class="p">]</span>
+</span><span class='line'><span class="nf">blowUp</span> <span class="n">n</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="ow">=</span> <span class="p">(</span><span class="n">blowUp</span> <span class="n">n</span> <span class="p">[</span><span class="n">x</span><span class="p">])</span> <span class="o">++</span> <span class="p">(</span><span class="n">blowUp</span> <span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="n">xs</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>Write a function to sort a list of orderable elements</code>
+This is a transaltion of the famous quick sort algorithm to Haskell.</p>
+
+<figure class='code'><figcaption><span>sort.hs</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='hs'><span class='line'><span class="nf">sort</span> <span class="ow">::</span> <span class="p">(</span><span class="kt">Ord</span> <span class="n">a</span><span class="p">)</span> <span class="ow">=&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span>
+</span><span class='line'><span class="nf">sort</span> <span class="kt">[]</span> <span class="ow">=</span> <span class="kt">[]</span>
+</span><span class='line'><span class="nf">sort</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="ow">=</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span>
+</span><span class='line'><span class="nf">sort</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="ow">=</span> <span class="n">sort</span> <span class="n">greater</span> <span class="o">++</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">++</span> <span class="n">sort</span> <span class="n">lesser</span>
+</span><span class='line'>                <span class="kr">where</span> <span class="n">greater</span> <span class="ow">=</span> <span class="p">[</span><span class="n">y</span> <span class="o">|</span> <span class="n">y</span> <span class="ow">&lt;-</span> <span class="n">xs</span><span class="p">,</span> <span class="n">y</span> <span class="o">&gt;</span> <span class="n">x</span><span class="p">]</span>
+</span><span class='line'>                      <span class="n">lesser</span> <span class="ow">=</span> <span class="p">[</span><span class="n">y</span> <span class="o">|</span> <span class="n">y</span> <span class="ow">&lt;-</span> <span class="n">xs</span><span class="p">,</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">x</span> <span class="p">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>Write a function that takes a big string and a small string and tells whether the big string starts with the small string</code></p>
+
+<figure class='code'><figcaption><span>startWith.hs</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='hs'><span class='line'><span class="nf">startWith</span> <span class="ow">::</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">Bool</span>
+</span><span class='line'><span class="nf">startWith</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="p">[</span><span class="n">y</span><span class="p">]</span> <span class="ow">=</span> <span class="n">y</span> <span class="o">==</span> <span class="n">x</span>
+</span><span class='line'><span class="nf">startWith</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="p">(</span><span class="n">y</span><span class="kt">:</span><span class="n">ys</span><span class="p">)</span> <span class="ow">=</span> <span class="n">y</span> <span class="o">==</span> <span class="n">x</span> <span class="o">&amp;&amp;</span> <span class="n">startWith</span> <span class="n">xs</span> <span class="n">ys</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>Write a function that takes a big string and a small string and tells whether the big string contains the small string as a substring</code>
+I use the previously defined startWith function to solve this.</p>
+
+<figure class='code'><figcaption><span>substring.hs</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='hs'><span class='line'><span class="nf">contains</span> <span class="ow">::</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">Bool</span>
+</span><span class='line'><span class="nf">contains</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="kt">[]</span> <span class="ow">=</span> <span class="kt">True</span>
+</span><span class='line'><span class="nf">contains</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="n">y</span> <span class="ow">=</span> <span class="n">startWith</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="n">y</span> <span class="o">||</span> <span class="n">startWith</span> <span class="n">xs</span> <span class="n">y</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Start/restart unicorn safely without downtime]]></title>
     <link href="http://prabhakar97.github.io/blog/2015/11/22/start-slash-restart-unicorn-safely-without-downtime/"/>
-    <updated>2015-11-22T00:42:00+05:30</updated>
+    <updated>2015-11-22T00:42:00-05:00</updated>
     <id>http://prabhakar97.github.io/blog/2015/11/22/start-slash-restart-unicorn-safely-without-downtime</id>
     <content type="html"><![CDATA[<p><a href="http://unicorn.bogomips.org/">Unicorn</a> is a cool application server for Rails. If you have a high traffic website, you would like to restart Unicorn without any downtime, upon a new
 code deployment or a Gem update which updates unicorn. I wrote an script, exactly for this purpose after learning signal handling basics of Unicorn. Here&rsquo;s the script. The comments
@@ -88,7 +187,7 @@ unicorn loaded with new code and/or new binary. The explanation of signal behavi
   <entry>
     <title type="html"><![CDATA[Include filename and line number in Rails logger]]></title>
     <link href="http://prabhakar97.github.io/blog/2015/11/21/include-filename-and-line-number-in-rails-logger/"/>
-    <updated>2015-11-21T23:50:00+05:30</updated>
+    <updated>2015-11-21T23:50:00-05:00</updated>
     <id>http://prabhakar97.github.io/blog/2015/11/21/include-filename-and-line-number-in-rails-logger</id>
     <content type="html"><![CDATA[<p>Rails logging is straightforward and works out of the box. But, sometimes I feel it would
 be really awesome if the log lines would contain the line number and file name which emit
@@ -202,7 +301,7 @@ Use it and change it to your liking.</p>
   <entry>
     <title type="html"><![CDATA[Earthquake alert system in nodejs]]></title>
     <link href="http://prabhakar97.github.io/blog/2015/04/27/earthquake-alert-system-in-nodejs/"/>
-    <updated>2015-04-27T01:01:00+05:30</updated>
+    <updated>2015-04-27T01:01:00-04:00</updated>
     <id>http://prabhakar97.github.io/blog/2015/04/27/earthquake-alert-system-in-nodejs</id>
     <content type="html"><![CDATA[<p>Afflicted by the recent earthquake in Nepal which took so many lives in India as well, my mind under the shower spawned up an idea of an earthquake alert system that attempts to notify people a few tens of seconds before the quake strikes.
 The premise of the idea is that <em>Electromagnetic waves travel way faster than seismic waves. 300,000 KM/s vs 10 KM/s</em>. Our communication systems (internet, sms) transmit on electronic waves and even after considering some added overhead (like buffers, processing etc) they can win the race with seismic waves easily. For instance, Kathmandu to New Delhi is around 800 kilometers. A quake epicentred in Kathmandu would be felt in Delhi after around 80 seconds. If we find some way to detect the quake in Kathmandu immediately after it strikes and transmit this information over the public communication infrastructure (web, SMS etc.), we could give the people more than a minute to move to safety. I made following assumptions:</p>
@@ -348,7 +447,7 @@ I recalled reading about an app called Instapush which provides a REST API to se
   <entry>
     <title type="html"><![CDATA[Find below]]></title>
     <link href="http://prabhakar97.github.io/blog/2015/04/21/find-below/"/>
-    <updated>2015-04-21T03:22:00+05:30</updated>
+    <updated>2015-04-21T03:22:00-04:00</updated>
     <id>http://prabhakar97.github.io/blog/2015/04/21/find-below</id>
     <content type="html"><![CDATA[<p>This is a small piece of snippet that can go into your <code>.zshrc</code> and make your life easier sometimes. This whips up a new command named <code>findbelow</code> for you. This command takes as argument, a string and returns all the files below your current directory whose names contain the entered string as a substring.</p>
 
@@ -385,7 +484,7 @@ I recalled reading about an app called Instapush which provides a REST API to se
   <entry>
     <title type="html"><![CDATA[Metaprogramming 101 in Ruby]]></title>
     <link href="http://prabhakar97.github.io/blog/2014/03/01/metaprogramming-101-in-ruby/"/>
-    <updated>2014-03-01T23:36:00+05:30</updated>
+    <updated>2014-03-01T23:36:00-05:00</updated>
     <id>http://prabhakar97.github.io/blog/2014/03/01/metaprogramming-101-in-ruby</id>
     <content type="html"><![CDATA[<p>Metaprogramming is fun! Dynamically modifying a program garners a lot of power to the programmer. In this post I show an example situation which is beautifully solved by metaprogramming.
 I am a Ruby dilettante.</p>
@@ -442,7 +541,7 @@ The code below is the constructor of the higher level class which checks the pas
   <entry>
     <title type="html"><![CDATA[Octopress syntax highlighting issue on Arch Linux]]></title>
     <link href="http://prabhakar97.github.io/blog/2014/01/27/octopress-syntax-highlighting-issue-on-arch-linux/"/>
-    <updated>2014-01-27T00:39:00+05:30</updated>
+    <updated>2014-01-27T00:39:00-05:00</updated>
     <id>http://prabhakar97.github.io/blog/2014/01/27/octopress-syntax-highlighting-issue-on-arch-linux</id>
     <content type="html"><![CDATA[<p>If you run Arch Linux and are trying to run <code>rake generate</code> on a Octopress blog, with a post that uses some code and syntax highlighting markdown over it; you will probably see this error:</p>
 
@@ -477,7 +576,7 @@ The code below is the constructor of the higher level class which checks the pas
   <entry>
     <title type="html"><![CDATA[Ruby script to generate 3D subtitles from srt files]]></title>
     <link href="http://prabhakar97.github.io/blog/2014/01/27/script-to-generate-3d-subtitles-from-srt-files/"/>
-    <updated>2014-01-27T00:09:00+05:30</updated>
+    <updated>2014-01-27T00:09:00-05:00</updated>
     <id>http://prabhakar97.github.io/blog/2014/01/27/script-to-generate-3d-subtitles-from-srt-files</id>
     <content type="html"><![CDATA[<p>So, you&rsquo;ve got a bunch of 3D movies with SRT subtitles which your 3D TV can play from a USB storage and show the subtitles correctly but can not if you are running the movie on your laptop and sending the display to TV over HDMI; for obvious reasons.
 The solution is to use <em>.ass</em> format subtitles with your media player(I recommed mplayer/smplayer). Just run this script from a directory that contains all your movies in separate directories under that directory. Make sure, <code>srt</code> file is present in each 3D movie directory and has the same name as the movie file. Also make sure, the directories for 3D movies have 3D in their names somewhere. Moreover, you must have the program <code>sub3dtool</code> installed. Get it from <a href="https://code.google.com/p/sub3dtool/">here</a>. After you run the script, all your 3D movie directories will be populated with .ass files automatically. Remember, VLC media player does not play well with <code>.ass</code> subtitles. It skips many dialogues.</p>
@@ -520,7 +619,7 @@ The solution is to use <em>.ass</em> format subtitles with your media player(I r
   <entry>
     <title type="html"><![CDATA[Hello World]]></title>
     <link href="http://prabhakar97.github.io/blog/2013/07/28/hello-world/"/>
-    <updated>2013-07-28T01:11:00+05:30</updated>
+    <updated>2013-07-28T01:11:00-04:00</updated>
     <id>http://prabhakar97.github.io/blog/2013/07/28/hello-world</id>
     <content type="html"><![CDATA[<p>Alright fellas, I have switched to Octopress being a ruby lover. I will be posting about code and code and more code in this blog. Mainly there will be lots of scripts that make my daily chores easier, some fixes from my experiences, some puzzle solving and liitle more code.</p>
 ]]></content>

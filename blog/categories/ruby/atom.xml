@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Ruby | Prab's Code Blog]]></title>
+  <link href="http://prabhakar97.github.io/blog/categories/ruby/atom.xml" rel="self"/>
+  <link href="http://prabhakar97.github.io/"/>
+  <updated>2016-05-14T12:52:55-04:00</updated>
+  <id>http://prabhakar97.github.io/</id>
+  <author>
+    <name><![CDATA[Prabhakar Kumar]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Start/restart Unicorn Safely Without Downtime]]></title>
+    <link href="http://prabhakar97.github.io/blog/2015/11/22/start-slash-restart-unicorn-safely-without-downtime/"/>
+    <updated>2015-11-22T00:42:00-05:00</updated>
+    <id>http://prabhakar97.github.io/blog/2015/11/22/start-slash-restart-unicorn-safely-without-downtime</id>
+    <content type="html"><![CDATA[<p><a href="http://unicorn.bogomips.org/">Unicorn</a> is a cool application server for Rails. If you have a high traffic website, you would like to restart Unicorn without any downtime, upon a new
+code deployment or a Gem update which updates unicorn. I wrote an script, exactly for this purpose after learning signal handling basics of Unicorn. Here&rsquo;s the script. The comments
+are self-explanatory and fairly give the idea of what is happening.</p>
+
+<pre><code class="sh start_uniorn">#!/bin/bash
+
+# Check if unicorn is already running
+unicorn_pid=$(ps -ef | grep "unicorn_rails master" | grep -v grep | awk '{print $2}')
+if [[ ! -z $unicorn_pid ]]; then
+  echo "Unicorn is already running. Sending USR2 to it"
+  kill -USR2 $unicorn_pid
+  # Wait till new master comes up so two instances of workers are there
+  while [[ $(ps -ef | grep 'unicorn_rails worker\[0\]' | grep -v grep | wc -l) -ne 2 ]]; do
+    echo "Waiting till new master comes up and spawns new workers"
+    sleep 1
+  done
+  # Send WINCH to old master
+  echo "Winching ID $unicorn_pid"
+  kill -WINCH $unicorn_pid
+  # Wait till old workers die
+  while [[ $(ps -ef | grep 'unicorn_rails worker\[0\]' | grep -v grep | wc -l) -ne 1 ]]; do
+    echo "Waiting till old workers die"
+    sleep 1
+  done
+  echo "Killing ID $unicorn_pid"
+  kill -QUIT $unicorn_pid
+else
+  echo "Start fresh copy of unicorn"
+  unicorn_rails -c config/unicorn.rb -D
+fi
+</code></pre>
+
+<p>Unicorn provides the facility to reload without losing connected clients. The process can be initiated by sending a <code>USR2</code> signal to the unicorn master process. Upon recieving this, unicorn will
+spawn a new master process and name the old process as <code>unicorn master (old)</code>. The new master process will also spawn it&rsquo;s own new workers. Once you are sure that the new workers have been
+spawned, you can send a <code>WINCH</code> signal to old unicorn master upon receipt of which, old unicorn will shutdown it&rsquo;s workers gracefully. Gracefully here means that the workers will die once
+they are done serving their connected clients. Once the old master has shut down all it&rsquo;s workers, we send a QUIT signal to the old master which then dies peacefully. And now we have the new
+unicorn loaded with new code and/or new binary. The explanation of signal behavior can be found <a href="http://unicorn.bogomips.org/SIGNALS.html">here</a>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Include Filename and Line Number in Rails Logger]]></title>
+    <link href="http://prabhakar97.github.io/blog/2015/11/21/include-filename-and-line-number-in-rails-logger/"/>
+    <updated>2015-11-21T23:50:00-05:00</updated>
+    <id>http://prabhakar97.github.io/blog/2015/11/21/include-filename-and-line-number-in-rails-logger</id>
+    <content type="html"><![CDATA[<p>Rails logging is straightforward and works out of the box. But, sometimes I feel it would
+be really awesome if the log lines would contain the line number and file name which emit
+the log. If you have experience with log4j in Java, you should be able to recall that we
+initialize the logger and pass it a class instance. All our log lines are tagged with the
+classname. That&rsquo;s cool for debugging purposes.</p>
+
+<p>How to get that behavior in Rails? There is
+one quick and dirty way. Just prepend to the log message <code>__LINE__</code> and <code>__FILE__</code> which
+contain the line the code is executing and the file it is in, respectively.</p>
+
+<pre><code class="ruby Logger">logger.info("[#{__FILE__}:#{__LINE__}] The log message")
+</code></pre>
+
+<p>This just works. But shows the full file path which is kind of overkill because it produces very long log lines. The below one improves it to include just the filename.</p>
+
+<pre><code class="ruby Logger">logger.info("[#{__FILE__.split('/').last}:#{__LINE__}] The log message")
+</code></pre>
+
+<p>Ok, this gets the job done but makes our log statements ugly in the code. And it isn&rsquo;t DRY. If
+we try to make it DRY, we can&rsquo;t. Because we can&rsquo;t assign the stuff
+on the left that produces file and line number strings, into a variable, because they will refer to the line where variable is assigned, so the log statement will contain wrong value for
+line number.</p>
+
+<p>There is another way that involves ActiveSupport&rsquo;s TaggedLogging. If you use a Tagged logger,
+you can associate a tag with every log message. That&rsquo;s cool too, especially for searching
+through certain events in logs. TaggedLogging can be used to add file and line number, but
+the usage would be similar to the above example. How about doing something that works
+seamlessly behind the scenes and is DRY?</p>
+
+<p>After some research, I wrote a class (ok, I assembled it from here and there), whose instance
+can be assigned to Rails log formatter. Here it is. Just put this class in your main
+application module and assign it&rsquo;s instance to rails log formatter. Apart from filename
+and line number, I have also edited the log line to have some other stuff displayed in fancy
+colors. Also, I don&rsquo;t print filename and line if the filename is logger.rb or starts with
+log_. That&rsquo;s because it would create so much spam due to Rails internal log files or
+files from various gems.
+Use it and change it to your liking.</p>
+
+<pre><code class="ruby application.rb">module ApplicationName
+
+  class QLogFormatter
+    HOSTNAME = Socket.gethostname
+    SEVERITY_TO_COLOR_MAP = {
+      'DEBUG' =&gt; '35',
+      'INFO' =&gt; '32',
+      'WARN' =&gt; '33',
+      'ERROR' =&gt; '31',
+      'FATAL' =&gt; '31',
+      'UNKNOWN' =&gt; '37'
+    }
+    def call(severity, time, progname, msg)
+      return "" if (msg.blank? || msg.strip.blank?)
+      formatted_time = time.strftime("%Y-%m-%d %H:%M:%S.") &lt;&lt; time.usec.to_s[0..2]
+      color = SEVERITY_TO_COLOR_MAP[severity]
+      callee = caller[5].split('/').last
+      callee = callee.split(':')[0,2].join(':')
+      log_line = "\033[0;37m#{HOSTNAME}@#{formatted_time}\033[0m [\033[01;#{color}m#{severity}\033[0m]"
+      unless (callee.start_with?('logger') || callee.start_with?('log_'))
+        log_line += "[\033[01;36m#{callee}\033[0m]"
+      end
+      log_line += " #{msg}\n"
+    end
+  end
+
+  class Application &lt; Rails::Application
+    # All your other configs
+    config.log_formatter = QLogFormatter.new
+  end
+end
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Metaprogramming 101 in Ruby]]></title>
+    <link href="http://prabhakar97.github.io/blog/2014/03/01/metaprogramming-101-in-ruby/"/>
+    <updated>2014-03-01T23:36:00-05:00</updated>
+    <id>http://prabhakar97.github.io/blog/2014/03/01/metaprogramming-101-in-ruby</id>
+    <content type="html"><![CDATA[<p>Metaprogramming is fun! Dynamically modifying a program garners a lot of power to the programmer. In this post I show an example situation which is beautifully solved by metaprogramming.
+I am a Ruby dilettante.</p>
+
+<h4>The situation</h4>
+
+<p>I wanted to develop a plugin framework for a side project of mine. There is a higher level class, which should delegate methods calls on itself to the plugin implementer class.
+Although, OOPS has a standard solution for this situation using interfaces but here is the beauty and elegance of metaprogramming in ruby.
+The code below is the constructor of the higher level class which checks the passed plugin object for interface&rsquo;s implementation and then defines those methods in itself delegating the actual calls to the passed plugin object.</p>
+
+<h4>The solution</h4>
+
+<pre><code class="ruby Dynamically defining methods">def initialize(provider)
+  # Check whether the interface is implemented or not
+  interface = [
+    :get, :put, :entries, :move, :rm!, :mkdir, :file?, :directory?, :exists?, :makedirs
+  ]
+  interface.each do |method|
+    raise "Plugin is not supported" unless provider.respond_to?(method)
+  end
+  @provider = provider
+
+  # Define the methods supported by provider in this class too
+  interface.each do |method|
+    self.class.send(:define_method, method) do |*splat|
+      @provider.send(method, *splat)
+    end
+  end
+end
+</code></pre>
+
+<p>Boy, so simple it is with ruby! And yeah, I love splat operator!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Ruby Script to Generate 3D Subtitles From Srt Files]]></title>
+    <link href="http://prabhakar97.github.io/blog/2014/01/27/script-to-generate-3d-subtitles-from-srt-files/"/>
+    <updated>2014-01-27T00:09:00-05:00</updated>
+    <id>http://prabhakar97.github.io/blog/2014/01/27/script-to-generate-3d-subtitles-from-srt-files</id>
+    <content type="html"><![CDATA[<p>So, you&rsquo;ve got a bunch of 3D movies with SRT subtitles which your 3D TV can play from a USB storage and show the subtitles correctly but can not if you are running the movie on your laptop and sending the display to TV over HDMI; for obvious reasons.
+The solution is to use <em>.ass</em> format subtitles with your media player(I recommed mplayer/smplayer). Just run this script from a directory that contains all your movies in separate directories under that directory. Make sure, <code>srt</code> file is present in each 3D movie directory and has the same name as the movie file. Also make sure, the directories for 3D movies have 3D in their names somewhere. Moreover, you must have the program <code>sub3dtool</code> installed. Get it from <a href="https://code.google.com/p/sub3dtool/">here</a>. After you run the script, all your 3D movie directories will be populated with .ass files automatically. Remember, VLC media player does not play well with <code>.ass</code> subtitles. It skips many dialogues.</p>
+
+<pre><code class="ruby Convert SRT subtitles into ASS">Dir.entries(".").each do |file|
+  if file.include? "3D"
+    puts "3D movie found - #{file}. Going ahead to generate .ass subtitle for it"
+    Dir.entries(file).each do |file1|
+      if file1.include? ".srt"
+        puts "Found srt file: #{file1}"
+        outfile_name = "#{file1[0,file1.length-3]}ass"
+        puts "Out file name : #{outfile_name}"
+        `sub3dtool "#{file}/#{file1}" --3dsbs -o "#{file}/#{outfile_name}"`
+        puts "Generated successfully"
+      end
+    end
+  end
+end
+</code></pre>
+
+<p>All the movie directories will be populated with corresponding <em>.ass</em> files. Now just run it by <code>mplayer -ass movie_file_name</code>. Use <code>j</code> to cycle through subtitles, <code>f</code> for fullscreen, <code>q</code> to quit mplayer.</p>
+]]></content>
+  </entry>
+  
+</feed>

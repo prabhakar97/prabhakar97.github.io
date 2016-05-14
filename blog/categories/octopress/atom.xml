@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Octopress | Prab's Code Blog]]></title>
+  <link href="http://prabhakar97.github.io/blog/categories/octopress/atom.xml" rel="self"/>
+  <link href="http://prabhakar97.github.io/"/>
+  <updated>2016-05-14T12:52:55-04:00</updated>
+  <id>http://prabhakar97.github.io/</id>
+  <author>
+    <name><![CDATA[Prabhakar Kumar]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Octopress Syntax Highlighting Issue on Arch Linux]]></title>
+    <link href="http://prabhakar97.github.io/blog/2014/01/27/octopress-syntax-highlighting-issue-on-arch-linux/"/>
+    <updated>2014-01-27T00:39:00-05:00</updated>
+    <id>http://prabhakar97.github.io/blog/2014/01/27/octopress-syntax-highlighting-issue-on-arch-linux</id>
+    <content type="html"><![CDATA[<p>If you run Arch Linux and are trying to run <code>rake generate</code> on a Octopress blog, with a post that uses some code and syntax highlighting markdown over it; you will probably see this error:</p>
+
+<pre><code>/plugins/pygments_code.rb:27:in `rescue in pygments': Pygments can't parse unknown language: ruby. (RuntimeError)
+</code></pre>
+
+<p>This happens because Arch uses <code>python3</code> as default python, while the world hasn&rsquo;t yet made up their mind to switch. The <em>Pygments</em> gem that Octopress uses, uses <code>python2</code> syntax which Arch&rsquo;s <code>python3</code> doesn&rsquo;t undertand fully and hence raises an error. To fix this, just open this file:</p>
+
+<pre><code class="bash">~/.rbenv/versions/2.1.0/lib/ruby/gems/2.1.0/gems/pygments.rb-0.3.4/lib/pygments/mentos.py  
+</code></pre>
+
+<p>Use your own version, instead of <code>2.1.0</code> that I am using. Change the first line:</p>
+
+<pre><code class="python mentos.py">#!/usr/bin/env python 
+</code></pre>
+
+<p>to</p>
+
+<pre><code class="python mentos.py">#!/usr/bin/env python2 
+</code></pre>
+
+<p>After this, your <code>rake generate</code> should succeed. Oh, and yes, this file path is for <code>rbenv</code>. If you use <code>rvm</code> figure out your own path using the command <code>find ~/ -name mentos.py</code>.</p>
+]]></content>
+  </entry>
+  
+</feed>

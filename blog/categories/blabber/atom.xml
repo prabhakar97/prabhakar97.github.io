@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Blabber | Prab's Code Blog]]></title>
+  <link href="http://prabhakar97.github.io/blog/categories/blabber/atom.xml" rel="self"/>
+  <link href="http://prabhakar97.github.io/"/>
+  <updated>2016-05-14T12:52:55-04:00</updated>
+  <id>http://prabhakar97.github.io/</id>
+  <author>
+    <name><![CDATA[Prabhakar Kumar]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Hello World]]></title>
+    <link href="http://prabhakar97.github.io/blog/2013/07/28/hello-world/"/>
+    <updated>2013-07-28T01:11:00-04:00</updated>
+    <id>http://prabhakar97.github.io/blog/2013/07/28/hello-world</id>
+    <content type="html"><![CDATA[<p>Alright fellas, I have switched to Octopress being a ruby lover. I will be posting about code and code and more code in this blog. Mainly there will be lots of scripts that make my daily chores easier, some fixes from my experiences, some puzzle solving and liitle more code.</p>
+]]></content>
+  </entry>
+  
+</feed>
