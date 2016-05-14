@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Functional Programming | Prab's Code Blog]]></title>
   <link href="http://prabhakar97.github.io/blog/categories/functional-programming/atom.xml" rel="self"/>
   <link href="http://prabhakar97.github.io/"/>
-  <updated>2016-05-14T13:12:46-04:00</updated>
+  <updated>2016-05-14T13:20:31-04:00</updated>
   <id>http://prabhakar97.github.io/</id>
   <author>
     <name><![CDATA[Prabhakar Kumar]]></name>
@@ -29,7 +29,7 @@ primarily because this book induces functional thinking without being too theore
 <p>I started solving exercises from the book. This post and a few subsequent ones will document my solutions to some of the exercise problems. These solutions may not be most concise
 or efficient because I am just beginning to learn Haskell.</p>
 
-<p><code>Define a method removeFst which removes the first instance of an element from a list</code></p>
+<blockquote><p>Define a method removeFst which removes the first instance of an element from a list</p></blockquote>
 
 <pre><code class="hs removeFst.hs">removeFst :: (Eq a) =&gt; [a] -&gt; a -&gt; [a]
 removeFst (x:xs) y = if x == y
@@ -37,46 +37,48 @@ removeFst (x:xs) y = if x == y
                         else x : removeFst xs y
 </code></pre>
 
-<p><code>Define a function which counts number of instances of an element in a list</code>
-<code>hs countChars.hs
-countChars :: Char -&gt; String -&gt; Int
+<blockquote><p>Define a function which counts number of instances of an element in a list</p></blockquote>
+
+<pre><code class="hs countChars.hs">countChars :: Char -&gt; String -&gt; Int
 countChars y [] = 0
 countChars y (x:xs) | y == x = 1 + countChars y xs
                     | otherwise = countChars y xs
-</code></p>
+</code></pre>
 
-<p><code>Define a function named blowUp that takes an string and creates a new string from it by repeating ith character in i times. For example: abcdef should return abbcccddddeeeeeffffff</code>
-<code>hs blowUp.hs
-blowUp :: Int -&gt; String -&gt; String
+<blockquote><p>Define a function named blowUp that takes an string and creates a new string from it by repeating ith character in i times. For example: abcdef should return abbcccddddeeeeeffffff</p></blockquote>
+
+<pre><code class="hs blowUp.hs">blowUp :: Int -&gt; String -&gt; String
 blowUp n [x] = take n [x,x..]
 blowUp n (x:xs) = (blowUp n [x]) ++ (blowUp (n+1) xs)
-</code></p>
+</code></pre>
 
-<p><code>Write a function to sort a list of orderable elements</code>
-This is a transaltion of the famous quick sort algorithm to Haskell.
-<code>hs sort.hs
-sort :: (Ord a) =&gt; [a] -&gt; [a]
+<blockquote><p>Write a function to sort a list of orderable elements</p></blockquote>
+
+<p>This is a translation of the famous quick sort algorithm to Haskell.</p>
+
+<pre><code class="hs sort.hs">sort :: (Ord a) =&gt; [a] -&gt; [a]
 sort [] = []
 sort [x] = [x]
 sort (x:xs) = sort greater ++ [x] ++ sort lesser
                 where greater = [y | y &lt;- xs, y &gt; x]
                       lesser = [y | y &lt;- xs, y &lt; x ]
-</code></p>
+</code></pre>
 
-<p><code>Write a function that takes a big string and a small string and tells whether the big string starts with the small string</code></p>
+<blockquote><p>Write a function that takes a big string and a small string and tells whether the big string starts with the small string</p></blockquote>
 
 <pre><code class="hs startWith.hs">startWith :: String -&gt; String -&gt; Bool
 startWith (x:xs) [y] = y == x
 startWith (x:xs) (y:ys) = y == x &amp;&amp; startWith xs ys
 </code></pre>
 
-<p><code>Write a function that takes a big string and a small string and tells whether the big string contains the small string as a substring</code>
-I use the previously defined startWith function to solve this.
-<code>hs substring.hs
-contains :: String -&gt; String -&gt; Bool
+<blockquote><p>Write a function that takes a big string and a small string and tells whether the big string contains the small string as a substring</p></blockquote>
+
+<p>I use the previously defined startWith function to solve this.</p>
+
+<pre><code class="hs substring.hs">contains :: String -&gt; String -&gt; Bool
 contains (x:xs) [] = True
 contains (x:xs) y = startWith (x:xs) y || startWith xs y
-</code></p>
+</code></pre>
 ]]></content>
   </entry>
   
