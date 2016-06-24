@@ -5,11 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Prab's Code Blog</title>
+  <title>Starting with Yesod on Arch Linux - Prab's Code Blog</title>
   <meta name="author" content="Prabhakar Kumar">
 
   
-  <meta name="description" content="This is a small piece of snippet that can go into your .zshrc and make your life easier sometimes. This whips up a new command named findbelow for &hellip;">
+  <meta name="description" content="As part of my eagerness to learn Haskell, I thought it might be a good idea to start building real world applications in Haskell. I chose
+Yesod to &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://prabhakar97.github.io/posts/6">
+  <link rel="canonical" href="http://prabhakar97.github.io/blog/2016/06/23/starting-with-yesod-on-arch-linux">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Prab's Code Blog" type="application/atom+xml">
@@ -78,15 +79,12 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2015/04/21/find-below/">Find Below</a></h1>
+      <h1 class="entry-title">Starting With Yesod on Arch Linux</h1>
     
     
       <p class="meta">
@@ -102,59 +100,119 @@
   
 
 
-<time datetime="2015-04-21T03:22:00-04:00" pubdate data-updated="true"></time>
+<time datetime="2016-06-23T19:59:39-04:00" pubdate data-updated="true"></time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>This is a small piece of snippet that can go into your <code>.zshrc</code> and make your life easier sometimes. This whips up a new command named <code>findbelow</code> for you. This command takes as argument, a string and returns all the files below your current directory whose names contain the entered string as a substring.</p>
+<div class="entry-content"><p>As part of my eagerness to learn Haskell, I thought it might be a good idea to start building real world applications in Haskell. I chose
+<a href="http://www.yesodweb.com/">Yesod</a> to start building a dynamic web application backed by as database. However, the getting started page on
+Yesod website didn&rsquo;t exactly work as advertised, probably because the <a href="http://docs.haskellstack.org/en/stable/README/">Haskell Stack</a>
+had some API change. These steps worked for me.</p>
 
-<figure class='code'><figcaption><span>findbelow</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>findbelow <span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>  find ./ -regex <span class="s2">&quot;.*/$1.*&quot;</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Bonus</h3>
-
-<p>The below piece of snippet enables you to jump n directories upwards from your current <code>pwd</code> by typing <code>u n</code>. For example: <code>u 5</code> will take you 5 directories up from your current position.</p>
-
-<figure class='code'><figcaption><span>u</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>u <span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>  <span class="nb">set</span> -A ud
-</span><span class='line'>  ud<span class="o">[</span>1+<span class="k">${</span><span class="nv">1</span><span class="p">-1</span><span class="k">}</span><span class="o">]=</span>
-</span><span class='line'>  <span class="nb">cd</span> <span class="k">${</span><span class="p">(j:../:)ud</span><span class="k">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
+<ul>
+<li>Install haskell-stack. It lets you develop, build and test Haskell apps without creating dependency version issues across projects.
+If you are coming from a ruby world, it is similar to rbenv.</li>
+</ul>
 
 
-<p>This has been tested on zsh.</p>
+<p><code>sudo pacman -S haskell-stack</code></p>
+
+<ul>
+<li>Checkout the <em>yesod-mongodb</em> template. This is going to create a <code>yesod</code> directory and checkout stuff from the <code>yesod-mongo</code> template.</li>
+</ul>
+
+
+<p><code>stack new yesod yesod-mongo</code></p>
+
+<ul>
+<li><p>Install <a href="https://aur.archlinux.org/packages/libtinfo/">libtinfo from AUR</a> because Arch screwed up (from stack perspective). There is
+another nuance to take care of. Edit the <em>PKGBUILD</em> and ensure that the line that simlinks <code>/usr/lib/libtinfo.so.5</code> is uncommented. Otherwise
+the next step doesn&rsquo;t work.</p></li>
+<li><p>Setup GHCi and friends.</p></li>
+</ul>
+
+
+<p><code>stack build yesod-bin cabal-install --install-ghc</code></p>
+
+<ul>
+<li>Build the libs.</li>
+</ul>
+
+
+<p><code>stack build</code></p>
+
+<p>This step is currently failing due to an <a href="https://github.com/commercialhaskell/stack/issues/595">issue</a> in <code>stack</code>. I will update the blog
+post as soon as I realize it is fixed.</p>
+
+<ul>
+<li>Hello World!</li>
+</ul>
+
+
+<p><code>stack exec -- yesod devel</code></p>
+
+<p>To access your server visit <a href="http://localhost:3000">http://localhost:3000</a></p>
 </div>
+
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">Prabhakar Kumar</span></span>
+
+      
+
+
+
+
+
+
+
+
   
 
 
-    </article>
+<time datetime="2016-06-23T19:59:39-04:00" pubdate data-updated="true"></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
   
-  <div class="pagination">
-    
-      <a class="prev" href="7">&larr; Older</a>
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-    <a class="next" href="5">Newer &rarr;</a>
-    
-  </div>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://prabhakar97.github.io/blog/2016/06/23/starting-with-yesod-on-arch-linux/" data-via="prab97" data-counturl="http://prabhakar97.github.io/blog/2016/06/23/starting-with-yesod-on-arch-linux/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
 </div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2016/05/13/getting-started-with-haskell/" title="Previous Post: Functional Programming Series - Part 1">&laquo; Functional Programming Series - Part 1</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
 <aside class="sidebar">
   
     <section>
@@ -196,6 +254,7 @@
   
 </aside>
 
+
     </div>
   </div>
   <footer role="contentinfo"><p>
@@ -210,7 +269,10 @@
       var disqus_shortname = 'techbite';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://prabhakar97.github.io/blog/2016/06/23/starting-with-yesod-on-arch-linux/';
+        var disqus_url = 'http://prabhakar97.github.io/blog/2016/06/23/starting-with-yesod-on-arch-linux/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

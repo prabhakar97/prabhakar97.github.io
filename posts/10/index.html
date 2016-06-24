@@ -9,7 +9,7 @@
   <meta name="author" content="Prabhakar Kumar">
 
   
-  <meta name="description" content="This is a small piece of snippet that can go into your .zshrc and make your life easier sometimes. This whips up a new command named findbelow for &hellip;">
+  <meta name="description" content="Alright fellas, I have switched to Octopress being a ruby lover. I will be posting about code and code and more code in this blog. Mainly there will &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://prabhakar97.github.io/posts/6">
+  <link rel="canonical" href="http://prabhakar97.github.io/posts/10">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Prab's Code Blog" type="application/atom+xml">
@@ -86,7 +86,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2015/04/21/find-below/">Find Below</a></h1>
+      <h1 class="entry-title"><a href="/blog/2013/07/28/hello-world/">Hello World</a></h1>
     
     
       <p class="meta">
@@ -102,42 +102,14 @@
   
 
 
-<time datetime="2015-04-21T03:22:00-04:00" pubdate data-updated="true"></time>
+<time datetime="2013-07-28T01:11:00-04:00" pubdate data-updated="true"></time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>This is a small piece of snippet that can go into your <code>.zshrc</code> and make your life easier sometimes. This whips up a new command named <code>findbelow</code> for you. This command takes as argument, a string and returns all the files below your current directory whose names contain the entered string as a substring.</p>
-
-<figure class='code'><figcaption><span>findbelow</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>findbelow <span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>  find ./ -regex <span class="s2">&quot;.*/$1.*&quot;</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Bonus</h3>
-
-<p>The below piece of snippet enables you to jump n directories upwards from your current <code>pwd</code> by typing <code>u n</code>. For example: <code>u 5</code> will take you 5 directories up from your current position.</p>
-
-<figure class='code'><figcaption><span>u</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>u <span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>  <span class="nb">set</span> -A ud
-</span><span class='line'>  ud<span class="o">[</span>1+<span class="k">${</span><span class="nv">1</span><span class="p">-1</span><span class="k">}</span><span class="o">]=</span>
-</span><span class='line'>  <span class="nb">cd</span> <span class="k">${</span><span class="p">(j:../:)ud</span><span class="k">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This has been tested on zsh.</p>
+  <div class="entry-content"><p>Alright fellas, I have switched to Octopress being a ruby lover. I will be posting about code and code and more code in this blog. Mainly there will be lots of scripts that make my daily chores easier, some fixes from my experiences, some puzzle solving and liitle more code.</p>
 </div>
   
   
@@ -147,11 +119,9 @@
   
   <div class="pagination">
     
-      <a class="prev" href="7">&larr; Older</a>
-    
     <a href="/blog/archives">Blog Archives</a>
     
-    <a class="next" href="5">Newer &rarr;</a>
+    <a class="next" href="9">Newer &rarr;</a>
     
   </div>
 </div>

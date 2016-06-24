@@ -9,8 +9,7 @@
   <meta name="author" content="Prabhakar Kumar">
 
   
-  <meta name="description" content="Rails logging is straightforward and works out of the box. But, sometimes I feel it would
-be really awesome if the log lines would contain the line &hellip;">
+  <meta name="description" content="Unicorn is a cool application server for Rails. If you have a high traffic website, you would like to restart Unicorn without any downtime, upon a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -87,7 +86,7 @@ be really awesome if the log lines would contain the line &hellip;">
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2015/11/21/include-filename-and-line-number-in-rails-logger/">Include Filename and Line Number in Rails Logger</a></h1>
+      <h1 class="entry-title"><a href="/blog/2015/11/22/start-slash-restart-unicorn-safely-without-downtime/">Start/restart Unicorn Safely Without Downtime</a></h1>
     
     
       <p class="meta">
@@ -103,56 +102,18 @@ be really awesome if the log lines would contain the line &hellip;">
   
 
 
-<time datetime="2015-11-21T23:50:00-05:00" pubdate data-updated="true"></time>
+<time datetime="2015-11-22T00:42:00-05:00" pubdate data-updated="true"></time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>Rails logging is straightforward and works out of the box. But, sometimes I feel it would
-be really awesome if the log lines would contain the line number and file name which emit
-the log. If you have experience with log4j in Java, you should be able to recall that we
-initialize the logger and pass it a class instance. All our log lines are tagged with the
-classname. That&rsquo;s cool for debugging purposes.</p>
+  <div class="entry-content"><p><a href="http://unicorn.bogomips.org/">Unicorn</a> is a cool application server for Rails. If you have a high traffic website, you would like to restart Unicorn without any downtime, upon a new
+code deployment or a Gem update which updates unicorn. I wrote an script, exactly for this purpose after learning signal handling basics of Unicorn. Here&rsquo;s the script. The comments
+are self-explanatory and fairly give the idea of what is happening.</p>
 
-<p>How to get that behavior in Rails? There is
-one quick and dirty way. Just prepend to the log message <code>__LINE__</code> and <code>__FILE__</code> which
-contain the line the code is executing and the file it is in, respectively.</p>
-
-<figure class='code'><figcaption><span>Logger</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[</span><span class="si">#{</span><span class="bp">__FILE__</span><span class="si">}</span><span class="s2">:</span><span class="si">#{</span><span class="bp">__LINE__</span><span class="si">}</span><span class="s2">] The log message&quot;</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This just works. But shows the full file path which is kind of overkill because it produces very long log lines. The below one improves it to include just the filename.</p>
-
-<figure class='code'><figcaption><span>Logger</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[</span><span class="si">#{</span><span class="bp">__FILE__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">last</span><span class="si">}</span><span class="s2">:</span><span class="si">#{</span><span class="bp">__LINE__</span><span class="si">}</span><span class="s2">] The log message&quot;</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Ok, this gets the job done but makes our log statements ugly in the code. And it isn&rsquo;t DRY. If
-we try to make it DRY, we can&rsquo;t. Because we can&rsquo;t assign the stuff
-on the left that produces file and line number strings, into a variable, because they will refer to the line where variable is assigned, so the log statement will contain wrong value for
-line number.</p>
-
-<p>There is another way that involves ActiveSupport&rsquo;s TaggedLogging. If you use a Tagged logger,
-you can associate a tag with every log message. That&rsquo;s cool too, especially for searching
-through certain events in logs. TaggedLogging can be used to add file and line number, but
-the usage would be similar to the above example. How about doing something that works
-seamlessly behind the scenes and is DRY?</p>
-
-<p>After some research, I wrote a class (ok, I assembled it from here and there), whose instance
-can be assigned to Rails log formatter. Here it is. Just put this class in your main
-application module and assign it&rsquo;s instance to rails log formatter. Apart from filename
-and line number, I have also edited the log line to have some other stuff displayed in fancy
-colors. Also, I don&rsquo;t print filename and line if the filename is logger.rb or starts with
-log_. That&rsquo;s because it would create so much spam due to Rails internal log files or
-files from various gems.
-Use it and change it to your liking.</p>
-
-<figure class='code'><figcaption><span>application.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>start_uniorn</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -178,44 +139,40 @@ Use it and change it to your liking.</p>
 <span class='line-number'>24</span>
 <span class='line-number'>25</span>
 <span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">ApplicationName</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c">#!/bin/bash</span>
 </span><span class='line'>
-</span><span class='line'>  <span class="k">class</span> <span class="nc">QLogFormatter</span>
-</span><span class='line'>    <span class="no">HOSTNAME</span> <span class="o">=</span> <span class="no">Socket</span><span class="o">.</span><span class="n">gethostname</span>
-</span><span class='line'>    <span class="no">SEVERITY_TO_COLOR_MAP</span> <span class="o">=</span> <span class="p">{</span>
-</span><span class='line'>      <span class="s1">&#39;DEBUG&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;35&#39;</span><span class="p">,</span>
-</span><span class='line'>      <span class="s1">&#39;INFO&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;32&#39;</span><span class="p">,</span>
-</span><span class='line'>      <span class="s1">&#39;WARN&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;33&#39;</span><span class="p">,</span>
-</span><span class='line'>      <span class="s1">&#39;ERROR&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;31&#39;</span><span class="p">,</span>
-</span><span class='line'>      <span class="s1">&#39;FATAL&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;31&#39;</span><span class="p">,</span>
-</span><span class='line'>      <span class="s1">&#39;UNKNOWN&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;37&#39;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">severity</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">progname</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
-</span><span class='line'>      <span class="k">return</span> <span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">blank?</span> <span class="o">||</span> <span class="n">msg</span><span class="o">.</span><span class="n">strip</span><span class="o">.</span><span class="n">blank?</span><span class="p">)</span>
-</span><span class='line'>      <span class="n">formatted_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-%d %H:%M:%S.&quot;</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">time</span><span class="o">.</span><span class="n">usec</span><span class="o">.</span><span class="n">to_s</span><span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="mi">2</span><span class="o">]</span>
-</span><span class='line'>      <span class="n">color</span> <span class="o">=</span> <span class="no">SEVERITY_TO_COLOR_MAP</span><span class="o">[</span><span class="n">severity</span><span class="o">]</span>
-</span><span class='line'>      <span class="n">callee</span> <span class="o">=</span> <span class="nb">caller</span><span class="o">[</span><span class="mi">5</span><span class="o">].</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">last</span>
-</span><span class='line'>      <span class="n">callee</span> <span class="o">=</span> <span class="n">callee</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span><span class="o">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="o">].</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
-</span><span class='line'>      <span class="n">log_line</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[0;37m</span><span class="si">#{</span><span class="no">HOSTNAME</span><span class="si">}</span><span class="s2">@</span><span class="si">#{</span><span class="n">formatted_time</span><span class="si">}</span><span class="se">\033</span><span class="s2">[0m [</span><span class="se">\033</span><span class="s2">[01;</span><span class="si">#{</span><span class="n">color</span><span class="si">}</span><span class="s2">m</span><span class="si">#{</span><span class="n">severity</span><span class="si">}</span><span class="se">\033</span><span class="s2">[0m]&quot;</span>
-</span><span class='line'>      <span class="k">unless</span> <span class="p">(</span><span class="n">callee</span><span class="o">.</span><span class="n">start_with?</span><span class="p">(</span><span class="s1">&#39;logger&#39;</span><span class="p">)</span> <span class="o">||</span> <span class="n">callee</span><span class="o">.</span><span class="n">start_with?</span><span class="p">(</span><span class="s1">&#39;log_&#39;</span><span class="p">))</span>
-</span><span class='line'>        <span class="n">log_line</span> <span class="o">+=</span> <span class="s2">&quot;[</span><span class="se">\033</span><span class="s2">[01;36m</span><span class="si">#{</span><span class="n">callee</span><span class="si">}</span><span class="se">\033</span><span class="s2">[0m]&quot;</span>
-</span><span class='line'>      <span class="k">end</span>
-</span><span class='line'>      <span class="n">log_line</span> <span class="o">+=</span> <span class="s2">&quot; </span><span class="si">#{</span><span class="n">msg</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">class</span> <span class="nc">Application</span> <span class="o">&lt;</span> <span class="ss">Rails</span><span class="p">:</span><span class="ss">:Application</span>
-</span><span class='line'>    <span class="c1"># All your other configs</span>
-</span><span class='line'>    <span class="n">config</span><span class="o">.</span><span class="n">log_formatter</span> <span class="o">=</span> <span class="no">QLogFormatter</span><span class="o">.</span><span class="n">new</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
+</span><span class='line'><span class="c"># Check if unicorn is already running</span>
+</span><span class='line'><span class="nv">unicorn_pid</span><span class="o">=</span><span class="k">$(</span>ps -ef | grep <span class="s2">&quot;unicorn_rails master&quot;</span> | grep -v grep | awk <span class="s1">&#39;{print $2}&#39;</span><span class="k">)</span>
+</span><span class='line'><span class="k">if</span> <span class="o">[[</span> ! -z <span class="nv">$unicorn_pid</span> <span class="o">]]</span>; <span class="k">then</span>
+</span><span class='line'><span class="k">  </span><span class="nb">echo</span> <span class="s2">&quot;Unicorn is already running. Sending USR2 to it&quot;</span>
+</span><span class='line'>  <span class="nb">kill</span> -USR2 <span class="nv">$unicorn_pid</span>
+</span><span class='line'>  <span class="c"># Wait till new master comes up so two instances of workers are there</span>
+</span><span class='line'>  <span class="k">while</span> <span class="o">[[</span> <span class="k">$(</span>ps -ef | grep <span class="s1">&#39;unicorn_rails worker\[0\]&#39;</span> | grep -v grep | wc -l<span class="k">)</span> -ne 2 <span class="o">]]</span>; <span class="k">do</span>
+</span><span class='line'><span class="k">    </span><span class="nb">echo</span> <span class="s2">&quot;Waiting till new master comes up and spawns new workers&quot;</span>
+</span><span class='line'>    sleep 1
+</span><span class='line'>  <span class="k">done</span>
+</span><span class='line'>  <span class="c"># Send WINCH to old master</span>
+</span><span class='line'>  <span class="nb">echo</span> <span class="s2">&quot;Winching ID $unicorn_pid&quot;</span>
+</span><span class='line'>  <span class="nb">kill</span> -WINCH <span class="nv">$unicorn_pid</span>
+</span><span class='line'>  <span class="c"># Wait till old workers die</span>
+</span><span class='line'>  <span class="k">while</span> <span class="o">[[</span> <span class="k">$(</span>ps -ef | grep <span class="s1">&#39;unicorn_rails worker\[0\]&#39;</span> | grep -v grep | wc -l<span class="k">)</span> -ne 1 <span class="o">]]</span>; <span class="k">do</span>
+</span><span class='line'><span class="k">    </span><span class="nb">echo</span> <span class="s2">&quot;Waiting till old workers die&quot;</span>
+</span><span class='line'>    sleep 1
+</span><span class='line'>  <span class="k">done</span>
+</span><span class='line'><span class="k">  </span><span class="nb">echo</span> <span class="s2">&quot;Killing ID $unicorn_pid&quot;</span>
+</span><span class='line'>  <span class="nb">kill</span> -QUIT <span class="nv">$unicorn_pid</span>
+</span><span class='line'><span class="k">else</span>
+</span><span class='line'><span class="k">  </span><span class="nb">echo</span> <span class="s2">&quot;Start fresh copy of unicorn&quot;</span>
+</span><span class='line'>  unicorn_rails -c config/unicorn.rb -D
+</span><span class='line'><span class="k">fi</span>
 </span></code></pre></td></tr></table></div></figure>
 
+
+<p>Unicorn provides the facility to reload without losing connected clients. The process can be initiated by sending a <code>USR2</code> signal to the unicorn master process. Upon recieving this, unicorn will
+spawn a new master process and name the old process as <code>unicorn master (old)</code>. The new master process will also spawn it&rsquo;s own new workers. Once you are sure that the new workers have been
+spawned, you can send a <code>WINCH</code> signal to old unicorn master upon receipt of which, old unicorn will shutdown it&rsquo;s workers gracefully. Gracefully here means that the workers will die once
+they are done serving their connected clients. Once the old master has shut down all it&rsquo;s workers, we send a QUIT signal to the old master which then dies peacefully. And now we have the new
+unicorn loaded with new code and/or new binary. The explanation of signal behavior can be found <a href="http://unicorn.bogomips.org/SIGNALS.html">here</a>.</p>
 </div>
   
   
@@ -244,6 +201,10 @@ Use it and change it to your liking.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/06/23/starting-with-yesod-on-arch-linux/">Starting With Yesod on Arch Linux</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/05/13/getting-started-with-haskell/">Functional Programming Series - Part 1</a>
       </li>
     
@@ -257,10 +218,6 @@ Use it and change it to your liking.</p>
     
       <li class="post">
         <a href="/blog/2015/04/27/earthquake-alert-system-in-nodejs/">Earthquake Alert System in Nodejs</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/04/21/find-below/">Find Below</a>
       </li>
     
   </ul>
