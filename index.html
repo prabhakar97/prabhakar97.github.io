@@ -124,11 +124,12 @@ If you are coming from a ruby world, it is similar to rbenv.</li>
 <p><code>sudo pacman -S haskell-stack</code></p>
 
 <ul>
-<li>Checkout the <em>yesod-mongodb</em> template. This is going to create a <code>yesod</code> directory and checkout stuff from the <code>yesod-mongo</code> template.</li>
+<li>Checkout the <em>yesod-mongodb</em> template. This is going to create a <code>haskell-webapp</code> directory and checkout stuff from the <code>yesod-mongo</code> template.
+Make sure that you don&rsquo;t provide a directory name which is the name of a package, like yesod, ghci etc.</li>
 </ul>
 
 
-<p><code>stack new yesod yesod-mongo</code></p>
+<p><code>stack new haskell-webapp yesod-mongo</code></p>
 
 <ul>
 <li><p>Install <a href="https://aur.archlinux.org/packages/libtinfo/">libtinfo from AUR</a> because Arch screwed up (from stack perspective). There is
@@ -146,9 +147,6 @@ the next step doesn&rsquo;t work.</p></li>
 
 
 <p><code>stack build</code></p>
-
-<p>This step is currently failing due to an <a href="https://github.com/commercialhaskell/stack/issues/595">issue</a> in <code>stack</code>. I will update the blog
-post as soon as I realize it is fixed.</p>
 
 <ul>
 <li>Hello World!</li>
