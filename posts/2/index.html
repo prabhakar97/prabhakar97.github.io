@@ -9,7 +9,8 @@
   <meta name="author" content="Prabhakar Kumar">
 
   
-  <meta name="description" content="I have been intrigued by functional programming for past couple of years, but never quite prioritized it bigtime. Recently I came across this amazing &hellip;">
+  <meta name="description" content="As part of my eagerness to learn Haskell, I thought it might be a good idea to start building real world applications in Haskell. I chose
+Yesod to &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -86,7 +87,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2016/05/13/getting-started-with-haskell/">Functional Programming Series - Part 1</a></h1>
+      <h1 class="entry-title"><a href="/blog/2016/06/23/starting-with-yesod-on-arch-linux/">Starting With Yesod on Arch Linux</a></h1>
     
     
       <p class="meta">
@@ -102,106 +103,59 @@
   
 
 
-<time datetime="2016-05-13T20:02:00-04:00" pubdate data-updated="true"></time>
+<time datetime="2016-06-23T19:59:39-04:00" pubdate data-updated="true"></time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>I have been intrigued by functional programming for past couple of years, but never quite prioritized it bigtime. Recently I came across this amazing talk which inspired me
-to go all-in to learn FP.</p>
+  <div class="entry-content"><p>As part of my eagerness to learn Haskell, I thought it might be a good idea to start building real world applications in Haskell. I chose
+<a href="http://www.yesodweb.com/">Yesod</a> to start building a dynamic web application backed by as database. However, the getting started page on
+Yesod website didn&rsquo;t exactly work as advertised, probably because the <a href="http://docs.haskellstack.org/en/stable/README/">Haskell Stack</a>
+had some API change. These steps worked for me.</p>
 
-<div class="embed-video-container"><iframe src="//www.youtube.com/embed/E8I19uA-wGY" allowfullscreen></iframe></div>
-
-
-<p>I chose Haskell as my preferred language and started with the book <a href="http://www.amazon.com/dp/0954300696">The Haskell Road to Logic, Maths and Programming</a>. I found the first
-chapter really interesting.</p>
-
-<p>I started solving exercises from the book. This post and a few subsequent ones will document my solutions to some of the exercise problems. These solutions may not be most concise
-or efficient because I am just beginning to learn Haskell.</p>
-
-<blockquote><p>Define a method removeFst which removes the first instance of an element from a list</p></blockquote>
-
-<figure class='code'><figcaption><span>removeFst.hs</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='hs'><span class='line'><span class="nf">removeFst</span> <span class="ow">::</span> <span class="p">(</span><span class="kt">Eq</span> <span class="n">a</span><span class="p">)</span> <span class="ow">=&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span>
-</span><span class='line'><span class="nf">removeFst</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="n">y</span> <span class="ow">=</span> <span class="kr">if</span> <span class="n">x</span> <span class="o">==</span> <span class="n">y</span>
-</span><span class='line'>                      <span class="kr">then</span> <span class="n">xs</span>
-</span><span class='line'>                        <span class="kr">else</span> <span class="n">x</span> <span class="kt">:</span> <span class="n">removeFst</span> <span class="n">xs</span> <span class="n">y</span>
-</span></code></pre></td></tr></table></div></figure>
+<ul>
+<li>Install haskell-stack. It lets you develop, build and test Haskell apps without creating dependency version issues across projects.
+If you are coming from a ruby world, it is similar to rbenv.</li>
+</ul>
 
 
-<blockquote><p>Define a function which counts number of instances of an element in a list</p></blockquote>
+<p><code>sudo pacman -S haskell-stack</code></p>
 
-<figure class='code'><figcaption><span>countChars.hs</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='hs'><span class='line'><span class="nf">countChars</span> <span class="ow">::</span> <span class="kt">Char</span> <span class="ow">-&gt;</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">Int</span>
-</span><span class='line'><span class="nf">countChars</span> <span class="n">y</span> <span class="kt">[]</span> <span class="ow">=</span> <span class="mi">0</span>
-</span><span class='line'><span class="nf">countChars</span> <span class="n">y</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="o">|</span> <span class="n">y</span> <span class="o">==</span> <span class="n">x</span> <span class="ow">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">countChars</span> <span class="n">y</span> <span class="n">xs</span>
-</span><span class='line'>                    <span class="o">|</span> <span class="n">otherwise</span> <span class="ow">=</span> <span class="n">countChars</span> <span class="n">y</span> <span class="n">xs</span>
-</span></code></pre></td></tr></table></div></figure>
+<ul>
+<li>Checkout the <em>yesod-mongodb</em> template. This is going to create a <code>haskell-webapp</code> directory and checkout stuff from the <code>yesod-mongo</code> template.
+Make sure that you don&rsquo;t provide a directory name which is the name of a package, like yesod, ghci etc.</li>
+</ul>
 
 
-<blockquote><p>Define a function named blowUp that takes an string and creates a new string from it by repeating ith character in i times. For example: abcdef should return abbcccddddeeeeeffffff</p></blockquote>
+<p><code>stack new haskell-webapp yesod-mongo</code></p>
 
-<figure class='code'><figcaption><span>blowUp.hs</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='hs'><span class='line'><span class="nf">blowUp</span> <span class="ow">::</span> <span class="kt">Int</span> <span class="ow">-&gt;</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">String</span>
-</span><span class='line'><span class="nf">blowUp</span> <span class="n">n</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="ow">=</span> <span class="n">take</span> <span class="n">n</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">x</span><span class="o">..</span><span class="p">]</span>
-</span><span class='line'><span class="nf">blowUp</span> <span class="n">n</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="ow">=</span> <span class="p">(</span><span class="n">blowUp</span> <span class="n">n</span> <span class="p">[</span><span class="n">x</span><span class="p">])</span> <span class="o">++</span> <span class="p">(</span><span class="n">blowUp</span> <span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="n">xs</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<blockquote><p>Write a function to sort a list of orderable elements</p></blockquote>
-
-<p>This is a translation of the famous quick sort algorithm to Haskell.</p>
-
-<figure class='code'><figcaption><span>sort.hs</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='hs'><span class='line'><span class="nf">sort</span> <span class="ow">::</span> <span class="p">(</span><span class="kt">Ord</span> <span class="n">a</span><span class="p">)</span> <span class="ow">=&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span>
-</span><span class='line'><span class="nf">sort</span> <span class="kt">[]</span> <span class="ow">=</span> <span class="kt">[]</span>
-</span><span class='line'><span class="nf">sort</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="ow">=</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span>
-</span><span class='line'><span class="nf">sort</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="ow">=</span> <span class="n">sort</span> <span class="n">greater</span> <span class="o">++</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">++</span> <span class="n">sort</span> <span class="n">lesser</span>
-</span><span class='line'>                <span class="kr">where</span> <span class="n">greater</span> <span class="ow">=</span> <span class="p">[</span><span class="n">y</span> <span class="o">|</span> <span class="n">y</span> <span class="ow">&lt;-</span> <span class="n">xs</span><span class="p">,</span> <span class="n">y</span> <span class="o">&gt;</span> <span class="n">x</span><span class="p">]</span>
-</span><span class='line'>                      <span class="n">lesser</span> <span class="ow">=</span> <span class="p">[</span><span class="n">y</span> <span class="o">|</span> <span class="n">y</span> <span class="ow">&lt;-</span> <span class="n">xs</span><span class="p">,</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">x</span> <span class="p">]</span>
-</span></code></pre></td></tr></table></div></figure>
+<ul>
+<li><p>Install <a href="https://aur.archlinux.org/packages/libtinfo/">libtinfo from AUR</a> because Arch screwed up (from stack perspective). There is
+another nuance to take care of. Edit the <em>PKGBUILD</em> and ensure that the line that simlinks <code>/usr/lib/libtinfo.so.5</code> is uncommented. Otherwise
+the next step doesn&rsquo;t work.</p></li>
+<li><p>Setup GHCi and friends.</p></li>
+</ul>
 
 
-<blockquote><p>Write a function that takes a big string and a small string and tells whether the big string starts with the small string</p></blockquote>
+<p><code>stack build yesod-bin cabal-install --install-ghc</code></p>
 
-<figure class='code'><figcaption><span>startWith.hs</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='hs'><span class='line'><span class="nf">startWith</span> <span class="ow">::</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">Bool</span>
-</span><span class='line'><span class="nf">startWith</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="p">[</span><span class="n">y</span><span class="p">]</span> <span class="ow">=</span> <span class="n">y</span> <span class="o">==</span> <span class="n">x</span>
-</span><span class='line'><span class="nf">startWith</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="p">(</span><span class="n">y</span><span class="kt">:</span><span class="n">ys</span><span class="p">)</span> <span class="ow">=</span> <span class="n">y</span> <span class="o">==</span> <span class="n">x</span> <span class="o">&amp;&amp;</span> <span class="n">startWith</span> <span class="n">xs</span> <span class="n">ys</span>
-</span></code></pre></td></tr></table></div></figure>
+<ul>
+<li>Build the libs.</li>
+</ul>
 
 
-<blockquote><p>Write a function that takes a big string and a small string and tells whether the big string contains the small string as a substring</p></blockquote>
+<p><code>stack build</code></p>
 
-<p>I use the previously defined startWith function to solve this.</p>
-
-<figure class='code'><figcaption><span>substring.hs</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='hs'><span class='line'><span class="nf">contains</span> <span class="ow">::</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">Bool</span>
-</span><span class='line'><span class="nf">contains</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="kt">[]</span> <span class="ow">=</span> <span class="kt">True</span>
-</span><span class='line'><span class="nf">contains</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="n">y</span> <span class="ow">=</span> <span class="n">startWith</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="n">y</span> <span class="o">||</span> <span class="n">startWith</span> <span class="n">xs</span> <span class="n">y</span>
-</span></code></pre></td></tr></table></div></figure>
+<ul>
+<li>Hello World!</li>
+</ul>
 
 
+<p><code>stack exec -- yesod devel</code></p>
 
+<p>To access your server visit <a href="http://localhost:3000">http://localhost:3000</a></p>
 </div>
   
   
@@ -223,11 +177,15 @@ or efficient because I am just beginning to learn Haskell.</p>
   
     <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/arch-linux'>arch linux (1)</a></li><li><a href='/blog/categories/blabber'>blabber (1)</a></li><li><a href='/blog/categories/functional-programming'>functional programming (1)</a></li><li><a href='/blog/categories/haskell'>haskell (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/nodejs'>nodejs (1)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/rails'>rails (2)</a></li><li><a href='/blog/categories/recursion'>recursion (1)</a></li><li><a href='/blog/categories/ruby'>ruby (4)</a></li><li><a href='/blog/categories/shell'>shell (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/arch-linux'>arch linux (1)</a></li><li><a href='/blog/categories/blabber'>blabber (1)</a></li><li><a href='/blog/categories/functional-programming'>functional programming (1)</a></li><li><a href='/blog/categories/haskell'>haskell (2)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/mongodb'>mongodb (1)</a></li><li><a href='/blog/categories/nodejs'>nodejs (1)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/rails'>rails (3)</a></li><li><a href='/blog/categories/recursion'>recursion (1)</a></li><li><a href='/blog/categories/ruby'>ruby (5)</a></li><li><a href='/blog/categories/shell'>shell (1)</a></li><li><a href='/blog/categories/web-apps'>web apps (1)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/06/26/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond/">Configure DatabaseCleaner With Rspec for Mongoid 5 and Beyond</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2016/06/23/starting-with-yesod-on-arch-linux/">Starting With Yesod on Arch Linux</a>
@@ -243,10 +201,6 @@ or efficient because I am just beginning to learn Haskell.</p>
     
       <li class="post">
         <a href="/blog/2015/11/21/include-filename-and-line-number-in-rails-logger/">Include Filename and Line Number in Rails Logger</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/04/27/earthquake-alert-system-in-nodejs/">Earthquake Alert System in Nodejs</a>
       </li>
     
   </ul>

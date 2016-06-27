@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://prabhakar97.github.io/blog/2016/06/26/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond/</loc>
+<lastmod>2016-06-26T21:05:22-04:00</lastmod>
+</url>
+<url>
 <loc>http://prabhakar97.github.io/blog/2016/06/23/starting-with-yesod-on-arch-linux/</loc>
 <lastmod>2016-06-23T19:59:39-04:00</lastmod>
 </url>
@@ -81,5 +85,11 @@
 </url>
 <url>
 <loc>http://prabhakar97.github.io/blog/categories/recursion/</loc>
+</url>
+<url>
+<loc>http://prabhakar97.github.io/blog/categories/web-apps/</loc>
+</url>
+<url>
+<loc>http://prabhakar97.github.io/blog/categories/mongodb/</loc>
 </url>
 </urlset>

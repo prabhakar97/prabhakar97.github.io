@@ -9,7 +9,7 @@
   <meta name="author" content="Prabhakar Kumar">
 
   
-  <meta name="description" content="Alright fellas, I have switched to Octopress being a ruby lover. I will be posting about code and code and more code in this blog. Mainly there will &hellip;">
+  <meta name="description" content="So, you&rsquo;ve got a bunch of 3D movies with SRT subtitles which your 3D TV can play from a USB storage and show the subtitles correctly but can &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -86,7 +86,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2013/07/28/hello-world/">Hello World</a></h1>
+      <h1 class="entry-title"><a href="/blog/2014/01/27/script-to-generate-3d-subtitles-from-srt-files/">Ruby Script to Generate 3D Subtitles From Srt Files</a></h1>
     
     
       <p class="meta">
@@ -102,14 +102,48 @@
   
 
 
-<time datetime="2013-07-28T01:11:00-04:00" pubdate data-updated="true"></time>
+<time datetime="2014-01-27T00:09:00-05:00" pubdate data-updated="true"></time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>Alright fellas, I have switched to Octopress being a ruby lover. I will be posting about code and code and more code in this blog. Mainly there will be lots of scripts that make my daily chores easier, some fixes from my experiences, some puzzle solving and liitle more code.</p>
+  <div class="entry-content"><p>So, you&rsquo;ve got a bunch of 3D movies with SRT subtitles which your 3D TV can play from a USB storage and show the subtitles correctly but can not if you are running the movie on your laptop and sending the display to TV over HDMI; for obvious reasons.
+The solution is to use <em>.ass</em> format subtitles with your media player(I recommed mplayer/smplayer). Just run this script from a directory that contains all your movies in separate directories under that directory. Make sure, <code>srt</code> file is present in each 3D movie directory and has the same name as the movie file. Also make sure, the directories for 3D movies have 3D in their names somewhere. Moreover, you must have the program <code>sub3dtool</code> installed. Get it from <a href="https://code.google.com/p/sub3dtool/">here</a>. After you run the script, all your 3D movie directories will be populated with .ass files automatically. Remember, VLC media player does not play well with <code>.ass</code> subtitles. It skips many dialogues.</p>
+
+<figure class='code'><figcaption><span>Convert SRT subtitles into ASS</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Dir</span><span class="o">.</span><span class="n">entries</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">file</span><span class="o">|</span>
+</span><span class='line'>  <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">include?</span> <span class="s2">&quot;3D&quot;</span>
+</span><span class='line'>    <span class="nb">puts</span> <span class="s2">&quot;3D movie found - </span><span class="si">#{</span><span class="n">file</span><span class="si">}</span><span class="s2">. Going ahead to generate .ass subtitle for it&quot;</span>
+</span><span class='line'>    <span class="no">Dir</span><span class="o">.</span><span class="n">entries</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">file1</span><span class="o">|</span>
+</span><span class='line'>      <span class="k">if</span> <span class="n">file1</span><span class="o">.</span><span class="n">include?</span> <span class="s2">&quot;.srt&quot;</span>
+</span><span class='line'>        <span class="nb">puts</span> <span class="s2">&quot;Found srt file: </span><span class="si">#{</span><span class="n">file1</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>        <span class="n">outfile_name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">file1</span><span class="o">[</span><span class="mi">0</span><span class="p">,</span><span class="n">file1</span><span class="o">.</span><span class="n">length</span><span class="o">-</span><span class="mi">3</span><span class="o">]</span><span class="si">}</span><span class="s2">ass&quot;</span>
+</span><span class='line'>        <span class="nb">puts</span> <span class="s2">&quot;Out file name : </span><span class="si">#{</span><span class="n">outfile_name</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>        <span class="sb">`sub3dtool &quot;</span><span class="si">#{</span><span class="n">file</span><span class="si">}</span><span class="sb">/</span><span class="si">#{</span><span class="n">file1</span><span class="si">}</span><span class="sb">&quot; --3dsbs -o &quot;</span><span class="si">#{</span><span class="n">file</span><span class="si">}</span><span class="sb">/</span><span class="si">#{</span><span class="n">outfile_name</span><span class="si">}</span><span class="sb">&quot;`</span>
+</span><span class='line'>        <span class="nb">puts</span> <span class="s2">&quot;Generated successfully&quot;</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>All the movie directories will be populated with corresponding <em>.ass</em> files. Now just run it by <code>mplayer -ass movie_file_name</code>. Use <code>j</code> to cycle through subtitles, <code>f</code> for fullscreen, <code>q</code> to quit mplayer.</p>
 </div>
   
   
@@ -118,6 +152,8 @@
     </article>
   
   <div class="pagination">
+    
+      <a class="prev" href="11">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -129,11 +165,15 @@
   
     <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/arch-linux'>arch linux (1)</a></li><li><a href='/blog/categories/blabber'>blabber (1)</a></li><li><a href='/blog/categories/functional-programming'>functional programming (1)</a></li><li><a href='/blog/categories/haskell'>haskell (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/nodejs'>nodejs (1)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/rails'>rails (2)</a></li><li><a href='/blog/categories/recursion'>recursion (1)</a></li><li><a href='/blog/categories/ruby'>ruby (4)</a></li><li><a href='/blog/categories/shell'>shell (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/arch-linux'>arch linux (1)</a></li><li><a href='/blog/categories/blabber'>blabber (1)</a></li><li><a href='/blog/categories/functional-programming'>functional programming (1)</a></li><li><a href='/blog/categories/haskell'>haskell (2)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/mongodb'>mongodb (1)</a></li><li><a href='/blog/categories/nodejs'>nodejs (1)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/rails'>rails (3)</a></li><li><a href='/blog/categories/recursion'>recursion (1)</a></li><li><a href='/blog/categories/ruby'>ruby (5)</a></li><li><a href='/blog/categories/shell'>shell (1)</a></li><li><a href='/blog/categories/web-apps'>web apps (1)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/06/26/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond/">Configure DatabaseCleaner With Rspec for Mongoid 5 and Beyond</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2016/06/23/starting-with-yesod-on-arch-linux/">Starting With Yesod on Arch Linux</a>
@@ -149,10 +189,6 @@
     
       <li class="post">
         <a href="/blog/2015/11/21/include-filename-and-line-number-in-rails-logger/">Include Filename and Line Number in Rails Logger</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/04/27/earthquake-alert-system-in-nodejs/">Earthquake Alert System in Nodejs</a>
       </li>
     
   </ul>

@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Prab's Code Blog</title>
+  <title>Configure DatabaseCleaner with Rspec for Mongoid 5 and beyond - Prab's Code Blog</title>
   <meta name="author" content="Prabhakar Kumar">
 
   
@@ -19,7 +19,7 @@ but it didn&rsquo;t work for me out of the box for Mongoid &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://prabhakar97.github.io">
+  <link rel="canonical" href="http://prabhakar97.github.io/blog/2016/06/26/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Prab's Code Blog" type="application/atom+xml">
@@ -79,15 +79,12 @@ but it didn&rsquo;t work for me out of the box for Mongoid &hellip;">
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2016/06/26/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond/">Configure DatabaseCleaner With Rspec for Mongoid 5 and Beyond</a></h1>
+      <h1 class="entry-title">Configure DatabaseCleaner With Rspec for Mongoid 5 and Beyond</h1>
     
     
       <p class="meta">
@@ -110,7 +107,7 @@ but it didn&rsquo;t work for me out of the box for Mongoid &hellip;">
   </header>
 
 
-  <div class="entry-content"><p><a href="https://github.com/DatabaseCleaner/database_cleaner">Database Cleaner</a> is a nifty gem for streamlining tests. Configuring it is straightforward
+<div class="entry-content"><p><a href="https://github.com/DatabaseCleaner/database_cleaner">Database Cleaner</a> is a nifty gem for streamlining tests. Configuring it is straightforward
 but it didn&rsquo;t work for me out of the box for Mongoid 5.</p>
 
 <p>Here&rsquo;s my Gemfile segment for testing.</p>
@@ -196,20 +193,69 @@ to have:</p>
 </span></code></pre></td></tr></table></div></figure>
 
 </div>
+
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">Prabhakar Kumar</span></span>
+
+      
+
+
+
+
+
+
+
+
   
 
 
-    </article>
+<time datetime="2016-06-26T21:05:22-04:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
   
-  <div class="pagination">
+    <a class='category' href='/blog/categories/mongodb/'>mongodb</a>, <a class='category' href='/blog/categories/rails/'>rails</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>
+  
+</span>
+
+
+    </p>
     
-      <a class="prev" href="2">&larr; Older</a>
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://prabhakar97.github.io/blog/2016/06/26/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond/" data-via="prab97" data-counturl="http://prabhakar97.github.io/blog/2016/06/26/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
 </div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2016/06/23/starting-with-yesod-on-arch-linux/" title="Previous Post: Starting with Yesod on Arch Linux">&laquo; Starting with Yesod on Arch Linux</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
 <aside class="sidebar">
   
     <section>
@@ -251,6 +297,7 @@ to have:</p>
   
 </aside>
 
+
     </div>
   </div>
   <footer role="contentinfo"><p>
@@ -265,7 +312,10 @@ to have:</p>
       var disqus_shortname = 'techbite';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://prabhakar97.github.io/blog/2016/06/26/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond/';
+        var disqus_url = 'http://prabhakar97.github.io/blog/2016/06/26/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

@@ -9,7 +9,7 @@
   <meta name="author" content="Prabhakar Kumar">
 
   
-  <meta name="description" content="This is a small piece of snippet that can go into your .zshrc and make your life easier sometimes. This whips up a new command named findbelow for &hellip;">
+  <meta name="description" content="Afflicted by the recent earthquake in Nepal which took so many lives in India as well, my mind under the shower spawned up an idea of an earthquake &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -86,7 +86,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2015/04/21/find-below/">Find Below</a></h1>
+      <h1 class="entry-title"><a href="/blog/2015/04/27/earthquake-alert-system-in-nodejs/">Earthquake Alert System in Nodejs</a></h1>
     
     
       <p class="meta">
@@ -102,42 +102,151 @@
   
 
 
-<time datetime="2015-04-21T03:22:00-04:00" pubdate data-updated="true"></time>
+<time datetime="2015-04-27T01:01:00-04:00" pubdate data-updated="true"></time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>This is a small piece of snippet that can go into your <code>.zshrc</code> and make your life easier sometimes. This whips up a new command named <code>findbelow</code> for you. This command takes as argument, a string and returns all the files below your current directory whose names contain the entered string as a substring.</p>
+  <div class="entry-content"><p>Afflicted by the recent earthquake in Nepal which took so many lives in India as well, my mind under the shower spawned up an idea of an earthquake alert system that attempts to notify people a few tens of seconds before the quake strikes.
+The premise of the idea is that <em>Electromagnetic waves travel way faster than seismic waves. 300,000 KM/s vs 10 KM/s</em>. Our communication systems (internet, sms) transmit on electronic waves and even after considering some added overhead (like buffers, processing etc) they can win the race with seismic waves easily. For instance, Kathmandu to New Delhi is around 800 kilometers. A quake epicentred in Kathmandu would be felt in Delhi after around 80 seconds. If we find some way to detect the quake in Kathmandu immediately after it strikes and transmit this information over the public communication infrastructure (web, SMS etc.), we could give the people more than a minute to move to safety. I made following assumptions:</p>
 
-<figure class='code'><figcaption><span>findbelow</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>findbelow <span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>  find ./ -regex <span class="s2">&quot;.*/$1.*&quot;</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
+<ul>
+<li>There must be some research organisations which place earthquake sensors all over the world</li>
+<li>At least one of those organisations, publishes such a feed in real-time</li>
+<li>I could hook into that feed and as soon as some quake gets triggered, I notify the registered people via SMS/Email/Push notifications etc.</li>
+</ul>
 
 
-<h3>Bonus</h3>
+<p>Upon some quick googling, I found two such services. First was US Geological Survey.
+Their <a href="http://earthquake.usgs.gov/fdsnws/event/1/">API page</a> says that they make the feed available in various formats, but the feeds are refreshed every 5 minutes.
+5 minutes is too long!
+Next I found something from EU. <a href="http://www.seismicportal.eu/realtime.html">Seismic Portal</a> broadcasts the feed on a web socket. Sweet! If I tap onto that feed, I would get near real time notifications.
+I can connect this to some SMS gateway and I would be done. After some googling, I found out that buying a plan from SMS gateway providers have become tougher than simply clicking buy now and paying through a credit card.
+This was done because of TRAI&rsquo;s strict regulations on bulk SMSes to be sent to Indian mobile numbers, to deter spammers.
+I recalled reading about an app called Instapush which provides a REST API to send instant notifications to Android and iOS devices. I went through their documentation and found that wiring them was pretty easy. But I could just get notifications on my phone, not on everyone&rsquo;s. That is doable by writing an Android app which can get notified through <a href="https://developer.android.com/google/gcm/index.html">Google Cloud Messaging</a>. This one later, for now let&rsquo;s go with Instapush.</p>
 
-<p>The below piece of snippet enables you to jump n directories upwards from your current <code>pwd</code> by typing <code>u n</code>. For example: <code>u 5</code> will take you 5 directories up from your current position.</p>
+<p>I created a <a href="https://developers.openshift.com/en/node-js-getting-started.html">NodeJS</a> application on Openshift. The app opens a websocket, listens to the earthquake feed, processes it, makes an API call to instapush which instantly delivers the notification on my phone. There are just two files in the codebase.</p>
 
-<figure class='code'><figcaption><span>u</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<h4>Configuring instapush</h4>
+
+<p>Instapush needs you to define two things. An event, and trackers for the event. An event is simply an event name. For example: earthquake. Trackers are placeholders in the notification message, which are populated with the values that you pass for them in the REST call to instapush. Here is my configuration for event and trackers.</p>
+
+<p><img src="/images/quakeinstapush.png"></p>
+
+<h4>Code</h4>
+
+<figure class='code'><figcaption><span>client.js</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>u <span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>  <span class="nb">set</span> -A ud
-</span><span class='line'>  ud<span class="o">[</span>1+<span class="k">${</span><span class="nv">1</span><span class="p">-1</span><span class="k">}</span><span class="o">]=</span>
-</span><span class='line'>  <span class="nb">cd</span> <span class="k">${</span><span class="p">(j:../:)ud</span><span class="k">}</span>
-</span><span class='line'><span class="o">}</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">sjsc</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;sockjs-client-ws&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">request</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;request&#39;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">var</span> <span class="nx">client</span> <span class="o">=</span> <span class="nx">sjsc</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="s2">&quot;http://www.seismicportal.eu/standing_order&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="nx">client</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;connection&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Connected&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">client</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">msg</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">message</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">msg</span><span class="p">);</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">magnitude</span> <span class="o">=</span> <span class="nx">message</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">properties</span><span class="p">.</span><span class="nx">mag</span><span class="p">;</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">place</span> <span class="o">=</span> <span class="nx">message</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">properties</span><span class="p">.</span><span class="nx">flynn_region</span><span class="p">;</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">time</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="nb">Date</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">properties</span><span class="p">.</span><span class="nx">time</span><span class="p">));</span>
+</span><span class='line'>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Earthquake of magintude &#39;</span> <span class="o">+</span> <span class="nx">magnitude</span> <span class="o">+</span> <span class="s2">&quot; in &quot;</span> <span class="o">+</span> <span class="nx">place</span> <span class="o">+</span> <span class="s2">&quot; at &quot;</span> <span class="o">+</span> <span class="nx">time</span><span class="p">);</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;POST&#39;</span><span class="p">,</span>
+</span><span class='line'>        <span class="nx">url</span><span class="o">:</span> <span class="s1">&#39;https://api.instapush.im/v1/post&#39;</span><span class="p">,</span>
+</span><span class='line'>        <span class="nx">headers</span><span class="o">:</span> <span class="p">{</span>
+</span><span class='line'>            <span class="s1">&#39;x-instapush-appid&#39;</span><span class="o">:</span> <span class="s2">&quot;MY_APP_ID&quot;</span><span class="p">,</span>
+</span><span class='line'>            <span class="s1">&#39;x-instapush-appsecret&#39;</span><span class="o">:</span> <span class="s2">&quot;MY_APP_SECRET&quot;</span><span class="p">,</span>
+</span><span class='line'>            <span class="s1">&#39;Content-Type&#39;</span><span class="o">:</span> <span class="s2">&quot;application/json&quot;</span>
+</span><span class='line'>        <span class="p">},</span>
+</span><span class='line'>        <span class="nx">json</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+</span><span class='line'>        <span class="nx">body</span><span class="o">:</span> <span class="p">{</span> <span class="s1">&#39;event&#39;</span><span class="o">:</span> <span class="s1">&#39;Earthquake&#39;</span><span class="p">,</span> <span class="s1">&#39;trackers&#39;</span><span class="o">:</span> <span class="p">{</span> <span class="s1">&#39;magnitude&#39;</span><span class="o">:</span> <span class="nx">magnitude</span><span class="p">,</span> <span class="s1">&#39;location&#39;</span><span class="o">:</span> <span class="nx">place</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="o">:</span> <span class="nx">time</span><span class="p">.</span><span class="nx">toLocaleTimeString</span><span class="p">()</span> <span class="p">}</span> <span class="p">}</span>
+</span><span class='line'>    <span class="p">};</span>
+</span><span class='line'>    <span class="nx">request</span><span class="p">(</span><span class="nx">options</span><span class="p">);</span>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'><span class="nx">client</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Some error occured&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="p">});</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>This has been tested on zsh.</p>
+<p>The package.json declares the dependency on <code>sockjs</code> and <code>request</code>.</p>
+
+<figure class='code'><figcaption><span>package.json</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;quake-prab&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&quot;engines&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nt">&quot;node&quot;</span><span class="p">:</span> <span class="s2">&quot;&gt;= 0.6.0&quot;</span><span class="p">,</span>
+</span><span class='line'>        <span class="nt">&quot;npm&quot;</span><span class="p">:</span> <span class="s2">&quot;&gt;= 1.0.0&quot;</span>
+</span><span class='line'>    <span class="p">},</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&quot;dependencies&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nt">&quot;request&quot;</span><span class="p">:</span> <span class="s2">&quot;*&quot;</span><span class="p">,</span>
+</span><span class='line'>        <span class="nt">&quot;sockjs-client-ws&quot;</span><span class="p">:</span> <span class="s2">&quot;*&quot;</span>
+</span><span class='line'>    <span class="p">},</span>
+</span><span class='line'>    <span class="nt">&quot;private&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+</span><span class='line'>    <span class="nt">&quot;main&quot;</span><span class="p">:</span> <span class="s2">&quot;client.js&quot;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Possible improvements</h4>
+
+<p>This project is quick and dirty. It is just re-wiring of stuff lying on the web. There are bunch of possible improvements here. Some of them are:</p>
+
+<ul>
+<li>Only notify if the quake has intensity greater than 4.5</li>
+<li>Only notify if the quake has struck in neighbouring countries like Nepal, Bhutan, Pakistan, India</li>
+<li>Provide an endpoint to let user register his/her mobile number on which SMSes can be sent.</li>
+</ul>
+
 </div>
   
   
@@ -159,11 +268,15 @@
   
     <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/arch-linux'>arch linux (1)</a></li><li><a href='/blog/categories/blabber'>blabber (1)</a></li><li><a href='/blog/categories/functional-programming'>functional programming (1)</a></li><li><a href='/blog/categories/haskell'>haskell (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/nodejs'>nodejs (1)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/rails'>rails (2)</a></li><li><a href='/blog/categories/recursion'>recursion (1)</a></li><li><a href='/blog/categories/ruby'>ruby (4)</a></li><li><a href='/blog/categories/shell'>shell (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/arch-linux'>arch linux (1)</a></li><li><a href='/blog/categories/blabber'>blabber (1)</a></li><li><a href='/blog/categories/functional-programming'>functional programming (1)</a></li><li><a href='/blog/categories/haskell'>haskell (2)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/mongodb'>mongodb (1)</a></li><li><a href='/blog/categories/nodejs'>nodejs (1)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/rails'>rails (3)</a></li><li><a href='/blog/categories/recursion'>recursion (1)</a></li><li><a href='/blog/categories/ruby'>ruby (5)</a></li><li><a href='/blog/categories/shell'>shell (1)</a></li><li><a href='/blog/categories/web-apps'>web apps (1)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/06/26/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond/">Configure DatabaseCleaner With Rspec for Mongoid 5 and Beyond</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2016/06/23/starting-with-yesod-on-arch-linux/">Starting With Yesod on Arch Linux</a>
@@ -179,10 +292,6 @@
     
       <li class="post">
         <a href="/blog/2015/11/21/include-filename-and-line-number-in-rails-logger/">Include Filename and Line Number in Rails Logger</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/04/27/earthquake-alert-system-in-nodejs/">Earthquake Alert System in Nodejs</a>
       </li>
     
   </ul>

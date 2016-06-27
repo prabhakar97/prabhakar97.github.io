@@ -9,7 +9,7 @@
   <meta name="author" content="Prabhakar Kumar">
 
   
-  <meta name="description" content="Metaprogramming is fun! Dynamically modifying a program garners a lot of power to the programmer. In this post I show an example situation which is &hellip;">
+  <meta name="description" content="This is a small piece of snippet that can go into your .zshrc and make your life easier sometimes. This whips up a new command named findbelow for &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -86,7 +86,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2014/03/01/metaprogramming-101-in-ruby/">Metaprogramming 101 in Ruby</a></h1>
+      <h1 class="entry-title"><a href="/blog/2015/04/21/find-below/">Find Below</a></h1>
     
     
       <p class="meta">
@@ -102,62 +102,42 @@
   
 
 
-<time datetime="2014-03-01T23:36:00-05:00" pubdate data-updated="true"></time>
+<time datetime="2015-04-21T03:22:00-04:00" pubdate data-updated="true"></time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>Metaprogramming is fun! Dynamically modifying a program garners a lot of power to the programmer. In this post I show an example situation which is beautifully solved by metaprogramming.
-I am a Ruby dilettante.</p>
+  <div class="entry-content"><p>This is a small piece of snippet that can go into your <code>.zshrc</code> and make your life easier sometimes. This whips up a new command named <code>findbelow</code> for you. This command takes as argument, a string and returns all the files below your current directory whose names contain the entered string as a substring.</p>
 
-<h4>The situation</h4>
+<figure class='code'><figcaption><span>findbelow</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>findbelow <span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>  find ./ -regex <span class="s2">&quot;.*/$1.*&quot;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
-<p>I wanted to develop a plugin framework for a side project of mine. There is a higher level class, which should delegate methods calls on itself to the plugin implementer class.
-Although, OOPS has a standard solution for this situation using interfaces but here is the beauty and elegance of metaprogramming in ruby.
-The code below is the constructor of the higher level class which checks the passed plugin object for interface&rsquo;s implementation and then defines those methods in itself delegating the actual calls to the passed plugin object.</p>
 
-<h4>The solution</h4>
+<h3>Bonus</h3>
 
-<figure class='code'><figcaption><span>Dynamically defining methods</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p>The below piece of snippet enables you to jump n directories upwards from your current <code>pwd</code> by typing <code>u n</code>. For example: <code>u 5</code> will take you 5 directories up from your current position.</p>
+
+<figure class='code'><figcaption><span>u</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">provider</span><span class="p">)</span>
-</span><span class='line'>  <span class="c1"># Check whether the interface is implemented or not</span>
-</span><span class='line'>  <span class="n">interface</span> <span class="o">=</span> <span class="o">[</span>
-</span><span class='line'>    <span class="ss">:get</span><span class="p">,</span> <span class="ss">:put</span><span class="p">,</span> <span class="ss">:entries</span><span class="p">,</span> <span class="ss">:move</span><span class="p">,</span> <span class="ss">:rm!</span><span class="p">,</span> <span class="ss">:mkdir</span><span class="p">,</span> <span class="ss">:file?</span><span class="p">,</span> <span class="ss">:directory?</span><span class="p">,</span> <span class="ss">:exists?</span><span class="p">,</span> <span class="ss">:makedirs</span>
-</span><span class='line'>  <span class="o">]</span>
-</span><span class='line'>  <span class="n">interface</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">method</span><span class="o">|</span>
-</span><span class='line'>    <span class="k">raise</span> <span class="s2">&quot;Plugin is not supported&quot;</span> <span class="k">unless</span> <span class="n">provider</span><span class="o">.</span><span class="n">respond_to?</span><span class="p">(</span><span class="nb">method</span><span class="p">)</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>  <span class="vi">@provider</span> <span class="o">=</span> <span class="n">provider</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="c1"># Define the methods supported by provider in this class too</span>
-</span><span class='line'>  <span class="n">interface</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">method</span><span class="o">|</span>
-</span><span class='line'>    <span class="nb">self</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="ss">:define_method</span><span class="p">,</span> <span class="nb">method</span><span class="p">)</span> <span class="k">do</span> <span class="o">|*</span><span class="n">splat</span><span class="o">|</span>
-</span><span class='line'>      <span class="vi">@provider</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="nb">method</span><span class="p">,</span> <span class="o">*</span><span class="n">splat</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>u <span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>  <span class="nb">set</span> -A ud
+</span><span class='line'>  ud<span class="o">[</span>1+<span class="k">${</span><span class="nv">1</span><span class="p">-1</span><span class="k">}</span><span class="o">]=</span>
+</span><span class='line'>  <span class="nb">cd</span> <span class="k">${</span><span class="p">(j:../:)ud</span><span class="k">}</span>
+</span><span class='line'><span class="o">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Boy, so simple it is with ruby! And yeah, I love splat operator!</p>
+<p>This has been tested on zsh.</p>
 </div>
   
   
@@ -179,11 +159,15 @@ The code below is the constructor of the higher level class which checks the pas
   
     <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/arch-linux'>arch linux (1)</a></li><li><a href='/blog/categories/blabber'>blabber (1)</a></li><li><a href='/blog/categories/functional-programming'>functional programming (1)</a></li><li><a href='/blog/categories/haskell'>haskell (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/nodejs'>nodejs (1)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/rails'>rails (2)</a></li><li><a href='/blog/categories/recursion'>recursion (1)</a></li><li><a href='/blog/categories/ruby'>ruby (4)</a></li><li><a href='/blog/categories/shell'>shell (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/arch-linux'>arch linux (1)</a></li><li><a href='/blog/categories/blabber'>blabber (1)</a></li><li><a href='/blog/categories/functional-programming'>functional programming (1)</a></li><li><a href='/blog/categories/haskell'>haskell (2)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/mongodb'>mongodb (1)</a></li><li><a href='/blog/categories/nodejs'>nodejs (1)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/rails'>rails (3)</a></li><li><a href='/blog/categories/recursion'>recursion (1)</a></li><li><a href='/blog/categories/ruby'>ruby (5)</a></li><li><a href='/blog/categories/shell'>shell (1)</a></li><li><a href='/blog/categories/web-apps'>web apps (1)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/06/26/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond/">Configure DatabaseCleaner With Rspec for Mongoid 5 and Beyond</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2016/06/23/starting-with-yesod-on-arch-linux/">Starting With Yesod on Arch Linux</a>
@@ -199,10 +183,6 @@ The code below is the constructor of the higher level class which checks the pas
     
       <li class="post">
         <a href="/blog/2015/11/21/include-filename-and-line-number-in-rails-logger/">Include Filename and Line Number in Rails Logger</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/04/27/earthquake-alert-system-in-nodejs/">Earthquake Alert System in Nodejs</a>
       </li>
     
   </ul>

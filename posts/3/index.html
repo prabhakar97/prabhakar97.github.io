@@ -9,7 +9,7 @@
   <meta name="author" content="Prabhakar Kumar">
 
   
-  <meta name="description" content="Unicorn is a cool application server for Rails. If you have a high traffic website, you would like to restart Unicorn without any downtime, upon a &hellip;">
+  <meta name="description" content="I have been intrigued by functional programming for past couple of years, but never quite prioritized it bigtime. Recently I came across this amazing &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -86,7 +86,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2015/11/22/start-slash-restart-unicorn-safely-without-downtime/">Start/restart Unicorn Safely Without Downtime</a></h1>
+      <h1 class="entry-title"><a href="/blog/2016/05/13/getting-started-with-haskell/">Functional Programming Series - Part 1</a></h1>
     
     
       <p class="meta">
@@ -102,77 +102,106 @@
   
 
 
-<time datetime="2015-11-22T00:42:00-05:00" pubdate data-updated="true"></time>
+<time datetime="2016-05-13T20:02:00-04:00" pubdate data-updated="true"></time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p><a href="http://unicorn.bogomips.org/">Unicorn</a> is a cool application server for Rails. If you have a high traffic website, you would like to restart Unicorn without any downtime, upon a new
-code deployment or a Gem update which updates unicorn. I wrote an script, exactly for this purpose after learning signal handling basics of Unicorn. Here&rsquo;s the script. The comments
-are self-explanatory and fairly give the idea of what is happening.</p>
+  <div class="entry-content"><p>I have been intrigued by functional programming for past couple of years, but never quite prioritized it bigtime. Recently I came across this amazing talk which inspired me
+to go all-in to learn FP.</p>
 
-<figure class='code'><figcaption><span>start_uniorn</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class="embed-video-container"><iframe src="//www.youtube.com/embed/E8I19uA-wGY" allowfullscreen></iframe></div>
+
+
+<p>I chose Haskell as my preferred language and started with the book <a href="http://www.amazon.com/dp/0954300696">The Haskell Road to Logic, Maths and Programming</a>. I found the first
+chapter really interesting.</p>
+
+<p>I started solving exercises from the book. This post and a few subsequent ones will document my solutions to some of the exercise problems. These solutions may not be most concise
+or efficient because I am just beginning to learn Haskell.</p>
+
+<blockquote><p>Define a method removeFst which removes the first instance of an element from a list</p></blockquote>
+
+<figure class='code'><figcaption><span>removeFst.hs</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='hs'><span class='line'><span class="nf">removeFst</span> <span class="ow">::</span> <span class="p">(</span><span class="kt">Eq</span> <span class="n">a</span><span class="p">)</span> <span class="ow">=&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span>
+</span><span class='line'><span class="nf">removeFst</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="n">y</span> <span class="ow">=</span> <span class="kr">if</span> <span class="n">x</span> <span class="o">==</span> <span class="n">y</span>
+</span><span class='line'>                      <span class="kr">then</span> <span class="n">xs</span>
+</span><span class='line'>                        <span class="kr">else</span> <span class="n">x</span> <span class="kt">:</span> <span class="n">removeFst</span> <span class="n">xs</span> <span class="n">y</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>Define a function which counts number of instances of an element in a list</p></blockquote>
+
+<figure class='code'><figcaption><span>countChars.hs</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='hs'><span class='line'><span class="nf">countChars</span> <span class="ow">::</span> <span class="kt">Char</span> <span class="ow">-&gt;</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">Int</span>
+</span><span class='line'><span class="nf">countChars</span> <span class="n">y</span> <span class="kt">[]</span> <span class="ow">=</span> <span class="mi">0</span>
+</span><span class='line'><span class="nf">countChars</span> <span class="n">y</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="o">|</span> <span class="n">y</span> <span class="o">==</span> <span class="n">x</span> <span class="ow">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">countChars</span> <span class="n">y</span> <span class="n">xs</span>
+</span><span class='line'>                    <span class="o">|</span> <span class="n">otherwise</span> <span class="ow">=</span> <span class="n">countChars</span> <span class="n">y</span> <span class="n">xs</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>Define a function named blowUp that takes an string and creates a new string from it by repeating ith character in i times. For example: abcdef should return abbcccddddeeeeeffffff</p></blockquote>
+
+<figure class='code'><figcaption><span>blowUp.hs</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='hs'><span class='line'><span class="nf">blowUp</span> <span class="ow">::</span> <span class="kt">Int</span> <span class="ow">-&gt;</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">String</span>
+</span><span class='line'><span class="nf">blowUp</span> <span class="n">n</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="ow">=</span> <span class="n">take</span> <span class="n">n</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">x</span><span class="o">..</span><span class="p">]</span>
+</span><span class='line'><span class="nf">blowUp</span> <span class="n">n</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="ow">=</span> <span class="p">(</span><span class="n">blowUp</span> <span class="n">n</span> <span class="p">[</span><span class="n">x</span><span class="p">])</span> <span class="o">++</span> <span class="p">(</span><span class="n">blowUp</span> <span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="n">xs</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>Write a function to sort a list of orderable elements</p></blockquote>
+
+<p>This is a translation of the famous quick sort algorithm to Haskell.</p>
+
+<figure class='code'><figcaption><span>sort.hs</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c">#!/bin/bash</span>
-</span><span class='line'>
-</span><span class='line'><span class="c"># Check if unicorn is already running</span>
-</span><span class='line'><span class="nv">unicorn_pid</span><span class="o">=</span><span class="k">$(</span>ps -ef | grep <span class="s2">&quot;unicorn_rails master&quot;</span> | grep -v grep | awk <span class="s1">&#39;{print $2}&#39;</span><span class="k">)</span>
-</span><span class='line'><span class="k">if</span> <span class="o">[[</span> ! -z <span class="nv">$unicorn_pid</span> <span class="o">]]</span>; <span class="k">then</span>
-</span><span class='line'><span class="k">  </span><span class="nb">echo</span> <span class="s2">&quot;Unicorn is already running. Sending USR2 to it&quot;</span>
-</span><span class='line'>  <span class="nb">kill</span> -USR2 <span class="nv">$unicorn_pid</span>
-</span><span class='line'>  <span class="c"># Wait till new master comes up so two instances of workers are there</span>
-</span><span class='line'>  <span class="k">while</span> <span class="o">[[</span> <span class="k">$(</span>ps -ef | grep <span class="s1">&#39;unicorn_rails worker\[0\]&#39;</span> | grep -v grep | wc -l<span class="k">)</span> -ne 2 <span class="o">]]</span>; <span class="k">do</span>
-</span><span class='line'><span class="k">    </span><span class="nb">echo</span> <span class="s2">&quot;Waiting till new master comes up and spawns new workers&quot;</span>
-</span><span class='line'>    sleep 1
-</span><span class='line'>  <span class="k">done</span>
-</span><span class='line'>  <span class="c"># Send WINCH to old master</span>
-</span><span class='line'>  <span class="nb">echo</span> <span class="s2">&quot;Winching ID $unicorn_pid&quot;</span>
-</span><span class='line'>  <span class="nb">kill</span> -WINCH <span class="nv">$unicorn_pid</span>
-</span><span class='line'>  <span class="c"># Wait till old workers die</span>
-</span><span class='line'>  <span class="k">while</span> <span class="o">[[</span> <span class="k">$(</span>ps -ef | grep <span class="s1">&#39;unicorn_rails worker\[0\]&#39;</span> | grep -v grep | wc -l<span class="k">)</span> -ne 1 <span class="o">]]</span>; <span class="k">do</span>
-</span><span class='line'><span class="k">    </span><span class="nb">echo</span> <span class="s2">&quot;Waiting till old workers die&quot;</span>
-</span><span class='line'>    sleep 1
-</span><span class='line'>  <span class="k">done</span>
-</span><span class='line'><span class="k">  </span><span class="nb">echo</span> <span class="s2">&quot;Killing ID $unicorn_pid&quot;</span>
-</span><span class='line'>  <span class="nb">kill</span> -QUIT <span class="nv">$unicorn_pid</span>
-</span><span class='line'><span class="k">else</span>
-</span><span class='line'><span class="k">  </span><span class="nb">echo</span> <span class="s2">&quot;Start fresh copy of unicorn&quot;</span>
-</span><span class='line'>  unicorn_rails -c config/unicorn.rb -D
-</span><span class='line'><span class="k">fi</span>
+</pre></td><td class='code'><pre><code class='hs'><span class='line'><span class="nf">sort</span> <span class="ow">::</span> <span class="p">(</span><span class="kt">Ord</span> <span class="n">a</span><span class="p">)</span> <span class="ow">=&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span>
+</span><span class='line'><span class="nf">sort</span> <span class="kt">[]</span> <span class="ow">=</span> <span class="kt">[]</span>
+</span><span class='line'><span class="nf">sort</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="ow">=</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span>
+</span><span class='line'><span class="nf">sort</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="ow">=</span> <span class="n">sort</span> <span class="n">greater</span> <span class="o">++</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">++</span> <span class="n">sort</span> <span class="n">lesser</span>
+</span><span class='line'>                <span class="kr">where</span> <span class="n">greater</span> <span class="ow">=</span> <span class="p">[</span><span class="n">y</span> <span class="o">|</span> <span class="n">y</span> <span class="ow">&lt;-</span> <span class="n">xs</span><span class="p">,</span> <span class="n">y</span> <span class="o">&gt;</span> <span class="n">x</span><span class="p">]</span>
+</span><span class='line'>                      <span class="n">lesser</span> <span class="ow">=</span> <span class="p">[</span><span class="n">y</span> <span class="o">|</span> <span class="n">y</span> <span class="ow">&lt;-</span> <span class="n">xs</span><span class="p">,</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">x</span> <span class="p">]</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Unicorn provides the facility to reload without losing connected clients. The process can be initiated by sending a <code>USR2</code> signal to the unicorn master process. Upon recieving this, unicorn will
-spawn a new master process and name the old process as <code>unicorn master (old)</code>. The new master process will also spawn it&rsquo;s own new workers. Once you are sure that the new workers have been
-spawned, you can send a <code>WINCH</code> signal to old unicorn master upon receipt of which, old unicorn will shutdown it&rsquo;s workers gracefully. Gracefully here means that the workers will die once
-they are done serving their connected clients. Once the old master has shut down all it&rsquo;s workers, we send a QUIT signal to the old master which then dies peacefully. And now we have the new
-unicorn loaded with new code and/or new binary. The explanation of signal behavior can be found <a href="http://unicorn.bogomips.org/SIGNALS.html">here</a>.</p>
+<blockquote><p>Write a function that takes a big string and a small string and tells whether the big string starts with the small string</p></blockquote>
+
+<figure class='code'><figcaption><span>startWith.hs</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='hs'><span class='line'><span class="nf">startWith</span> <span class="ow">::</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">Bool</span>
+</span><span class='line'><span class="nf">startWith</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="p">[</span><span class="n">y</span><span class="p">]</span> <span class="ow">=</span> <span class="n">y</span> <span class="o">==</span> <span class="n">x</span>
+</span><span class='line'><span class="nf">startWith</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="p">(</span><span class="n">y</span><span class="kt">:</span><span class="n">ys</span><span class="p">)</span> <span class="ow">=</span> <span class="n">y</span> <span class="o">==</span> <span class="n">x</span> <span class="o">&amp;&amp;</span> <span class="n">startWith</span> <span class="n">xs</span> <span class="n">ys</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>Write a function that takes a big string and a small string and tells whether the big string contains the small string as a substring</p></blockquote>
+
+<p>I use the previously defined startWith function to solve this.</p>
+
+<figure class='code'><figcaption><span>substring.hs</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='hs'><span class='line'><span class="nf">contains</span> <span class="ow">::</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">Bool</span>
+</span><span class='line'><span class="nf">contains</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="kt">[]</span> <span class="ow">=</span> <span class="kt">True</span>
+</span><span class='line'><span class="nf">contains</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="n">y</span> <span class="ow">=</span> <span class="n">startWith</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="n">y</span> <span class="o">||</span> <span class="n">startWith</span> <span class="n">xs</span> <span class="n">y</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
 </div>
   
   
@@ -194,11 +223,15 @@ unicorn loaded with new code and/or new binary. The explanation of signal behavi
   
     <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/arch-linux'>arch linux (1)</a></li><li><a href='/blog/categories/blabber'>blabber (1)</a></li><li><a href='/blog/categories/functional-programming'>functional programming (1)</a></li><li><a href='/blog/categories/haskell'>haskell (1)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/nodejs'>nodejs (1)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/rails'>rails (2)</a></li><li><a href='/blog/categories/recursion'>recursion (1)</a></li><li><a href='/blog/categories/ruby'>ruby (4)</a></li><li><a href='/blog/categories/shell'>shell (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/arch-linux'>arch linux (1)</a></li><li><a href='/blog/categories/blabber'>blabber (1)</a></li><li><a href='/blog/categories/functional-programming'>functional programming (1)</a></li><li><a href='/blog/categories/haskell'>haskell (2)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/mongodb'>mongodb (1)</a></li><li><a href='/blog/categories/nodejs'>nodejs (1)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/rails'>rails (3)</a></li><li><a href='/blog/categories/recursion'>recursion (1)</a></li><li><a href='/blog/categories/ruby'>ruby (5)</a></li><li><a href='/blog/categories/shell'>shell (1)</a></li><li><a href='/blog/categories/web-apps'>web apps (1)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/06/26/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond/">Configure DatabaseCleaner With Rspec for Mongoid 5 and Beyond</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2016/06/23/starting-with-yesod-on-arch-linux/">Starting With Yesod on Arch Linux</a>
@@ -214,10 +247,6 @@ unicorn loaded with new code and/or new binary. The explanation of signal behavi
     
       <li class="post">
         <a href="/blog/2015/11/21/include-filename-and-line-number-in-rails-logger/">Include Filename and Line Number in Rails Logger</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/04/27/earthquake-alert-system-in-nodejs/">Earthquake Alert System in Nodejs</a>
       </li>
     
   </ul>
