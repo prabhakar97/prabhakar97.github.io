@@ -9,8 +9,8 @@
   <meta name="author" content="Prabhakar Kumar">
 
   
-  <meta name="description" content="Database Cleaner is a nifty gem for streamlining tests. Configuring it is straightforward
-but it didn&rsquo;t work for me out of the box for Mongoid &hellip;">
+  <meta name="description" content="Goaccess is a neat little utility which scans through your web server (I use nginx) logs and generates a nice HTML report of
+your site&rsquo;s access &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -87,7 +87,7 @@ but it didn&rsquo;t work for me out of the box for Mongoid &hellip;">
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2016/06/26/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond/">Configure DatabaseCleaner With Rspec for Mongoid 5 and Beyond</a></h1>
+      <h1 class="entry-title"><a href="/blog/2016/07/07/compile-goaccess-from-source-on-centos-7/">Compile Goaccess From Source on CentOS 7</a></h1>
     
     
       <p class="meta">
@@ -103,36 +103,25 @@ but it didn&rsquo;t work for me out of the box for Mongoid &hellip;">
   
 
 
-<time datetime="2016-06-26T21:05:22-04:00" pubdate data-updated="true"></time>
+<time datetime="2016-07-07T22:00:32-04:00" pubdate data-updated="true"></time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p><a href="https://github.com/DatabaseCleaner/database_cleaner">Database Cleaner</a> is a nifty gem for streamlining tests. Configuring it is straightforward
-but it didn&rsquo;t work for me out of the box for Mongoid 5.</p>
+  <div class="entry-content"><p><a href="https://goaccess.io">Goaccess</a> is a neat little utility which scans through your web server (I use nginx) logs and generates a nice HTML report of
+your site&rsquo;s access statistics. Here is a <a href="http://rt.goaccess.io">sample from their site</a>. I run CentOS 7 on an EC2 Instance where I run a pet project. I wanted a light web analyzer that just works. I have
+<a href="https://fedoraproject.org/wiki/EPEL">epel</a> enabled on my instance so I just installed goaccess by <code>sudo yum install goaccess</code>. It worked and I was able
+to see some stats. But then I figured out that the version from repositories is quite an old one at 0.9.8. The latest one is 1.0.2 from the website.
+So, I just uninstalled it <code>sudo yum remove goaccess</code>.</p>
 
-<p>Here&rsquo;s my Gemfile segment for testing.</p>
+<p>I downloaded the source tarball and after a few hiccups I was able to get it running. There are two quirks you need to watch out for. First one is
+that, enabling geoip in goaccess requires installation of maxmind&rsquo;s geoip database. The installed database from yum is very small, so you need to
+update it and change symlink /usr/share/GeoIP/GeoIP.dat to point to /usr/share/GeoIP/GeoLiteCountry.dat. Second quirk is that by default the configure
+script doesn&rsquo;t figure out the geoip devel libs path so you need to manually point to it while configuring.</p>
 
-<figure class='code'><figcaption><span>Gemfile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">group</span> <span class="ss">:test</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">gem</span> <span class="s2">&quot;factory_girl_rails&quot;</span>
-</span><span class='line'>  <span class="n">gem</span> <span class="s2">&quot;rspec-rails&quot;</span><span class="p">,</span> <span class="s1">&#39;~&gt; 3.4&#39;</span>
-</span><span class='line'>  <span class="n">gem</span> <span class="s1">&#39;faker&#39;</span>
-</span><span class='line'>  <span class="n">gem</span> <span class="s1">&#39;database_cleaner&#39;</span><span class="p">,</span> <span class="ss">git</span><span class="p">:</span> <span class="s1">&#39;git://github.com/DatabaseCleaner/database_cleaner.git&#39;</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I added a <code>require 'support/database_cleaner'</code> in my <code>spec_helper</code>. And here&rsquo;s my <code>database_cleaner.rb</code>.</p>
-
-<figure class='code'><figcaption><span>spec/support/database_cleaner.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -143,56 +132,25 @@ but it didn&rsquo;t work for me out of the box for Mongoid 5.</p>
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">RSpec</span><span class="o">.</span><span class="n">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo yum install GeoIP
+</span><span class='line'>geoipupdate
+</span><span class='line'>sudo rm /usr/share/GeoIP.dat
+</span><span class='line'>sudo ln -s /usr/share/<span class="o">{</span>GeoLiteCountry,GeoIP<span class="o">}</span>.dat
 </span><span class='line'>
-</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">before</span><span class="p">(</span><span class="ss">:suite</span><span class="p">)</span> <span class="k">do</span>
-</span><span class='line'>    <span class="no">DatabaseCleaner</span><span class="o">.</span><span class="n">strategy</span> <span class="o">=</span> <span class="ss">:truncation</span>
-</span><span class='line'>    <span class="no">DatabaseCleaner</span><span class="o">.</span><span class="n">clean</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">before</span><span class="p">(</span><span class="ss">:each</span><span class="p">)</span> <span class="k">do</span>
-</span><span class='line'>    <span class="no">DatabaseCleaner</span><span class="o">.</span><span class="n">start</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">after</span><span class="p">(</span><span class="ss">:each</span><span class="p">)</span> <span class="k">do</span>
-</span><span class='line'>    <span class="no">DatabaseCleaner</span><span class="o">.</span><span class="n">clean</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">end</span>
+</span><span class='line'>wget http://tar.goaccess.io/goaccess-1.0.2.tar.gz
+</span><span class='line'>tar -xzvf goaccess-1.0.2.tar.gz
+</span><span class='line'><span class="nb">cd </span>goaccess-1.0.2
+</span><span class='line'><span class="nv">LD_FLAGS</span><span class="o">=</span><span class="s1">&#39;-L/usr/lib64/&#39;</span> ./configure --enable-utf8 --enable-geoip
+</span><span class='line'>make
+</span><span class='line'>sudo make install
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>When I ran my spec, I was greeted with an unexpected ugly error.</p>
+<p>I also created a daily crontab entry to generate reports daily and put it in my <code>public</code> folder of rails directory, all the files in which I serve
+statically from nginx. So I can just type <a href="http://mydomain.com/access.html">http://mydomain.com/access.html</a> and see the reports. Here is my crontab entry.</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='text'><span class='line'>/home/prabhakar/.rbenv/versions/2.3.0/lib/ruby/gems/2.3.0/bundler/gems/database_cleaner-f052d64d3be9/lib/database_cleaner/mongo2/truncation_mixin.rb:29:in `collections&#39;: undefined method `collections&#39; for #&lt;Mongo::Client:0x47021052998580 cluster=127.0.0.1:27017&gt; (NoMethodError)
-</span><span class='line'>  from /home/prabhakar/.rbenv/versions/2.3.0/lib/ruby/gems/2.3.0/bundler/gems/database_cleaner-f052d64d3be9/lib/database_cleaner/mongo2/truncation_mixin.rb:9:in `clean&#39;
-</span><span class='line'>  from /home/prabhakar/.rbenv/versions/2.3.0/lib/ruby/gems/2.3.0/bundler/gems/database_cleaner-f052d64d3be9/lib/database_cleaner/base.rb:92:in `clean&#39;
-</span><span class='line'>  from /home/prabhakar/.rbenv/versions/2.3.0/lib/ruby/gems/2.3.0/bundler/gems/database_cleaner-f052d64d3be9/lib/database_cleaner/configuration.rb:79:in `block in clean&#39;
-</span><span class='line'>  from /home/prabhakar/.rbenv/versions/2.3.0/lib/ruby/gems/2.3.0/bundler/gems/database_cleaner-f052d64d3be9/lib/database_cleaner/configuration.rb:79:in `each&#39;
-</span><span class='line'>  from /home/prabhakar/.rbenv/versions/2.3.0/lib/ruby/gems/2.3.0/bundler/gems/database_cleaner-f052d64d3be9/lib/database_cleaner/configuration.rb:79:in `clean&#39;
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>After looking at the code in the gem, I finally found out what was wrong in it. I created a
-<a href="https://github.com/prabhakar97/database_cleaner/commit/3cf0d1b81e4a118fd173d697f032a9aff4f431de">commit for fix</a> and submitted a pull request to
-the maintainer. Looking at my commit and the relevant files <a href="https://github.com/DatabaseCleaner/database_cleaner/blob/master/lib/database_cleaner/mongoid/truncation.rb">truncation.rb</a> and <a href="https://github.com/DatabaseCleaner/database_cleaner/blob/master/lib/database_cleaner/mongo2/truncation_mixin.rb">truncation_mixin.rb</a>, you should be able to piece together the problem.</p>
-
-<p>Meanwhile, if you are using Mongoid 5 and aren&rsquo;t able to get it working you could simply point to my fork of database_cleaner by updating your Gemfile
-to have:</p>
-
-<figure class='code'><figcaption><span>Gemfile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gem</span> <span class="s1">&#39;database_cleaner&#39;</span><span class="p">,</span> <span class="ss">git</span><span class="p">:</span> <span class="s1">&#39;git://github.com/prabhakar97/database_cleaner.git&#39;</span>
+<figure class='code'><figcaption><span>crontab</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>@daily /bin/zcat -f /var/log/nginx/access.log* <span class="p">|</span> /usr/local/bin/goaccess -a -o /home/ec2-user/my_rails_dir/public/access.html
 </span></code></pre></td></tr></table></div></figure>
 
 </div>
@@ -214,11 +172,15 @@ to have:</p>
   
     <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/arch-linux'>arch linux (1)</a></li><li><a href='/blog/categories/blabber'>blabber (1)</a></li><li><a href='/blog/categories/functional-programming'>functional programming (1)</a></li><li><a href='/blog/categories/haskell'>haskell (2)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/mongodb'>mongodb (1)</a></li><li><a href='/blog/categories/nodejs'>nodejs (1)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/rails'>rails (3)</a></li><li><a href='/blog/categories/recursion'>recursion (1)</a></li><li><a href='/blog/categories/ruby'>ruby (5)</a></li><li><a href='/blog/categories/shell'>shell (1)</a></li><li><a href='/blog/categories/web-apps'>web apps (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/arch-linux'>arch linux (1)</a></li><li><a href='/blog/categories/blabber'>blabber (1)</a></li><li><a href='/blog/categories/functional-programming'>functional programming (1)</a></li><li><a href='/blog/categories/haskell'>haskell (2)</a></li><li><a href='/blog/categories/linux'>linux (2)</a></li><li><a href='/blog/categories/mongodb'>mongodb (1)</a></li><li><a href='/blog/categories/nodejs'>nodejs (1)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/rails'>rails (3)</a></li><li><a href='/blog/categories/recursion'>recursion (1)</a></li><li><a href='/blog/categories/ruby'>ruby (5)</a></li><li><a href='/blog/categories/shell'>shell (1)</a></li><li><a href='/blog/categories/web-apps'>web apps (2)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/07/07/compile-goaccess-from-source-on-centos-7/">Compile Goaccess From Source on CentOS 7</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2016/06/26/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond/">Configure DatabaseCleaner With Rspec for Mongoid 5 and Beyond</a>
@@ -234,10 +196,6 @@ to have:</p>
     
       <li class="post">
         <a href="/blog/2015/11/22/start-slash-restart-unicorn-safely-without-downtime/">Start/restart Unicorn Safely Without Downtime</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/11/21/include-filename-and-line-number-in-rails-logger/">Include Filename and Line Number in Rails Logger</a>
       </li>
     
   </ul>

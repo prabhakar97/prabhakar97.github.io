@@ -9,7 +9,8 @@
   <meta name="author" content="Prabhakar Kumar">
 
   
-  <meta name="description" content="Afflicted by the recent earthquake in Nepal which took so many lives in India as well, my mind under the shower spawned up an idea of an earthquake &hellip;">
+  <meta name="description" content="Rails logging is straightforward and works out of the box. But, sometimes I feel it would
+be really awesome if the log lines would contain the line &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -86,7 +87,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2015/04/27/earthquake-alert-system-in-nodejs/">Earthquake Alert System in Nodejs</a></h1>
+      <h1 class="entry-title"><a href="/blog/2015/11/21/include-filename-and-line-number-in-rails-logger/">Include Filename and Line Number in Rails Logger</a></h1>
     
     
       <p class="meta">
@@ -102,42 +103,56 @@
   
 
 
-<time datetime="2015-04-27T01:01:00-04:00" pubdate data-updated="true"></time>
+<time datetime="2015-11-21T23:50:00-05:00" pubdate data-updated="true"></time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>Afflicted by the recent earthquake in Nepal which took so many lives in India as well, my mind under the shower spawned up an idea of an earthquake alert system that attempts to notify people a few tens of seconds before the quake strikes.
-The premise of the idea is that <em>Electromagnetic waves travel way faster than seismic waves. 300,000 KM/s vs 10 KM/s</em>. Our communication systems (internet, sms) transmit on electronic waves and even after considering some added overhead (like buffers, processing etc) they can win the race with seismic waves easily. For instance, Kathmandu to New Delhi is around 800 kilometers. A quake epicentred in Kathmandu would be felt in Delhi after around 80 seconds. If we find some way to detect the quake in Kathmandu immediately after it strikes and transmit this information over the public communication infrastructure (web, SMS etc.), we could give the people more than a minute to move to safety. I made following assumptions:</p>
+  <div class="entry-content"><p>Rails logging is straightforward and works out of the box. But, sometimes I feel it would
+be really awesome if the log lines would contain the line number and file name which emit
+the log. If you have experience with log4j in Java, you should be able to recall that we
+initialize the logger and pass it a class instance. All our log lines are tagged with the
+classname. That&rsquo;s cool for debugging purposes.</p>
 
-<ul>
-<li>There must be some research organisations which place earthquake sensors all over the world</li>
-<li>At least one of those organisations, publishes such a feed in real-time</li>
-<li>I could hook into that feed and as soon as some quake gets triggered, I notify the registered people via SMS/Email/Push notifications etc.</li>
-</ul>
+<p>How to get that behavior in Rails? There is
+one quick and dirty way. Just prepend to the log message <code>__LINE__</code> and <code>__FILE__</code> which
+contain the line the code is executing and the file it is in, respectively.</p>
+
+<figure class='code'><figcaption><span>Logger</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[</span><span class="si">#{</span><span class="bp">__FILE__</span><span class="si">}</span><span class="s2">:</span><span class="si">#{</span><span class="bp">__LINE__</span><span class="si">}</span><span class="s2">] The log message&quot;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-<p>Upon some quick googling, I found two such services. First was US Geological Survey.
-Their <a href="http://earthquake.usgs.gov/fdsnws/event/1/">API page</a> says that they make the feed available in various formats, but the feeds are refreshed every 5 minutes.
-5 minutes is too long!
-Next I found something from EU. <a href="http://www.seismicportal.eu/realtime.html">Seismic Portal</a> broadcasts the feed on a web socket. Sweet! If I tap onto that feed, I would get near real time notifications.
-I can connect this to some SMS gateway and I would be done. After some googling, I found out that buying a plan from SMS gateway providers have become tougher than simply clicking buy now and paying through a credit card.
-This was done because of TRAI&rsquo;s strict regulations on bulk SMSes to be sent to Indian mobile numbers, to deter spammers.
-I recalled reading about an app called Instapush which provides a REST API to send instant notifications to Android and iOS devices. I went through their documentation and found that wiring them was pretty easy. But I could just get notifications on my phone, not on everyone&rsquo;s. That is doable by writing an Android app which can get notified through <a href="https://developer.android.com/google/gcm/index.html">Google Cloud Messaging</a>. This one later, for now let&rsquo;s go with Instapush.</p>
+<p>This just works. But shows the full file path which is kind of overkill because it produces very long log lines. The below one improves it to include just the filename.</p>
 
-<p>I created a <a href="https://developers.openshift.com/en/node-js-getting-started.html">NodeJS</a> application on Openshift. The app opens a websocket, listens to the earthquake feed, processes it, makes an API call to instapush which instantly delivers the notification on my phone. There are just two files in the codebase.</p>
+<figure class='code'><figcaption><span>Logger</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[</span><span class="si">#{</span><span class="bp">__FILE__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">last</span><span class="si">}</span><span class="s2">:</span><span class="si">#{</span><span class="bp">__LINE__</span><span class="si">}</span><span class="s2">] The log message&quot;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
 
-<h4>Configuring instapush</h4>
 
-<p>Instapush needs you to define two things. An event, and trackers for the event. An event is simply an event name. For example: earthquake. Trackers are placeholders in the notification message, which are populated with the values that you pass for them in the REST call to instapush. Here is my configuration for event and trackers.</p>
+<p>Ok, this gets the job done but makes our log statements ugly in the code. And it isn&rsquo;t DRY. If
+we try to make it DRY, we can&rsquo;t. Because we can&rsquo;t assign the stuff
+on the left that produces file and line number strings, into a variable, because they will refer to the line where variable is assigned, so the log statement will contain wrong value for
+line number.</p>
 
-<p><img src="/images/quakeinstapush.png"></p>
+<p>There is another way that involves ActiveSupport&rsquo;s TaggedLogging. If you use a Tagged logger,
+you can associate a tag with every log message. That&rsquo;s cool too, especially for searching
+through certain events in logs. TaggedLogging can be used to add file and line number, but
+the usage would be similar to the above example. How about doing something that works
+seamlessly behind the scenes and is DRY?</p>
 
-<h4>Code</h4>
+<p>After some research, I wrote a class (ok, I assembled it from here and there), whose instance
+can be assigned to Rails log formatter. Here it is. Just put this class in your main
+application module and assign it&rsquo;s instance to rails log formatter. Apart from filename
+and line number, I have also edited the log line to have some other stuff displayed in fancy
+colors. Also, I don&rsquo;t print filename and line if the filename is logger.rb or starts with
+log_. That&rsquo;s because it would create so much spam due to Rails internal log files or
+files from various gems.
+Use it and change it to your liking.</p>
 
-<figure class='code'><figcaption><span>client.js</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>application.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -167,85 +182,39 @@ I recalled reading about an app called Instapush which provides a REST API to se
 <span class='line-number'>28</span>
 <span class='line-number'>29</span>
 <span class='line-number'>30</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">sjsc</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;sockjs-client-ws&#39;</span><span class="p">);</span>
-</span><span class='line'><span class="kd">var</span> <span class="nx">request</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;request&#39;</span><span class="p">);</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">ApplicationName</span>
 </span><span class='line'>
-</span><span class='line'><span class="kd">var</span> <span class="nx">client</span> <span class="o">=</span> <span class="nx">sjsc</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="s2">&quot;http://www.seismicportal.eu/standing_order&quot;</span><span class="p">);</span>
-</span><span class='line'><span class="nx">client</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;connection&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Connected&#39;</span><span class="p">);</span>
-</span><span class='line'><span class="p">});</span>
+</span><span class='line'>  <span class="k">class</span> <span class="nc">QLogFormatter</span>
+</span><span class='line'>    <span class="no">HOSTNAME</span> <span class="o">=</span> <span class="no">Socket</span><span class="o">.</span><span class="n">gethostname</span>
+</span><span class='line'>    <span class="no">SEVERITY_TO_COLOR_MAP</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>      <span class="s1">&#39;DEBUG&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;35&#39;</span><span class="p">,</span>
+</span><span class='line'>      <span class="s1">&#39;INFO&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;32&#39;</span><span class="p">,</span>
+</span><span class='line'>      <span class="s1">&#39;WARN&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;33&#39;</span><span class="p">,</span>
+</span><span class='line'>      <span class="s1">&#39;ERROR&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;31&#39;</span><span class="p">,</span>
+</span><span class='line'>      <span class="s1">&#39;FATAL&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;31&#39;</span><span class="p">,</span>
+</span><span class='line'>      <span class="s1">&#39;UNKNOWN&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;37&#39;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">severity</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">progname</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">return</span> <span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">blank?</span> <span class="o">||</span> <span class="n">msg</span><span class="o">.</span><span class="n">strip</span><span class="o">.</span><span class="n">blank?</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">formatted_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-%d %H:%M:%S.&quot;</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">time</span><span class="o">.</span><span class="n">usec</span><span class="o">.</span><span class="n">to_s</span><span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="mi">2</span><span class="o">]</span>
+</span><span class='line'>      <span class="n">color</span> <span class="o">=</span> <span class="no">SEVERITY_TO_COLOR_MAP</span><span class="o">[</span><span class="n">severity</span><span class="o">]</span>
+</span><span class='line'>      <span class="n">callee</span> <span class="o">=</span> <span class="nb">caller</span><span class="o">[</span><span class="mi">5</span><span class="o">].</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">last</span>
+</span><span class='line'>      <span class="n">callee</span> <span class="o">=</span> <span class="n">callee</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span><span class="o">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="o">].</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">log_line</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[0;37m</span><span class="si">#{</span><span class="no">HOSTNAME</span><span class="si">}</span><span class="s2">@</span><span class="si">#{</span><span class="n">formatted_time</span><span class="si">}</span><span class="se">\033</span><span class="s2">[0m [</span><span class="se">\033</span><span class="s2">[01;</span><span class="si">#{</span><span class="n">color</span><span class="si">}</span><span class="s2">m</span><span class="si">#{</span><span class="n">severity</span><span class="si">}</span><span class="se">\033</span><span class="s2">[0m]&quot;</span>
+</span><span class='line'>      <span class="k">unless</span> <span class="p">(</span><span class="n">callee</span><span class="o">.</span><span class="n">start_with?</span><span class="p">(</span><span class="s1">&#39;logger&#39;</span><span class="p">)</span> <span class="o">||</span> <span class="n">callee</span><span class="o">.</span><span class="n">start_with?</span><span class="p">(</span><span class="s1">&#39;log_&#39;</span><span class="p">))</span>
+</span><span class='line'>        <span class="n">log_line</span> <span class="o">+=</span> <span class="s2">&quot;[</span><span class="se">\033</span><span class="s2">[01;36m</span><span class="si">#{</span><span class="n">callee</span><span class="si">}</span><span class="se">\033</span><span class="s2">[0m]&quot;</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>      <span class="n">log_line</span> <span class="o">+=</span> <span class="s2">&quot; </span><span class="si">#{</span><span class="n">msg</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
 </span><span class='line'>
-</span><span class='line'><span class="nx">client</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">msg</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="kd">var</span> <span class="nx">message</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">msg</span><span class="p">);</span>
-</span><span class='line'>    <span class="kd">var</span> <span class="nx">magnitude</span> <span class="o">=</span> <span class="nx">message</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">properties</span><span class="p">.</span><span class="nx">mag</span><span class="p">;</span>
-</span><span class='line'>    <span class="kd">var</span> <span class="nx">place</span> <span class="o">=</span> <span class="nx">message</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">properties</span><span class="p">.</span><span class="nx">flynn_region</span><span class="p">;</span>
-</span><span class='line'>    <span class="kd">var</span> <span class="nx">time</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="nb">Date</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">properties</span><span class="p">.</span><span class="nx">time</span><span class="p">));</span>
-</span><span class='line'>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Earthquake of magintude &#39;</span> <span class="o">+</span> <span class="nx">magnitude</span> <span class="o">+</span> <span class="s2">&quot; in &quot;</span> <span class="o">+</span> <span class="nx">place</span> <span class="o">+</span> <span class="s2">&quot; at &quot;</span> <span class="o">+</span> <span class="nx">time</span><span class="p">);</span>
-</span><span class='line'>    <span class="kd">var</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{</span>
-</span><span class='line'>        <span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;POST&#39;</span><span class="p">,</span>
-</span><span class='line'>        <span class="nx">url</span><span class="o">:</span> <span class="s1">&#39;https://api.instapush.im/v1/post&#39;</span><span class="p">,</span>
-</span><span class='line'>        <span class="nx">headers</span><span class="o">:</span> <span class="p">{</span>
-</span><span class='line'>            <span class="s1">&#39;x-instapush-appid&#39;</span><span class="o">:</span> <span class="s2">&quot;MY_APP_ID&quot;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s1">&#39;x-instapush-appsecret&#39;</span><span class="o">:</span> <span class="s2">&quot;MY_APP_SECRET&quot;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s1">&#39;Content-Type&#39;</span><span class="o">:</span> <span class="s2">&quot;application/json&quot;</span>
-</span><span class='line'>        <span class="p">},</span>
-</span><span class='line'>        <span class="nx">json</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-</span><span class='line'>        <span class="nx">body</span><span class="o">:</span> <span class="p">{</span> <span class="s1">&#39;event&#39;</span><span class="o">:</span> <span class="s1">&#39;Earthquake&#39;</span><span class="p">,</span> <span class="s1">&#39;trackers&#39;</span><span class="o">:</span> <span class="p">{</span> <span class="s1">&#39;magnitude&#39;</span><span class="o">:</span> <span class="nx">magnitude</span><span class="p">,</span> <span class="s1">&#39;location&#39;</span><span class="o">:</span> <span class="nx">place</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="o">:</span> <span class="nx">time</span><span class="p">.</span><span class="nx">toLocaleTimeString</span><span class="p">()</span> <span class="p">}</span> <span class="p">}</span>
-</span><span class='line'>    <span class="p">};</span>
-</span><span class='line'>    <span class="nx">request</span><span class="p">(</span><span class="nx">options</span><span class="p">);</span>
-</span><span class='line'><span class="p">});</span>
-</span><span class='line'><span class="nx">client</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Some error occured&#39;</span><span class="p">);</span>
-</span><span class='line'><span class="p">});</span>
+</span><span class='line'>  <span class="k">class</span> <span class="nc">Application</span> <span class="o">&lt;</span> <span class="ss">Rails</span><span class="p">:</span><span class="ss">:Application</span>
+</span><span class='line'>    <span class="c1"># All your other configs</span>
+</span><span class='line'>    <span class="n">config</span><span class="o">.</span><span class="n">log_formatter</span> <span class="o">=</span> <span class="no">QLogFormatter</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
-
-
-<p>The package.json declares the dependency on <code>sockjs</code> and <code>request</code>.</p>
-
-<figure class='code'><figcaption><span>package.json</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;quake-prab&quot;</span><span class="p">,</span>
-</span><span class='line'>    <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nt">&quot;engines&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span class='line'>        <span class="nt">&quot;node&quot;</span><span class="p">:</span> <span class="s2">&quot;&gt;= 0.6.0&quot;</span><span class="p">,</span>
-</span><span class='line'>        <span class="nt">&quot;npm&quot;</span><span class="p">:</span> <span class="s2">&quot;&gt;= 1.0.0&quot;</span>
-</span><span class='line'>    <span class="p">},</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nt">&quot;dependencies&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span class='line'>        <span class="nt">&quot;request&quot;</span><span class="p">:</span> <span class="s2">&quot;*&quot;</span><span class="p">,</span>
-</span><span class='line'>        <span class="nt">&quot;sockjs-client-ws&quot;</span><span class="p">:</span> <span class="s2">&quot;*&quot;</span>
-</span><span class='line'>    <span class="p">},</span>
-</span><span class='line'>    <span class="nt">&quot;private&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-</span><span class='line'>    <span class="nt">&quot;main&quot;</span><span class="p">:</span> <span class="s2">&quot;client.js&quot;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Possible improvements</h4>
-
-<p>This project is quick and dirty. It is just re-wiring of stuff lying on the web. There are bunch of possible improvements here. Some of them are:</p>
-
-<ul>
-<li>Only notify if the quake has intensity greater than 4.5</li>
-<li>Only notify if the quake has struck in neighbouring countries like Nepal, Bhutan, Pakistan, India</li>
-<li>Provide an endpoint to let user register his/her mobile number on which SMSes can be sent.</li>
-</ul>
 
 </div>
   
@@ -268,11 +237,15 @@ I recalled reading about an app called Instapush which provides a REST API to se
   
     <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/arch-linux'>arch linux (1)</a></li><li><a href='/blog/categories/blabber'>blabber (1)</a></li><li><a href='/blog/categories/functional-programming'>functional programming (1)</a></li><li><a href='/blog/categories/haskell'>haskell (2)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/mongodb'>mongodb (1)</a></li><li><a href='/blog/categories/nodejs'>nodejs (1)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/rails'>rails (3)</a></li><li><a href='/blog/categories/recursion'>recursion (1)</a></li><li><a href='/blog/categories/ruby'>ruby (5)</a></li><li><a href='/blog/categories/shell'>shell (1)</a></li><li><a href='/blog/categories/web-apps'>web apps (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/arch-linux'>arch linux (1)</a></li><li><a href='/blog/categories/blabber'>blabber (1)</a></li><li><a href='/blog/categories/functional-programming'>functional programming (1)</a></li><li><a href='/blog/categories/haskell'>haskell (2)</a></li><li><a href='/blog/categories/linux'>linux (2)</a></li><li><a href='/blog/categories/mongodb'>mongodb (1)</a></li><li><a href='/blog/categories/nodejs'>nodejs (1)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/rails'>rails (3)</a></li><li><a href='/blog/categories/recursion'>recursion (1)</a></li><li><a href='/blog/categories/ruby'>ruby (5)</a></li><li><a href='/blog/categories/shell'>shell (1)</a></li><li><a href='/blog/categories/web-apps'>web apps (2)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/07/07/compile-goaccess-from-source-on-centos-7/">Compile Goaccess From Source on CentOS 7</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2016/06/26/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond/">Configure DatabaseCleaner With Rspec for Mongoid 5 and Beyond</a>
@@ -288,10 +261,6 @@ I recalled reading about an app called Instapush which provides a REST API to se
     
       <li class="post">
         <a href="/blog/2015/11/22/start-slash-restart-unicorn-safely-without-downtime/">Start/restart Unicorn Safely Without Downtime</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/11/21/include-filename-and-line-number-in-rails-logger/">Include Filename and Line Number in Rails Logger</a>
       </li>
     
   </ul>

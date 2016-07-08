@@ -9,7 +9,7 @@
   <meta name="author" content="Prabhakar Kumar">
 
   
-  <meta name="description" content="If you run Arch Linux and are trying to run rake generate on a Octopress blog, with a post that uses some code and syntax highlighting markdown over &hellip;">
+  <meta name="description" content="Metaprogramming is fun! Dynamically modifying a program garners a lot of power to the programmer. In this post I show an example situation which is &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -86,7 +86,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2014/01/27/octopress-syntax-highlighting-issue-on-arch-linux/">Octopress Syntax Highlighting Issue on Arch Linux</a></h1>
+      <h1 class="entry-title"><a href="/blog/2014/03/01/metaprogramming-101-in-ruby/">Metaprogramming 101 in Ruby</a></h1>
     
     
       <p class="meta">
@@ -102,40 +102,62 @@
   
 
 
-<time datetime="2014-01-27T00:39:00-05:00" pubdate data-updated="true"></time>
+<time datetime="2014-03-01T23:36:00-05:00" pubdate data-updated="true"></time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>If you run Arch Linux and are trying to run <code>rake generate</code> on a Octopress blog, with a post that uses some code and syntax highlighting markdown over it; you will probably see this error:</p>
+  <div class="entry-content"><p>Metaprogramming is fun! Dynamically modifying a program garners a lot of power to the programmer. In this post I show an example situation which is beautifully solved by metaprogramming.
+I am a Ruby dilettante.</p>
 
-<pre><code>/plugins/pygments_code.rb:27:in `rescue in pygments': Pygments can't parse unknown language: ruby. (RuntimeError)
-</code></pre>
+<h4>The situation</h4>
 
-<p>This happens because Arch uses <code>python3</code> as default python, while the world hasn&rsquo;t yet made up their mind to switch. The <em>Pygments</em> gem that Octopress uses, uses <code>python2</code> syntax which Arch&rsquo;s <code>python3</code> doesn&rsquo;t undertand fully and hence raises an error. To fix this, just open this file:</p>
+<p>I wanted to develop a plugin framework for a side project of mine. There is a higher level class, which should delegate methods calls on itself to the plugin implementer class.
+Although, OOPS has a standard solution for this situation using interfaces but here is the beauty and elegance of metaprogramming in ruby.
+The code below is the constructor of the higher level class which checks the passed plugin object for interface&rsquo;s implementation and then defines those methods in itself delegating the actual calls to the passed plugin object.</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>~/.rbenv/versions/2.1.0/lib/ruby/gems/2.1.0/gems/pygments.rb-0.3.4/lib/pygments/mentos.py
+<h4>The solution</h4>
+
+<figure class='code'><figcaption><span>Dynamically defining methods</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">provider</span><span class="p">)</span>
+</span><span class='line'>  <span class="c1"># Check whether the interface is implemented or not</span>
+</span><span class='line'>  <span class="n">interface</span> <span class="o">=</span> <span class="o">[</span>
+</span><span class='line'>    <span class="ss">:get</span><span class="p">,</span> <span class="ss">:put</span><span class="p">,</span> <span class="ss">:entries</span><span class="p">,</span> <span class="ss">:move</span><span class="p">,</span> <span class="ss">:rm!</span><span class="p">,</span> <span class="ss">:mkdir</span><span class="p">,</span> <span class="ss">:file?</span><span class="p">,</span> <span class="ss">:directory?</span><span class="p">,</span> <span class="ss">:exists?</span><span class="p">,</span> <span class="ss">:makedirs</span>
+</span><span class='line'>  <span class="o">]</span>
+</span><span class='line'>  <span class="n">interface</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">method</span><span class="o">|</span>
+</span><span class='line'>    <span class="k">raise</span> <span class="s2">&quot;Plugin is not supported&quot;</span> <span class="k">unless</span> <span class="n">provider</span><span class="o">.</span><span class="n">respond_to?</span><span class="p">(</span><span class="nb">method</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>  <span class="vi">@provider</span> <span class="o">=</span> <span class="n">provider</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># Define the methods supported by provider in this class too</span>
+</span><span class='line'>  <span class="n">interface</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">method</span><span class="o">|</span>
+</span><span class='line'>    <span class="nb">self</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="ss">:define_method</span><span class="p">,</span> <span class="nb">method</span><span class="p">)</span> <span class="k">do</span> <span class="o">|*</span><span class="n">splat</span><span class="o">|</span>
+</span><span class='line'>      <span class="vi">@provider</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="nb">method</span><span class="p">,</span> <span class="o">*</span><span class="n">splat</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Use your own version, instead of <code>2.1.0</code> that I am using. Change the first line:</p>
-
-<figure class='code'><figcaption><span>mentos.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c">#!/usr/bin/env python </span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>to</p>
-
-<figure class='code'><figcaption><span>mentos.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c">#!/usr/bin/env python2 </span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>After this, your <code>rake generate</code> should succeed. Oh, and yes, this file path is for <code>rbenv</code>. If you use <code>rvm</code> figure out your own path using the command <code>find ~/ -name mentos.py</code>.</p>
+<p>Boy, so simple it is with ruby! And yeah, I love splat operator!</p>
 </div>
   
   
@@ -157,11 +179,15 @@
   
     <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/arch-linux'>arch linux (1)</a></li><li><a href='/blog/categories/blabber'>blabber (1)</a></li><li><a href='/blog/categories/functional-programming'>functional programming (1)</a></li><li><a href='/blog/categories/haskell'>haskell (2)</a></li><li><a href='/blog/categories/linux'>linux (1)</a></li><li><a href='/blog/categories/mongodb'>mongodb (1)</a></li><li><a href='/blog/categories/nodejs'>nodejs (1)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/rails'>rails (3)</a></li><li><a href='/blog/categories/recursion'>recursion (1)</a></li><li><a href='/blog/categories/ruby'>ruby (5)</a></li><li><a href='/blog/categories/shell'>shell (1)</a></li><li><a href='/blog/categories/web-apps'>web apps (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/arch-linux'>arch linux (1)</a></li><li><a href='/blog/categories/blabber'>blabber (1)</a></li><li><a href='/blog/categories/functional-programming'>functional programming (1)</a></li><li><a href='/blog/categories/haskell'>haskell (2)</a></li><li><a href='/blog/categories/linux'>linux (2)</a></li><li><a href='/blog/categories/mongodb'>mongodb (1)</a></li><li><a href='/blog/categories/nodejs'>nodejs (1)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/rails'>rails (3)</a></li><li><a href='/blog/categories/recursion'>recursion (1)</a></li><li><a href='/blog/categories/ruby'>ruby (5)</a></li><li><a href='/blog/categories/shell'>shell (1)</a></li><li><a href='/blog/categories/web-apps'>web apps (2)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/07/07/compile-goaccess-from-source-on-centos-7/">Compile Goaccess From Source on CentOS 7</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2016/06/26/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond/">Configure DatabaseCleaner With Rspec for Mongoid 5 and Beyond</a>
@@ -177,10 +203,6 @@
     
       <li class="post">
         <a href="/blog/2015/11/22/start-slash-restart-unicorn-safely-without-downtime/">Start/restart Unicorn Safely Without Downtime</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/11/21/include-filename-and-line-number-in-rails-logger/">Include Filename and Line Number in Rails Logger</a>
       </li>
     
   </ul>

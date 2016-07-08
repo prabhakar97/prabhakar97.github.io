@@ -5,11 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Hello World - Prab's Code Blog</title>
+  <title>Compile goaccess from source on CentOS 7 - Prab's Code Blog</title>
   <meta name="author" content="Prabhakar Kumar">
 
   
-  <meta name="description" content="Alright fellas, I have switched to Octopress being a ruby lover. I will be posting about code and code and more code in this blog. Mainly there will &hellip;">
+  <meta name="description" content="Goaccess is a neat little utility which scans through your web server (I use nginx) logs and generates a nice HTML report of
+your site&rsquo;s access &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://prabhakar97.github.io/blog/2013/07/28/hello-world">
+  <link rel="canonical" href="http://prabhakar97.github.io/blog/2016/07/07/compile-goaccess-from-source-on-centos-7">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Prab's Code Blog" type="application/atom+xml">
@@ -83,7 +84,7 @@
   
   <header>
     
-      <h1 class="entry-title">Hello World</h1>
+      <h1 class="entry-title">Compile Goaccess From Source on CentOS 7</h1>
     
     
       <p class="meta">
@@ -99,14 +100,56 @@
   
 
 
-<time datetime="2013-07-28T01:11:00-04:00" pubdate data-updated="true"></time>
+<time datetime="2016-07-07T22:00:32-04:00" pubdate data-updated="true"></time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Alright fellas, I have switched to Octopress being a ruby lover. I will be posting about code and code and more code in this blog. Mainly there will be lots of scripts that make my daily chores easier, some fixes from my experiences, some puzzle solving and liitle more code.</p>
+<div class="entry-content"><p><a href="https://goaccess.io">Goaccess</a> is a neat little utility which scans through your web server (I use nginx) logs and generates a nice HTML report of
+your site&rsquo;s access statistics. Here is a <a href="http://rt.goaccess.io">sample from their site</a>. I run CentOS 7 on an EC2 Instance where I run a pet project. I wanted a light web analyzer that just works. I have
+<a href="https://fedoraproject.org/wiki/EPEL">epel</a> enabled on my instance so I just installed goaccess by <code>sudo yum install goaccess</code>. It worked and I was able
+to see some stats. But then I figured out that the version from repositories is quite an old one at 0.9.8. The latest one is 1.0.2 from the website.
+So, I just uninstalled it <code>sudo yum remove goaccess</code>.</p>
+
+<p>I downloaded the source tarball and after a few hiccups I was able to get it running. There are two quirks you need to watch out for. First one is
+that, enabling geoip in goaccess requires installation of maxmind&rsquo;s geoip database. The installed database from yum is very small, so you need to
+update it and change symlink /usr/share/GeoIP/GeoIP.dat to point to /usr/share/GeoIP/GeoLiteCountry.dat. Second quirk is that by default the configure
+script doesn&rsquo;t figure out the geoip devel libs path so you need to manually point to it while configuring.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo yum install GeoIP
+</span><span class='line'>geoipupdate
+</span><span class='line'>sudo rm /usr/share/GeoIP.dat
+</span><span class='line'>sudo ln -s /usr/share/<span class="o">{</span>GeoLiteCountry,GeoIP<span class="o">}</span>.dat
+</span><span class='line'>
+</span><span class='line'>wget http://tar.goaccess.io/goaccess-1.0.2.tar.gz
+</span><span class='line'>tar -xzvf goaccess-1.0.2.tar.gz
+</span><span class='line'><span class="nb">cd </span>goaccess-1.0.2
+</span><span class='line'><span class="nv">LD_FLAGS</span><span class="o">=</span><span class="s1">&#39;-L/usr/lib64/&#39;</span> ./configure --enable-utf8 --enable-geoip
+</span><span class='line'>make
+</span><span class='line'>sudo make install
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I also created a daily crontab entry to generate reports daily and put it in my <code>public</code> folder of rails directory, all the files in which I serve
+statically from nginx. So I can just type <a href="http://mydomain.com/access.html">http://mydomain.com/access.html</a> and see the reports. Here is my crontab entry.</p>
+
+<figure class='code'><figcaption><span>crontab</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>@daily /bin/zcat -f /var/log/nginx/access.log* <span class="p">|</span> /usr/local/bin/goaccess -a -o /home/ec2-user/my_rails_dir/public/access.html
+</span></code></pre></td></tr></table></div></figure>
+
 </div>
 
 
@@ -129,12 +172,12 @@
   
 
 
-<time datetime="2013-07-28T01:11:00-04:00" pubdate data-updated="true"></time>
+<time datetime="2016-07-07T22:00:32-04:00" pubdate data-updated="true"></time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/blabber/'>blabber</a>
+    <a class='category' href='/blog/categories/linux/'>linux</a>, <a class='category' href='/blog/categories/web-apps/'>web apps</a>
   
 </span>
 
@@ -143,7 +186,7 @@
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://prabhakar97.github.io/blog/2013/07/28/hello-world/" data-via="prab97" data-counturl="http://prabhakar97.github.io/blog/2013/07/28/hello-world/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://prabhakar97.github.io/blog/2016/07/07/compile-goaccess-from-source-on-centos-7/" data-via="prab97" data-counturl="http://prabhakar97.github.io/blog/2016/07/07/compile-goaccess-from-source-on-centos-7/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -156,8 +199,8 @@
     
     <p class="meta">
       
+        <a class="basic-alignment left" href="/blog/2016/06/26/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond/" title="Previous Post: Configure DatabaseCleaner with Rspec for Mongoid 5 and beyond">&laquo; Configure DatabaseCleaner with Rspec for Mongoid 5 and beyond</a>
       
-        <a class="basic-alignment right" href="/blog/2014/01/27/script-to-generate-3d-subtitles-from-srt-files/" title="Next Post: Ruby script to generate 3D subtitles from srt files">Ruby script to generate 3D subtitles from srt files &raquo;</a>
       
     </p>
   </footer>
@@ -228,8 +271,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://prabhakar97.github.io/blog/2013/07/28/hello-world/';
-        var disqus_url = 'http://prabhakar97.github.io/blog/2013/07/28/hello-world/';
+        var disqus_identifier = 'http://prabhakar97.github.io/blog/2016/07/07/compile-goaccess-from-source-on-centos-7/';
+        var disqus_url = 'http://prabhakar97.github.io/blog/2016/07/07/compile-goaccess-from-source-on-centos-7/';
         var disqus_script = 'embed.js';
       
     (function () {
