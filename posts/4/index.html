@@ -9,7 +9,7 @@
   <meta name="author" content="Prabhakar Kumar">
 
   
-  <meta name="description" content="I have been intrigued by functional programming for past couple of years, but never quite prioritized it bigtime. Recently I came across this amazing &hellip;">
+  <meta name="description" content="If you run Arch Linux and are trying to run rake generate on a Octopress blog, with a post that uses some code and syntax highlighting markdown over &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -33,18 +33,6 @@
 <!--- MathJax Configuration -->
 <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
   
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-20481925-1']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
 
 </head>
 
@@ -86,7 +74,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2016/05/13/getting-started-with-haskell/">Functional Programming Series - Part 1</a></h1>
+      <h1 class="entry-title"><a href="/blog/2014/01/27/octopress-syntax-highlighting-issue-on-arch-linux/">Octopress Syntax Highlighting Issue on Arch Linux</a></h1>
     
     
       <p class="meta">
@@ -102,106 +90,146 @@
   
 
 
-<time datetime="2016-05-13T20:02:00-04:00" pubdate data-updated="true"></time>
+<time datetime="2014-01-27T00:39:00-05:00" pubdate data-updated="true"></time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>I have been intrigued by functional programming for past couple of years, but never quite prioritized it bigtime. Recently I came across this amazing talk which inspired me
-to go all-in to learn FP.</p>
+  <div class="entry-content"><p>If you run Arch Linux and are trying to run <code>rake generate</code> on a Octopress blog, with a post that uses some code and syntax highlighting markdown over it; you will probably see this error:</p>
 
-<div class="embed-video-container"><iframe src="//www.youtube.com/embed/E8I19uA-wGY" allowfullscreen></iframe></div>
+<pre><code>/plugins/pygments_code.rb:27:in `rescue in pygments': Pygments can't parse unknown language: ruby. (RuntimeError)
+</code></pre>
 
+<p>This happens because Arch uses <code>python3</code> as default python, while the world hasn&rsquo;t yet made up their mind to switch. The <em>Pygments</em> gem that Octopress uses, uses <code>python2</code> syntax which Arch&rsquo;s <code>python3</code> doesn&rsquo;t undertand fully and hence raises an error. To fix this, just open this file:</p>
 
-<p>I chose Haskell as my preferred language and started with the book <a href="http://www.amazon.com/dp/0954300696">The Haskell Road to Logic, Maths and Programming</a>. I found the first
-chapter really interesting.</p>
-
-<p>I started solving exercises from the book. This post and a few subsequent ones will document my solutions to some of the exercise problems. These solutions may not be most concise
-or efficient because I am just beginning to learn Haskell.</p>
-
-<blockquote><p>Define a method removeFst which removes the first instance of an element from a list</p></blockquote>
-
-<figure class='code'><figcaption><span>removeFst.hs</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='hs'><span class='line'><span class="nf">removeFst</span> <span class="ow">::</span> <span class="p">(</span><span class="kt">Eq</span> <span class="n">a</span><span class="p">)</span> <span class="ow">=&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span>
-</span><span class='line'><span class="nf">removeFst</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="n">y</span> <span class="ow">=</span> <span class="kr">if</span> <span class="n">x</span> <span class="o">==</span> <span class="n">y</span>
-</span><span class='line'>                      <span class="kr">then</span> <span class="n">xs</span>
-</span><span class='line'>                        <span class="kr">else</span> <span class="n">x</span> <span class="kt">:</span> <span class="n">removeFst</span> <span class="n">xs</span> <span class="n">y</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>~/.rbenv/versions/2.1.0/lib/ruby/gems/2.1.0/gems/pygments.rb-0.3.4/lib/pygments/mentos.py
 </span></code></pre></td></tr></table></div></figure>
 
 
-<blockquote><p>Define a function which counts number of instances of an element in a list</p></blockquote>
+<p>Use your own version, instead of <code>2.1.0</code> that I am using. Change the first line:</p>
 
-<figure class='code'><figcaption><span>countChars.hs</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='hs'><span class='line'><span class="nf">countChars</span> <span class="ow">::</span> <span class="kt">Char</span> <span class="ow">-&gt;</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">Int</span>
-</span><span class='line'><span class="nf">countChars</span> <span class="n">y</span> <span class="kt">[]</span> <span class="ow">=</span> <span class="mi">0</span>
-</span><span class='line'><span class="nf">countChars</span> <span class="n">y</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="o">|</span> <span class="n">y</span> <span class="o">==</span> <span class="n">x</span> <span class="ow">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">countChars</span> <span class="n">y</span> <span class="n">xs</span>
-</span><span class='line'>                    <span class="o">|</span> <span class="n">otherwise</span> <span class="ow">=</span> <span class="n">countChars</span> <span class="n">y</span> <span class="n">xs</span>
+<figure class='code'><figcaption><span>mentos.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c">#!/usr/bin/env python </span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<blockquote><p>Define a function named blowUp that takes an string and creates a new string from it by repeating ith character in i times. For example: abcdef should return abbcccddddeeeeeffffff</p></blockquote>
+<p>to</p>
 
-<figure class='code'><figcaption><span>blowUp.hs</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='hs'><span class='line'><span class="nf">blowUp</span> <span class="ow">::</span> <span class="kt">Int</span> <span class="ow">-&gt;</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">String</span>
-</span><span class='line'><span class="nf">blowUp</span> <span class="n">n</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="ow">=</span> <span class="n">take</span> <span class="n">n</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">x</span><span class="o">..</span><span class="p">]</span>
-</span><span class='line'><span class="nf">blowUp</span> <span class="n">n</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="ow">=</span> <span class="p">(</span><span class="n">blowUp</span> <span class="n">n</span> <span class="p">[</span><span class="n">x</span><span class="p">])</span> <span class="o">++</span> <span class="p">(</span><span class="n">blowUp</span> <span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="n">xs</span><span class="p">)</span>
+<figure class='code'><figcaption><span>mentos.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c">#!/usr/bin/env python2 </span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<blockquote><p>Write a function to sort a list of orderable elements</p></blockquote>
+<p>After this, your <code>rake generate</code> should succeed. Oh, and yes, this file path is for <code>rbenv</code>. If you use <code>rvm</code> figure out your own path using the command <code>find ~/ -name mentos.py</code>.</p>
+</div>
+  
+  
 
-<p>This is a translation of the famous quick sort algorithm to Haskell.</p>
 
-<figure class='code'><figcaption><span>sort.hs</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/01/27/script-to-generate-3d-subtitles-from-srt-files/">Ruby Script to Generate 3D Subtitles From Srt Files</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-27T00:09:00-05:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>So, you&rsquo;ve got a bunch of 3D movies with SRT subtitles which your 3D TV can play from a USB storage and show the subtitles correctly but can not if you are running the movie on your laptop and sending the display to TV over HDMI; for obvious reasons.
+The solution is to use <em>.ass</em> format subtitles with your media player(I recommed mplayer/smplayer). Just run this script from a directory that contains all your movies in separate directories under that directory. Make sure, <code>srt</code> file is present in each 3D movie directory and has the same name as the movie file. Also make sure, the directories for 3D movies have 3D in their names somewhere. Moreover, you must have the program <code>sub3dtool</code> installed. Get it from <a href="https://code.google.com/p/sub3dtool/">here</a>. After you run the script, all your 3D movie directories will be populated with .ass files automatically. Remember, VLC media player does not play well with <code>.ass</code> subtitles. It skips many dialogues.</p>
+
+<figure class='code'><figcaption><span>Convert SRT subtitles into ASS</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='hs'><span class='line'><span class="nf">sort</span> <span class="ow">::</span> <span class="p">(</span><span class="kt">Ord</span> <span class="n">a</span><span class="p">)</span> <span class="ow">=&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span>
-</span><span class='line'><span class="nf">sort</span> <span class="kt">[]</span> <span class="ow">=</span> <span class="kt">[]</span>
-</span><span class='line'><span class="nf">sort</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="ow">=</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span>
-</span><span class='line'><span class="nf">sort</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="ow">=</span> <span class="n">sort</span> <span class="n">greater</span> <span class="o">++</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">++</span> <span class="n">sort</span> <span class="n">lesser</span>
-</span><span class='line'>                <span class="kr">where</span> <span class="n">greater</span> <span class="ow">=</span> <span class="p">[</span><span class="n">y</span> <span class="o">|</span> <span class="n">y</span> <span class="ow">&lt;-</span> <span class="n">xs</span><span class="p">,</span> <span class="n">y</span> <span class="o">&gt;</span> <span class="n">x</span><span class="p">]</span>
-</span><span class='line'>                      <span class="n">lesser</span> <span class="ow">=</span> <span class="p">[</span><span class="n">y</span> <span class="o">|</span> <span class="n">y</span> <span class="ow">&lt;-</span> <span class="n">xs</span><span class="p">,</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">x</span> <span class="p">]</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Dir</span><span class="o">.</span><span class="n">entries</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">file</span><span class="o">|</span>
+</span><span class='line'>  <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">include?</span> <span class="s2">&quot;3D&quot;</span>
+</span><span class='line'>    <span class="nb">puts</span> <span class="s2">&quot;3D movie found - </span><span class="si">#{</span><span class="n">file</span><span class="si">}</span><span class="s2">. Going ahead to generate .ass subtitle for it&quot;</span>
+</span><span class='line'>    <span class="no">Dir</span><span class="o">.</span><span class="n">entries</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">file1</span><span class="o">|</span>
+</span><span class='line'>      <span class="k">if</span> <span class="n">file1</span><span class="o">.</span><span class="n">include?</span> <span class="s2">&quot;.srt&quot;</span>
+</span><span class='line'>        <span class="nb">puts</span> <span class="s2">&quot;Found srt file: </span><span class="si">#{</span><span class="n">file1</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>        <span class="n">outfile_name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">file1</span><span class="o">[</span><span class="mi">0</span><span class="p">,</span><span class="n">file1</span><span class="o">.</span><span class="n">length</span><span class="o">-</span><span class="mi">3</span><span class="o">]</span><span class="si">}</span><span class="s2">ass&quot;</span>
+</span><span class='line'>        <span class="nb">puts</span> <span class="s2">&quot;Out file name : </span><span class="si">#{</span><span class="n">outfile_name</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>        <span class="sb">`sub3dtool &quot;</span><span class="si">#{</span><span class="n">file</span><span class="si">}</span><span class="sb">/</span><span class="si">#{</span><span class="n">file1</span><span class="si">}</span><span class="sb">&quot; --3dsbs -o &quot;</span><span class="si">#{</span><span class="n">file</span><span class="si">}</span><span class="sb">/</span><span class="si">#{</span><span class="n">outfile_name</span><span class="si">}</span><span class="sb">&quot;`</span>
+</span><span class='line'>        <span class="nb">puts</span> <span class="s2">&quot;Generated successfully&quot;</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<blockquote><p>Write a function that takes a big string and a small string and tells whether the big string starts with the small string</p></blockquote>
-
-<figure class='code'><figcaption><span>startWith.hs</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='hs'><span class='line'><span class="nf">startWith</span> <span class="ow">::</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">Bool</span>
-</span><span class='line'><span class="nf">startWith</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="p">[</span><span class="n">y</span><span class="p">]</span> <span class="ow">=</span> <span class="n">y</span> <span class="o">==</span> <span class="n">x</span>
-</span><span class='line'><span class="nf">startWith</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="p">(</span><span class="n">y</span><span class="kt">:</span><span class="n">ys</span><span class="p">)</span> <span class="ow">=</span> <span class="n">y</span> <span class="o">==</span> <span class="n">x</span> <span class="o">&amp;&amp;</span> <span class="n">startWith</span> <span class="n">xs</span> <span class="n">ys</span>
-</span></code></pre></td></tr></table></div></figure>
+<p>All the movie directories will be populated with corresponding <em>.ass</em> files. Now just run it by <code>mplayer -ass movie_file_name</code>. Use <code>j</code> to cycle through subtitles, <code>f</code> for fullscreen, <code>q</code> to quit mplayer.</p>
+</div>
+  
+  
 
 
-<blockquote><p>Write a function that takes a big string and a small string and tells whether the big string contains the small string as a substring</p></blockquote>
-
-<p>I use the previously defined startWith function to solve this.</p>
-
-<figure class='code'><figcaption><span>substring.hs</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='hs'><span class='line'><span class="nf">contains</span> <span class="ow">::</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">Bool</span>
-</span><span class='line'><span class="nf">contains</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="kt">[]</span> <span class="ow">=</span> <span class="kt">True</span>
-</span><span class='line'><span class="nf">contains</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="n">y</span> <span class="ow">=</span> <span class="n">startWith</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="n">y</span> <span class="o">||</span> <span class="n">startWith</span> <span class="n">xs</span> <span class="n">y</span>
-</span></code></pre></td></tr></table></div></figure>
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/28/hello-world/">Hello World</a></h1>
+    
+    
+      <p class="meta">
+        
 
 
 
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-28T01:11:00-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Alright fellas, I have switched to Octopress being a ruby lover. I will be posting about code and code and more code in this blog. Mainly there will be lots of scripts that make my daily chores easier, some fixes from my experiences, some puzzle solving and liitle more code.</p>
 </div>
   
   
@@ -210,8 +238,6 @@ or efficient because I am just beginning to learn Haskell.</p>
     </article>
   
   <div class="pagination">
-    
-      <a class="prev" href="5">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -263,7 +289,7 @@ or efficient because I am just beginning to learn Haskell.</p>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2016 - Prabhakar Kumar -
+  Copyright &copy; 2017 - Prabhakar Kumar -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> | Themed with <a href="https://github.com/lucaslew/whitespace">Whitespace</a></span>
 </p>
 

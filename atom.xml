@@ -4,7 +4,7 @@
   <title><![CDATA[Prab's Code Blog]]></title>
   <link href="http://prabhakar97.github.io/atom.xml" rel="self"/>
   <link href="http://prabhakar97.github.io/"/>
-  <updated>2016-07-07T22:20:55-04:00</updated>
+  <updated>2017-02-28T20:40:54-05:00</updated>
   <id>http://prabhakar97.github.io/</id>
   <author>
     <name><![CDATA[Prabhakar Kumar]]></name>
@@ -222,8 +222,8 @@ to go all-in to learn FP.</p>
 <div class="embed-video-container"><iframe src="//www.youtube.com/embed/E8I19uA-wGY" allowfullscreen></iframe></div>
 
 
-<p>I chose Haskell as my preferred language and started with the book <a href="http://www.amazon.com/dp/0954300696">The Haskell Road to Logic, Maths and Programming</a>. I found the first
-chapter really interesting.</p>
+<p>I chose Haskell as my preferred language and started with the book <a href="http://www.amazon.com/dp/0954300696">The Haskell Road to Logic, Maths and Programming</a>. The reason was
+primarily because this book induces functional thinking without being too theoretical.</p>
 
 <p>I started solving exercises from the book. This post and a few subsequent ones will document my solutions to some of the exercise problems. These solutions may not be most concise
 or efficient because I am just beginning to learn Haskell.</p>
