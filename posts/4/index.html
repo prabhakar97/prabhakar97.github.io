@@ -9,7 +9,7 @@
   <meta name="author" content="Prabhakar Kumar">
 
   
-  <meta name="description" content="If you run Arch Linux and are trying to run rake generate on a Octopress blog, with a post that uses some code and syntax highlighting markdown over &hellip;">
+  <meta name="description" content="Metaprogramming is fun! Dynamically modifying a program garners a lot of power to the programmer. In this post I show an example situation which is &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -68,6 +68,90 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/03/01/metaprogramming-101-in-ruby/">Metaprogramming 101 in Ruby</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-01T23:36:00-05:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Metaprogramming is fun! Dynamically modifying a program garners a lot of power to the programmer. In this post I show an example situation which is beautifully solved by metaprogramming.
+I am a Ruby dilettante.</p>
+
+<h4>The situation</h4>
+
+<p>I wanted to develop a plugin framework for a side project of mine. There is a higher level class, which should delegate methods calls on itself to the plugin implementer class.
+Although, OOPS has a standard solution for this situation using interfaces but here is the beauty and elegance of metaprogramming in ruby.
+The code below is the constructor of the higher level class which checks the passed plugin object for interface&rsquo;s implementation and then defines those methods in itself delegating the actual calls to the passed plugin object.</p>
+
+<h4>The solution</h4>
+
+<figure class='code'><figcaption><span>Dynamically defining methods</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">provider</span><span class="p">)</span>
+</span><span class='line'>  <span class="c1"># Check whether the interface is implemented or not</span>
+</span><span class='line'>  <span class="n">interface</span> <span class="o">=</span> <span class="o">[</span>
+</span><span class='line'>    <span class="ss">:get</span><span class="p">,</span> <span class="ss">:put</span><span class="p">,</span> <span class="ss">:entries</span><span class="p">,</span> <span class="ss">:move</span><span class="p">,</span> <span class="ss">:rm!</span><span class="p">,</span> <span class="ss">:mkdir</span><span class="p">,</span> <span class="ss">:file?</span><span class="p">,</span> <span class="ss">:directory?</span><span class="p">,</span> <span class="ss">:exists?</span><span class="p">,</span> <span class="ss">:makedirs</span>
+</span><span class='line'>  <span class="o">]</span>
+</span><span class='line'>  <span class="n">interface</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">method</span><span class="o">|</span>
+</span><span class='line'>    <span class="k">raise</span> <span class="s2">&quot;Plugin is not supported&quot;</span> <span class="k">unless</span> <span class="n">provider</span><span class="o">.</span><span class="n">respond_to?</span><span class="p">(</span><span class="nb">method</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>  <span class="vi">@provider</span> <span class="o">=</span> <span class="n">provider</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># Define the methods supported by provider in this class too</span>
+</span><span class='line'>  <span class="n">interface</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">method</span><span class="o">|</span>
+</span><span class='line'>    <span class="nb">self</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="ss">:define_method</span><span class="p">,</span> <span class="nb">method</span><span class="p">)</span> <span class="k">do</span> <span class="o">|*</span><span class="n">splat</span><span class="o">|</span>
+</span><span class='line'>      <span class="vi">@provider</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="nb">method</span><span class="p">,</span> <span class="o">*</span><span class="n">splat</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Boy, so simple it is with ruby! And yeah, I love splat operator!</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -201,43 +285,9 @@ The solution is to use <em>.ass</em> format subtitles with your media player(I r
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/07/28/hello-world/">Hello World</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-07-28T01:11:00-04:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Alright fellas, I have switched to Octopress being a ruby lover. I will be posting about code and code and more code in this blog. Mainly there will be lots of scripts that make my daily chores easier, some fixes from my experiences, some puzzle solving and liitle more code.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
+    
+      <a class="prev" href="5">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -256,6 +306,10 @@ The solution is to use <em>.ass</em> format subtitles with your media player(I r
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2017/03/10/elegant-solutions-to-common-interview-problems/">Elegant Solutions to Common Interview Problems - Part 1 - Linked Lists</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/07/07/compile-goaccess-from-source-on-centos-7/">Compile Goaccess From Source on CentOS 7</a>
       </li>
     
@@ -269,10 +323,6 @@ The solution is to use <em>.ass</em> format subtitles with your media player(I r
     
       <li class="post">
         <a href="/blog/2016/05/13/getting-started-with-haskell/">Functional Programming Series - Part 1</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/11/22/start-slash-restart-unicorn-safely-without-downtime/">Start/restart Unicorn Safely Without Downtime</a>
       </li>
     
   </ul>

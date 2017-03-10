@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Prab's Code Blog</title>
+  <title>Elegant solutions to common interview problems - Part 1 - Linked Lists - Prab's Code Blog</title>
   <meta name="author" content="Prabhakar Kumar">
 
   
@@ -24,7 +24,7 @@ class Node { public: int data; Node* next;
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://prabhakar97.github.io">
+  <link rel="canonical" href="http://prabhakar97.github.io/blog/2017/03/10/elegant-solutions-to-common-interview-problems">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Prab's Code Blog" type="application/atom+xml">
@@ -72,15 +72,12 @@ class Node { public: int data; Node* next;
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2017/03/10/elegant-solutions-to-common-interview-problems/">Elegant Solutions to Common Interview Problems - Part 1 - Linked Lists</a></h1>
+      <h1 class="entry-title">Elegant Solutions to Common Interview Problems - Part 1 - Linked Lists</h1>
     
     
       <p class="meta">
@@ -103,7 +100,7 @@ class Node { public: int data; Node* next;
   </header>
 
 
-  <div class="entry-content"><blockquote><p>Define a linked list node for integers</p></blockquote>
+<div class="entry-content"><blockquote><p>Define a linked list node for integers</p></blockquote>
 
 <figure class='code'><figcaption><span>LinkedListNode.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -278,100 +275,16 @@ class Node { public: int data; Node* next;
 </span></code></pre></td></tr></table></div></figure>
 
 </div>
-  
-  
 
 
-    </article>
-  
-  
-    <article>
+  <footer>
+    <p class="meta">
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2016/07/07/compile-goaccess-from-source-on-centos-7/">Compile Goaccess From Source on CentOS 7</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
   
 
+<span class="byline author vcard">Posted by <span class="fn">Prabhakar Kumar</span></span>
 
-<time datetime="2016-07-07T22:00:32-04:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="https://goaccess.io">Goaccess</a> is a neat little utility which scans through your web server (I use nginx) logs and generates a nice HTML report of
-your site&rsquo;s access statistics. Here is a <a href="http://rt.goaccess.io">sample from their site</a>. I run CentOS 7 on an EC2 Instance where I run a pet project. I wanted a light web analyzer that just works. I have
-<a href="https://fedoraproject.org/wiki/EPEL">epel</a> enabled on my instance so I just installed goaccess by <code>sudo yum install goaccess</code>. It worked and I was able
-to see some stats. But then I figured out that the version from repositories is quite an old one at 0.9.8. The latest one is 1.0.2 from the website.
-So, I just uninstalled it <code>sudo yum remove goaccess</code>.</p>
-
-<p>I downloaded the source tarball and after a few hiccups I was able to get it running. There are two quirks you need to watch out for. First one is
-that, enabling geoip in goaccess requires installation of maxmind&rsquo;s geoip database. The installed database from yum is very small, so you need to
-update it and change symlink /usr/share/GeoIP/GeoIP.dat to point to /usr/share/GeoIP/GeoLiteCountry.dat. Second quirk is that by default the configure
-script doesn&rsquo;t figure out the geoip devel libs path so you need to manually point to it while configuring.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo yum install GeoIP
-</span><span class='line'>geoipupdate
-</span><span class='line'>sudo rm /usr/share/GeoIP.dat
-</span><span class='line'>sudo ln -s /usr/share/<span class="o">{</span>GeoLiteCountry,GeoIP<span class="o">}</span>.dat
-</span><span class='line'>
-</span><span class='line'>wget http://tar.goaccess.io/goaccess-1.0.2.tar.gz
-</span><span class='line'>tar -xzvf goaccess-1.0.2.tar.gz
-</span><span class='line'><span class="nb">cd </span>goaccess-1.0.2
-</span><span class='line'><span class="nv">LD_FLAGS</span><span class="o">=</span><span class="s1">&#39;-L/usr/lib64/&#39;</span> ./configure --enable-utf8 --enable-geoip
-</span><span class='line'>make
-</span><span class='line'>sudo make install
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I also created a daily crontab entry to generate reports daily and put it in my <code>public</code> folder of rails directory, all the files in which I serve
-statically from nginx. So I can just type <a href="http://mydomain.com/access.html">http://mydomain.com/access.html</a> and see the reports. Here is my crontab entry.</p>
-
-<figure class='code'><figcaption><span>crontab</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>@daily /bin/zcat -f /var/log/nginx/access.log* <span class="p">|</span> /usr/local/bin/goaccess -a -o /home/ec2-user/my_rails_dir/public/access.html
-</span></code></pre></td></tr></table></div></figure>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2016/06/26/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond/">Configure DatabaseCleaner With Rspec for Mongoid 5 and Beyond</a></h1>
-    
-    
-      <p class="meta">
-        
 
 
 
@@ -383,113 +296,42 @@ statically from nginx. So I can just type <a href="http://mydomain.com/access.ht
   
 
 
-<time datetime="2016-06-26T21:05:22-04:00" pubdate data-updated="true"></time>
-        
-      </p>
+<time datetime="2017-03-10T13:48:24-05:00" pubdate data-updated="true"></time>
+      
+
+
+    </p>
     
-  </header>
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://prabhakar97.github.io/blog/2017/03/10/elegant-solutions-to-common-interview-problems/" data-via="prab97" data-counturl="http://prabhakar97.github.io/blog/2017/03/10/elegant-solutions-to-common-interview-problems/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
 
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2016/07/07/compile-goaccess-from-source-on-centos-7/" title="Previous Post: Compile goaccess from source on CentOS 7">&laquo; Compile goaccess from source on CentOS 7</a>
+      
+      
+    </p>
+  </footer>
+</article>
 
-  <div class="entry-content"><p><a href="https://github.com/DatabaseCleaner/database_cleaner">Database Cleaner</a> is a nifty gem for streamlining tests. Configuring it is straightforward
-but it didn&rsquo;t work for me out of the box for Mongoid 5.</p>
-
-<p>Here&rsquo;s my Gemfile segment for testing.</p>
-
-<figure class='code'><figcaption><span>Gemfile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">group</span> <span class="ss">:test</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">gem</span> <span class="s2">&quot;factory_girl_rails&quot;</span>
-</span><span class='line'>  <span class="n">gem</span> <span class="s2">&quot;rspec-rails&quot;</span><span class="p">,</span> <span class="s1">&#39;~&gt; 3.4&#39;</span>
-</span><span class='line'>  <span class="n">gem</span> <span class="s1">&#39;faker&#39;</span>
-</span><span class='line'>  <span class="n">gem</span> <span class="s1">&#39;database_cleaner&#39;</span><span class="p">,</span> <span class="ss">git</span><span class="p">:</span> <span class="s1">&#39;git://github.com/DatabaseCleaner/database_cleaner.git&#39;</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I added a <code>require 'support/database_cleaner'</code> in my <code>spec_helper</code>. And here&rsquo;s my <code>database_cleaner.rb</code>.</p>
-
-<figure class='code'><figcaption><span>spec/support/database_cleaner.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">RSpec</span><span class="o">.</span><span class="n">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">before</span><span class="p">(</span><span class="ss">:suite</span><span class="p">)</span> <span class="k">do</span>
-</span><span class='line'>    <span class="no">DatabaseCleaner</span><span class="o">.</span><span class="n">strategy</span> <span class="o">=</span> <span class="ss">:truncation</span>
-</span><span class='line'>    <span class="no">DatabaseCleaner</span><span class="o">.</span><span class="n">clean</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">before</span><span class="p">(</span><span class="ss">:each</span><span class="p">)</span> <span class="k">do</span>
-</span><span class='line'>    <span class="no">DatabaseCleaner</span><span class="o">.</span><span class="n">start</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">after</span><span class="p">(</span><span class="ss">:each</span><span class="p">)</span> <span class="k">do</span>
-</span><span class='line'>    <span class="no">DatabaseCleaner</span><span class="o">.</span><span class="n">clean</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>When I ran my spec, I was greeted with an unexpected ugly error.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='text'><span class='line'>/home/prabhakar/.rbenv/versions/2.3.0/lib/ruby/gems/2.3.0/bundler/gems/database_cleaner-f052d64d3be9/lib/database_cleaner/mongo2/truncation_mixin.rb:29:in `collections&#39;: undefined method `collections&#39; for #&lt;Mongo::Client:0x47021052998580 cluster=127.0.0.1:27017&gt; (NoMethodError)
-</span><span class='line'>  from /home/prabhakar/.rbenv/versions/2.3.0/lib/ruby/gems/2.3.0/bundler/gems/database_cleaner-f052d64d3be9/lib/database_cleaner/mongo2/truncation_mixin.rb:9:in `clean&#39;
-</span><span class='line'>  from /home/prabhakar/.rbenv/versions/2.3.0/lib/ruby/gems/2.3.0/bundler/gems/database_cleaner-f052d64d3be9/lib/database_cleaner/base.rb:92:in `clean&#39;
-</span><span class='line'>  from /home/prabhakar/.rbenv/versions/2.3.0/lib/ruby/gems/2.3.0/bundler/gems/database_cleaner-f052d64d3be9/lib/database_cleaner/configuration.rb:79:in `block in clean&#39;
-</span><span class='line'>  from /home/prabhakar/.rbenv/versions/2.3.0/lib/ruby/gems/2.3.0/bundler/gems/database_cleaner-f052d64d3be9/lib/database_cleaner/configuration.rb:79:in `each&#39;
-</span><span class='line'>  from /home/prabhakar/.rbenv/versions/2.3.0/lib/ruby/gems/2.3.0/bundler/gems/database_cleaner-f052d64d3be9/lib/database_cleaner/configuration.rb:79:in `clean&#39;
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>After looking at the code in the gem, I finally found out what was wrong in it. I created a
-<a href="https://github.com/prabhakar97/database_cleaner/commit/3cf0d1b81e4a118fd173d697f032a9aff4f431de">commit for fix</a> and submitted a pull request to
-the maintainer. Looking at my commit and the relevant files <a href="https://github.com/DatabaseCleaner/database_cleaner/blob/master/lib/database_cleaner/mongoid/truncation.rb">truncation.rb</a> and <a href="https://github.com/DatabaseCleaner/database_cleaner/blob/master/lib/database_cleaner/mongo2/truncation_mixin.rb">truncation_mixin.rb</a>, you should be able to piece together the problem.</p>
-
-<p>Meanwhile, if you are using Mongoid 5 and aren&rsquo;t able to get it working you could simply point to my fork of database_cleaner by updating your Gemfile
-to have:</p>
-
-<figure class='code'><figcaption><span>Gemfile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gem</span> <span class="s1">&#39;database_cleaner&#39;</span><span class="p">,</span> <span class="ss">git</span><span class="p">:</span> <span class="s1">&#39;git://github.com/prabhakar97/database_cleaner.git&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
-  
-  
 
-
-    </article>
-  
-  <div class="pagination">
-    
-      <a class="prev" href="2">&larr; Older</a>
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
-</div>
 <aside class="sidebar">
   
     <section>
@@ -531,6 +373,7 @@ to have:</p>
   
 </aside>
 
+
     </div>
   </div>
   <footer role="contentinfo"><p>
@@ -545,7 +388,10 @@ to have:</p>
       var disqus_shortname = 'techbite';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://prabhakar97.github.io/blog/2017/03/10/elegant-solutions-to-common-interview-problems/';
+        var disqus_url = 'http://prabhakar97.github.io/blog/2017/03/10/elegant-solutions-to-common-interview-problems/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

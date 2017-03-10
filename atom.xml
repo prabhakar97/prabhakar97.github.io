@@ -4,7 +4,7 @@
   <title><![CDATA[Prab's Code Blog]]></title>
   <link href="http://prabhakar97.github.io/atom.xml" rel="self"/>
   <link href="http://prabhakar97.github.io/"/>
-  <updated>2017-03-01T15:48:37-05:00</updated>
+  <updated>2017-03-10T14:26:08-05:00</updated>
   <id>http://prabhakar97.github.io/</id>
   <author>
     <name><![CDATA[Prabhakar Kumar]]></name>
@@ -12,6 +12,188 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Elegant solutions to common interview problems - Part 1 - Linked Lists]]></title>
+    <link href="http://prabhakar97.github.io/blog/2017/03/10/elegant-solutions-to-common-interview-problems/"/>
+    <updated>2017-03-10T13:48:24-05:00</updated>
+    <id>http://prabhakar97.github.io/blog/2017/03/10/elegant-solutions-to-common-interview-problems</id>
+    <content type="html"><![CDATA[<blockquote><p>Define a linked list node for integers</p></blockquote>
+
+<figure class='code'><figcaption><span>LinkedListNode.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">class</span> <span class="nc">Node</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">public</span><span class="o">:</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">data</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">Node</span><span class="o">*</span> <span class="n">next</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>Reverse a singly linked list in-place iteratively</p></blockquote>
+
+<figure class='code'><figcaption><span>ReverseLinkedListIterative.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">Node</span><span class="o">*</span> <span class="nf">reverseIterative</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">head</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="c1">// Empty list is already reversed</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">head</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="c1">// Initialize two pointers, current(ptr) and previous</span>
+</span><span class='line'>    <span class="n">Node</span><span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="n">head</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">Node</span><span class="o">*</span> <span class="n">prev</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+</span><span class='line'>    <span class="c1">// At each node, we point it&#39;s next to previous</span>
+</span><span class='line'>    <span class="k">while</span> <span class="p">(</span><span class="n">ptr</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">Node</span><span class="o">*</span> <span class="n">next</span> <span class="o">=</span> <span class="n">ptr</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">ptr</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">prev</span><span class="p">;</span>
+</span><span class='line'>        <span class="c1">// Advance both pointers</span>
+</span><span class='line'>        <span class="n">prev</span> <span class="o">=</span> <span class="n">ptr</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">ptr</span> <span class="o">=</span> <span class="n">next</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="c1">// Point head to last node</span>
+</span><span class='line'>    <span class="n">head</span> <span class="o">=</span> <span class="n">prev</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">head</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>Reverse a singly linked list in-place recursively</p></blockquote>
+
+<figure class='code'><figcaption><span>ReverseLinkedListRecursive.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">Node</span><span class="o">*</span> <span class="nf">reverseRecursive</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">head</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">head</span> <span class="o">||</span> <span class="o">!</span><span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">head</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="n">Node</span><span class="o">*</span> <span class="n">rest</span> <span class="o">=</span> <span class="n">reverseRecursive</span><span class="p">(</span><span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">);</span>
+</span><span class='line'>    <span class="c1">// Point head&#39;s next node towards head</span>
+</span><span class='line'>    <span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">head</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">rest</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>Traverse a linked list recursively</p></blockquote>
+
+<figure class='code'><figcaption><span>traverseRecursive.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">void</span> <span class="nf">traverse</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">head</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">head</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">head</span><span class="o">-&gt;</span><span class="n">data</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="n">traverse</span><span class="p">(</span><span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>Traverse a linked list recursively in reverse order</p></blockquote>
+
+<figure class='code'><figcaption><span>traverseRecursiveReverse.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">void</span> <span class="nf">traverseReverse</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">head</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">head</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="n">traverseReverse</span><span class="p">(</span><span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">head</span><span class="o">-&gt;</span><span class="n">data</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>Print nth element of linked list (counted from 1)</p></blockquote>
+
+<figure class='code'><figcaption><span>printNthElement.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">void</span> <span class="nf">printNthElement</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">head</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">head</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">head</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="n">printNthElement</span><span class="p">(</span><span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>Print nth element from last in linked list</p></blockquote>
+
+<figure class='code'><figcaption><span>printNthElementFromLast.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">void</span> <span class="nf">printNthLastElement</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">head</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">head</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="n">printNthLastElement</span><span class="p">(</span><span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span>
+</span><span class='line'>    <span class="o">*</span><span class="n">n</span> <span class="o">=</span> <span class="o">*</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">head</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">;</span>
+</span><span class='line'>        <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Compile goaccess from source on CentOS 7]]></title>
