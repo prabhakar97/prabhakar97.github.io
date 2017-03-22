@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Prab's Code Blog</title>
+  <title>Ship a REST API with Node, ES6 and MongoDB - Part 1 - Prab's Code Blog</title>
   <meta name="author" content="Prabhakar Kumar">
 
   
@@ -19,7 +19,7 @@ are now being built &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://prabhakar97.github.io">
+  <link rel="canonical" href="http://prabhakar97.github.io/blog/2017/03/22/bootstrap-a-restful-api-app-with-mean-stack-on-arch-linux">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Prab's Code Blog" type="application/atom+xml">
@@ -67,15 +67,12 @@ are now being built &hellip;">
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2017/03/22/bootstrap-a-restful-api-app-with-mean-stack-on-arch-linux/">Ship a REST API With Node, ES6 and MongoDB - Part 1</a></h1>
+      <h1 class="entry-title">Ship a REST API With Node, ES6 and MongoDB - Part 1</h1>
     
     
       <p class="meta">
@@ -98,7 +95,7 @@ are now being built &hellip;">
   </header>
 
 
-  <div class="entry-content"><h2>Introduction</h2>
+<div class="entry-content"><h2>Introduction</h2>
 
 <p>NodeJS has been gaining a lot of traction recently, especially for web applications. Lots of new web applications
 are now being built with tools from  the Node ecosystem. A possible reason is the umpteen number of javascript
@@ -485,231 +482,16 @@ WHERE sex = &lsquo;F&rsquo; in SQL.</p>
 <p>In this part we got bootstrapped and got our hands dirty. In the next part we will start with data modeling and
 continue further. Stay tuned for it.</p>
 </div>
-  
-  
 
 
-    </article>
-  
-  
-    <article>
+  <footer>
+    <p class="meta">
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2017/03/10/elegant-solutions-to-common-interview-problems/">Elegant Solutions to Common Interview Problems - Part 1 - Linked Lists</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
   
 
+<span class="byline author vcard">Posted by <span class="fn">Prabhakar Kumar</span></span>
 
-<time datetime="2017-03-10T13:48:24-05:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><blockquote><p>Define a linked list node for integers</p></blockquote>
-
-<figure class='code'><figcaption><span>LinkedListNode.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">class</span> <span class="nc">Node</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">public</span><span class="o">:</span>
-</span><span class='line'>    <span class="kt">int</span> <span class="n">data</span><span class="p">;</span>
-</span><span class='line'>    <span class="n">Node</span><span class="o">*</span> <span class="n">next</span><span class="p">;</span>
-</span><span class='line'><span class="p">};</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<blockquote><p>Reverse a singly linked list in-place iteratively</p></blockquote>
-
-<figure class='code'><figcaption><span>ReverseLinkedListIterative.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">Node</span><span class="o">*</span> <span class="nf">reverseIterative</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">head</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="c1">// Empty list is already reversed</span>
-</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">head</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>    <span class="c1">// Initialize two pointers, current(ptr) and previous</span>
-</span><span class='line'>    <span class="n">Node</span><span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="n">head</span><span class="p">;</span>
-</span><span class='line'>    <span class="n">Node</span><span class="o">*</span> <span class="n">prev</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
-</span><span class='line'>    <span class="c1">// At each node, we point it&#39;s next to previous</span>
-</span><span class='line'>    <span class="k">while</span> <span class="p">(</span><span class="n">ptr</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>        <span class="n">Node</span><span class="o">*</span> <span class="n">next</span> <span class="o">=</span> <span class="n">ptr</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
-</span><span class='line'>        <span class="n">ptr</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">prev</span><span class="p">;</span>
-</span><span class='line'>        <span class="c1">// Advance both pointers</span>
-</span><span class='line'>        <span class="n">prev</span> <span class="o">=</span> <span class="n">ptr</span><span class="p">;</span>
-</span><span class='line'>        <span class="n">ptr</span> <span class="o">=</span> <span class="n">next</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>    <span class="c1">// Point head to last node</span>
-</span><span class='line'>    <span class="n">head</span> <span class="o">=</span> <span class="n">prev</span><span class="p">;</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">head</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<blockquote><p>Reverse a singly linked list in-place recursively</p></blockquote>
-
-<figure class='code'><figcaption><span>ReverseLinkedListRecursive.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">Node</span><span class="o">*</span> <span class="nf">reverseRecursive</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">head</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">head</span> <span class="o">||</span> <span class="o">!</span><span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">head</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>    <span class="n">Node</span><span class="o">*</span> <span class="n">rest</span> <span class="o">=</span> <span class="n">reverseRecursive</span><span class="p">(</span><span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">);</span>
-</span><span class='line'>    <span class="c1">// Point head&#39;s next node towards head</span>
-</span><span class='line'>    <span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">head</span><span class="p">;</span>
-</span><span class='line'>    <span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">rest</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<blockquote><p>Traverse a linked list recursively</p></blockquote>
-
-<figure class='code'><figcaption><span>traverseRecursive.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">void</span> <span class="nf">traverse</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">head</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">head</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>        <span class="k">return</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-</span><span class='line'>        <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">head</span><span class="o">-&gt;</span><span class="n">data</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>    <span class="n">traverse</span><span class="p">(</span><span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">);</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<blockquote><p>Traverse a linked list recursively in reverse order</p></blockquote>
-
-<figure class='code'><figcaption><span>traverseRecursiveReverse.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">void</span> <span class="nf">traverseReverse</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">head</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">head</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>        <span class="k">return</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>    <span class="n">traverseReverse</span><span class="p">(</span><span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">);</span>
-</span><span class='line'>    <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">head</span><span class="o">-&gt;</span><span class="n">data</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<blockquote><p>Print nth element of linked list (counted from 1)</p></blockquote>
-
-<figure class='code'><figcaption><span>printNthElement.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">void</span> <span class="nf">printNthElement</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">head</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">head</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>        <span class="k">return</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>        <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">head</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>    <span class="n">printNthElement</span><span class="p">(</span><span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<blockquote><p>Print nth element from last in linked list</p></blockquote>
-
-<figure class='code'><figcaption><span>printNthElementFromLast.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">void</span> <span class="nf">printNthLastElement</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">head</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">head</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>        <span class="k">return</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>    <span class="n">printNthLastElement</span><span class="p">(</span><span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span>
-</span><span class='line'>    <span class="o">*</span><span class="n">n</span> <span class="o">=</span> <span class="o">*</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
-</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>        <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">head</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">;</span>
-</span><span class='line'>        <span class="k">return</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2016/07/07/compile-goaccess-from-source-on-centos-7/">Compile Goaccess From Source on CentOS 7</a></h1>
-    
-    
-      <p class="meta">
-        
 
 
 
@@ -721,71 +503,48 @@ continue further. Stay tuned for it.</p>
   
 
 
-<time datetime="2016-07-07T22:00:32-04:00" pubdate data-updated="true"></time>
-        
-      </p>
+<time datetime="2017-03-22T12:22:40-04:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/es6/'>es6</a>, <a class='category' href='/blog/categories/linux/'>linux</a>, <a class='category' href='/blog/categories/mongodb/'>mongodb</a>, <a class='category' href='/blog/categories/nodejs/'>nodejs</a>
+  
+</span>
+
+
+    </p>
     
-  </header>
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://prabhakar97.github.io/blog/2017/03/22/bootstrap-a-restful-api-app-with-mean-stack-on-arch-linux/" data-via="prab97" data-counturl="http://prabhakar97.github.io/blog/2017/03/22/bootstrap-a-restful-api-app-with-mean-stack-on-arch-linux/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
 
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2017/03/10/elegant-solutions-to-common-interview-problems/" title="Previous Post: Elegant solutions to common interview problems - Part 1 - Linked Lists">&laquo; Elegant solutions to common interview problems - Part 1 - Linked Lists</a>
+      
+      
+    </p>
+  </footer>
+</article>
 
-  <div class="entry-content"><p><a href="https://goaccess.io">Goaccess</a> is a neat little utility which scans through your web server (I use nginx) logs and generates a nice HTML report of
-your site&rsquo;s access statistics. Here is a <a href="http://rt.goaccess.io">sample from their site</a>. I run CentOS 7 on an EC2 Instance where I run a pet project. I wanted a light web analyzer that just works. I have
-<a href="https://fedoraproject.org/wiki/EPEL">epel</a> enabled on my instance so I just installed goaccess by <code>sudo yum install goaccess</code>. It worked and I was able
-to see some stats. But then I figured out that the version from repositories is quite an old one at 0.9.8. The latest one is 1.0.2 from the website.
-So, I just uninstalled it <code>sudo yum remove goaccess</code>.</p>
-
-<p>I downloaded the source tarball and after a few hiccups I was able to get it running. There are two quirks you need to watch out for. First one is
-that, enabling geoip in goaccess requires installation of maxmind&rsquo;s geoip database. The installed database from yum is very small, so you need to
-update it and change symlink /usr/share/GeoIP/GeoIP.dat to point to /usr/share/GeoIP/GeoLiteCountry.dat. Second quirk is that by default the configure
-script doesn&rsquo;t figure out the geoip devel libs path so you need to manually point to it while configuring.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo yum install GeoIP
-</span><span class='line'>geoipupdate
-</span><span class='line'>sudo rm /usr/share/GeoIP.dat
-</span><span class='line'>sudo ln -s /usr/share/<span class="o">{</span>GeoLiteCountry,GeoIP<span class="o">}</span>.dat
-</span><span class='line'>
-</span><span class='line'>wget http://tar.goaccess.io/goaccess-1.0.2.tar.gz
-</span><span class='line'>tar -xzvf goaccess-1.0.2.tar.gz
-</span><span class='line'><span class="nb">cd </span>goaccess-1.0.2
-</span><span class='line'><span class="nv">LD_FLAGS</span><span class="o">=</span><span class="s1">&#39;-L/usr/lib64/&#39;</span> ./configure --enable-utf8 --enable-geoip
-</span><span class='line'>make
-</span><span class='line'>sudo make install
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I also created a daily crontab entry to generate reports daily and put it in my <code>public</code> folder of rails directory, all the files in which I serve
-statically from nginx. So I can just type <a href="http://mydomain.com/access.html">http://mydomain.com/access.html</a> and see the reports. Here is my crontab entry.</p>
-
-<figure class='code'><figcaption><span>crontab</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>@daily /bin/zcat -f /var/log/nginx/access.log* <span class="p">|</span> /usr/local/bin/goaccess -a -o /home/ec2-user/my_rails_dir/public/access.html
-</span></code></pre></td></tr></table></div></figure>
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
-  
-  
 
-
-    </article>
-  
-  <div class="pagination">
-    
-      <a class="prev" href="2">&larr; Older</a>
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
-</div>
 <aside class="sidebar">
   
     <section>
@@ -827,6 +586,7 @@ statically from nginx. So I can just type <a href="http://mydomain.com/access.ht
   
 </aside>
 
+
     </div>
   </div>
   <footer role="contentinfo"><p>
@@ -841,7 +601,10 @@ statically from nginx. So I can just type <a href="http://mydomain.com/access.ht
       var disqus_shortname = 'techbite';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://prabhakar97.github.io/blog/2017/03/22/bootstrap-a-restful-api-app-with-mean-stack-on-arch-linux/';
+        var disqus_url = 'http://prabhakar97.github.io/blog/2017/03/22/bootstrap-a-restful-api-app-with-mean-stack-on-arch-linux/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

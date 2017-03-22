@@ -4,7 +4,7 @@
   <title><![CDATA[Prab's Code Blog]]></title>
   <link href="http://prabhakar97.github.io/atom.xml" rel="self"/>
   <link href="http://prabhakar97.github.io/"/>
-  <updated>2017-03-10T14:26:08-05:00</updated>
+  <updated>2017-03-22T11:56:33-04:00</updated>
   <id>http://prabhakar97.github.io/</id>
   <author>
     <name><![CDATA[Prabhakar Kumar]]></name>
@@ -12,6 +12,400 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Ship a REST API with Node, ES6 and MongoDB - Part 1]]></title>
+    <link href="http://prabhakar97.github.io/blog/2017/03/22/bootstrap-a-restful-api-app-with-mean-stack-on-arch-linux/"/>
+    <updated>2017-03-22T12:22:40-04:00</updated>
+    <id>http://prabhakar97.github.io/blog/2017/03/22/bootstrap-a-restful-api-app-with-mean-stack-on-arch-linux</id>
+    <content type="html"><![CDATA[<h2>Introduction</h2>
+
+<p>NodeJS has been gaining a lot of traction recently, especially for web applications. Lots of new web applications
+are now being built with tools from  the Node ecosystem. A possible reason is the umpteen number of javascript
+developers out in the wild. Other one is  the blazing speed of
+<a href="https://en.wikipedia.org/wiki/V8_(JavaScript_engine">V8 engine</a>). Heck, even shiny desktop apps are now being built
+with Node viz. Popcorn Time.</p>
+
+<p>In this post I will walk through everything I did to ship an API app. Ship as in - ready to serve production traffic.</p>
+
+<h3>About the stack</h3>
+
+<p>We will be using <a href="https://expressjs.com/">Express</a> as our web app framework. Express is minimalistic, fast and quietly
+gets out of our way when you want to detour through the dirt road. It is unlike convention over configuration style in
+<a href="http://rubyonrails.org/">Rails</a> and <a href="https://playframework.com/">Play framework</a> where you are good as long as you
+follow the conventions recommended by the framework. Going gets tough, if you start deviating. There are frameworks
+built specifically for facilitating API building. An example would be <a href="http://restify.com/">Restify</a>. The reason of
+not choosing such a framework for this exercise is to understand the intricacies of building an API. Restify would
+shield us from understanding lots of stuff.</p>
+
+<p>Also, we wil be writing our javascript in <a href="http://es6-features.org/">ES6</a> which is cleaner and hands down a better
+language than the javascript specced in ES5. Latest version of node still doesn&rsquo;t fully support ES6, so we will use a
+transpiler named <a href="http://babeljs.io/">Babel</a> which transpiles code written by us into code conforming to ES5 for which
+node has full support. In the future when node catches up, we can turn off transpilation and run our ES6 code directly
+with node.</p>
+
+<p><a href="https://www.mongodb.com/">MongoDB</a> will be our database. It is a document oriented NoSQL database. What that means
+is - it is unlike the RDBMSes like MySQL or Oracle which let you model the world by defining a schema in form
+of tables recording their properties and then linking them with primary and foreign keys. With MongoDB we model our
+worldly entities in form of documents which are similar to JSON objects . The biggest advantage of NoSQL databases like
+MongoDB is that they are designed to be horizontally scalable - whenever we need to increase performance, we just
+add few more machines to the DB cluster and the database engine takes care of redistributing data and query traffic
+across all available machines. RDBMSes are limited by theory, in terms of horizontal scalability. A discussion of this
+is beyond the scope of this article, but if you are interested in knowing more about it you can browse the interwebs
+for this nuisance called CAP theorem.</p>
+
+<h3>About the project</h3>
+
+<p>We are going to build an API which can power a web application and/or a mobile app. The app is a social code snippet
+sharing system where the users can share frequently encountered code snippets that are used in a developer&rsquo;s day to
+day life for solving mundane problems which they are too lazy to code themselves. Usually, as developers we google for
+our problem, find link to a stackoverflow question and copy the snippet from there and use from. In our case we let
+the users share the snippet, enter a description, select the language, optionally add some tags and publish it. A user
+can also thumb up a snippet or mark it as junk. We also allow some experienced users to edit the snippets and/or
+descriptions for clarity. We define experience with a formula derived from number of upvotes to their questions by
+other users, their age on the site and their time spent on the site. Also, we do away with logins through passwords.
+We provide OAuth based logins through Google, Facebook, Twitter etc. Apart from these functional features, we will
+also do some non-functional stuff like generate an SEO friendly URL for each snippet so that Googlebot can find our
+snippets and list in search results. Let&rsquo;s wear the product manager hat for a moment and write down the high level
+product requirements for our application.</p>
+
+<h4>As a guest user I should be able to</h4>
+
+<ul>
+<li>search for snipppets through description and/or code matches</li>
+<li>list snippets by language, and sort them by
+
+<ul>
+<li>most voted</li>
+<li>most viewed</li>
+</ul>
+</li>
+<li>login using Google, Facebook or Twitter auth</li>
+</ul>
+
+
+<h4>As a logged-in user I should be able to</h4>
+
+<ul>
+<li>perform snippet operations
+
+<ul>
+<li>post a snippet</li>
+<li>edit my posted snippets</li>
+<li>view a snippet and see all previous versions of a snippet, if they have been edited</li>
+</ul>
+</li>
+<li>perform profile operations
+
+<ul>
+<li>view my profile</li>
+<li>refresh upstream information in the profile</li>
+<li>view others' profiles</li>
+<li>view activity of a user, like snippets posted, snippets upvoted, snippets edited etc.</li>
+</ul>
+</li>
+<li>perform friendship operations
+
+<ul>
+<li>send friend requests to people</li>
+<li>accept/reject others' friend requests</li>
+<li>ignore/block a user</li>
+</ul>
+</li>
+<li>perform feed operations
+
+<ul>
+<li>view a feed which shows my friends' activity on the website</li>
+<li>like and comment on activities in the feed</li>
+</ul>
+</li>
+<li>perform leaderboard operations
+
+<ul>
+<li>view leaderboard of snippets</li>
+<li>view leaderboard of users</li>
+<li>filter leaderboard by language, user location etc.</li>
+</ul>
+</li>
+<li>perform messaging operations
+
+<ul>
+<li>send private messages to my friends</li>
+<li>send private messages to non-friends</li>
+<li>view my inbox, categorized with messages from friends/non-friends</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>Why API?</h3>
+
+<p>Let&rsquo;s take a step back and understand why should we write an API? Why not a simple MVC web application? APIs are great
+for scaling, technically as well as logistically. With an API, we define a set of operations, which cover all the
+interactions of users and other systems with our application. Then we write client apps, which talk to the API and get
+the job done. So, next time you swipe left in gmail to archive an email, you should know that an API call has been
+made by the GMail app residing on your phone, to the GMail servers along with some parameters which did the actual
+archiving of the email.</p>
+
+<p>What is logistic stability? Ok, I just made up this term! With an API as contract in place, the client app can
+independently scale with the actual functional implementation. We can have different people (or teams) working on the
+different client apps. As long as they have the API spec they can work independently. Also, the same API can power a
+native iOS app, an Android app, a mobile website and a web application. These client apps make API calls to fetch and
+display relevant data and perform operations upon user interactions.</p>
+
+<p>In terms of technical scalability, the people working on the backend can independently scale the most used operations
+in the API. For instance, if we are getting millions of calls for our compute intensive <code>createQuiz</code> operation in a
+day, we can intelligently increase the resources it needs. One way would be to have a dedicated independent machine of
+high configuration just for this operation in the API. And we leverage the power of distributed systems and horizontal
+scalability! We will get into the details of this when we talk about shipping once we are code complete.</p>
+
+<h2>Dev Env setup</h2>
+
+<p>Before we design our data model, let&rsquo;s get our hands dirty a bit, write a hello world app with Express and get MongoDB
+setup on our workstation.</p>
+
+<p>I am an <a href="https://www.archlinux.org/">Arch Linux</a> devotee. The instructions here should work perfectly on Arch. The
+onus of changing the commands to suit your package manager(apt, yum, emerge, brew) is upto you.</p>
+
+<h3>Install node, npm and mongodb</h3>
+
+<p>The following commands will install <code>node</code>, <code>npm</code> and <code>mongodb</code> for us. <code>node</code> is the javascript runtime executable
+which is actually going to run our code. <code>npm</code> is the package manager which takes care of resolving dependencies on
+third party libraries, downloading them and setting up their paths correctly so that we have a lot of pre-written
+code in form of modules available at our disposal.</p>
+
+<p>Mongodb will also be started and enabled for autostart. If you don&rsquo;t want it to be auto started everytime you boot,
+don&rsquo;t execute the last command.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo pacman -Syu node npm mongodb
+</span><span class='line'>
+</span><span class='line'>sudo systemctl start mongodb
+</span><span class='line'>
+</span><span class='line'>sudo systemctl <span class="nb">enable </span>mongodb
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As of this writing, I got node 7.2, npm 4.0 and mongodb 3.2. The javascript ecosystem is a very fast moving one. Some
+of the code mentioned hereon might get obsolete in a couple of years but the general idea remains the same.</p>
+
+<h3>Setup the initial package.json</h3>
+
+<p>In the node world <code>package.json</code> is the file which contains the details of our dependencies and run configurations.
+In Rails world, it is analogous to <code>Gemfile</code> but on steroids. In java world it is kind of analogous to <code>build.gradle</code>
+or a <code>pom.xml</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>mkdir -p ~/Documents/Projects/js-snipcode
+</span><span class='line'><span class="nb">cd</span> !<span class="err">$</span>
+</span><span class='line'>npm init
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p> The second command might seem unfamiliar. !$ represents the last paramter of previous command in bash and zsh. So it
+will just take you to the newly created directory from the previous step.</p>
+
+<p>The <code>npm init</code> is interactive and it will first ask you for a project name. Then configure the version and description.
+Next it asks for the entry point for the app. You can leave it as <code>index.js</code>. Keep pressing enter to accept the
+defaults for other fields or change if you like. For now we ignore the test command. A <code>package.json</code> file will be
+created in the end.</p>
+
+<h3>Install Express</h3>
+
+<p>Express is the web framework library that we are going to use. Now let&rsquo;s add a dependency on Express, add babel
+transpilation of ES6 and get from zero to &ldquo;Hello World!&rdquo;.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>npm install express --save
+</span><span class='line'>npm install --save-dev babel-cli babel-preset-latest
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Running the above commands will download Express, babel-cli and babel&rsquo;s latest preset. <code>--save</code> flag makes an entry in
+the <code>dependencies</code> section of package.json. Guess what does the <code>--save-dev</code> flag do? You got it right! It makes an
+entry in <code>devDependencies</code> in <code>package.json</code>. Dev dependencies are different from dependencies in that they
+are not required for running the app. They are only used during development, for instance for transpilation during
+build. Let&rsquo;s also add two target scripts named <code>build</code> and <code>start</code> in the <code>package.json</code>. Running <code>npm run build</code> will
+tell babel to transpile everything in <code>src</code> directory recursively and output the transpiled files in <code>dist</code> directory.
+<code>npm run start</code> in the root directory of our project will start our web server by running the command
+<code>node dist/index.js</code>. Also, don&rsquo;t forget <code>mkdir src; mv index.js src</code>. Here&rsquo;s the updated <code>package.json</code>.</p>
+
+<figure class='code'><figcaption><span>package.json</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;js-snipcode&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;API in NodeJS for the Snipcode project.&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nt">&quot;main&quot;</span><span class="p">:</span> <span class="s2">&quot;index.js&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nt">&quot;scripts&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nt">&quot;test&quot;</span><span class="p">:</span> <span class="s2">&quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nt">&quot;build&quot;</span><span class="p">:</span> <span class="s2">&quot;babel src -d dist --presets latest&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nt">&quot;start&quot;</span><span class="p">:</span> <span class="s2">&quot;node dist/index.js&quot;</span>
+</span><span class='line'>  <span class="p">},</span>
+</span><span class='line'>  <span class="nt">&quot;author&quot;</span><span class="p">:</span> <span class="s2">&quot;Prabhakar Kumar&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nt">&quot;license&quot;</span><span class="p">:</span> <span class="s2">&quot;ISC&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nt">&quot;dependencies&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nt">&quot;express&quot;</span><span class="p">:</span> <span class="s2">&quot;^4.14.0&quot;</span>
+</span><span class='line'>  <span class="p">},</span>
+</span><span class='line'>  <span class="nt">&quot;devDependencies&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nt">&quot;babel-cli&quot;</span><span class="p">:</span> <span class="s2">&quot;^6.18.0&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nt">&quot;babel-preset-latest&quot;</span><span class="p">:</span> <span class="s2">&quot;^6.18.0&quot;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Zero to Hello World!</h3>
+
+<p>Let&rsquo;s edit our <code>src/index.js</code> and write relevant code to make a Hello World app.</p>
+
+<figure class='code'><figcaption><span>index.js</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kr">import</span> <span class="nx">express</span> <span class="nx">from</span> <span class="s1">&#39;express&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kr">const</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">express</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span>
+</span><span class='line'>  <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="s1">&#39;Hello World!&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">3000</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span>
+</span><span class='line'>  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Server is up on port 3000!&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now let&rsquo;s build and run.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>npm run build
+</span><span class='line'>npm run start
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If everything went well as we discussed, you will see a message on the console that says server is up on port 3000.
+Now if you fire up firefox or chromium and go to <a href="http://localhost:3000">localhost:3000</a>, you will see the evergreen
+&lsquo;Hello world!&rsquo; message staring at you on a white screen.</p>
+
+<p>Before we start writing more code, I&rsquo;ll explain the meaning of the lines in our Hello World web app. But, before that
+let&rsquo;s pivot and focus on learning our database and design a basic data model.</p>
+
+<h3>Play with mongo console</h3>
+
+<p>Let&rsquo;s play with mongo console a bit to gain some familiarity with it.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class='text'><span class='line'>$ mongo
+</span><span class='line'>MongoDB shell version: 3.2.10
+</span><span class='line'>connecting to: test
+</span><span class='line'>Welcome to the MongoDB shell.
+</span><span class='line'>For interactive help, type &quot;help&quot;.
+</span><span class='line'>For more comprehensive documentation, see
+</span><span class='line'>        http://docs.mongodb.org/
+</span><span class='line'>Questions? Try the support group
+</span><span class='line'>        http://groups.google.com/group/mongodb-user
+</span><span class='line'>Server has startup warnings:
+</span><span class='line'>2016-12-04T07:40:24.545-0500 I CONTROL  [initandlisten]
+</span><span class='line'>2016-12-04T07:40:24.545-0500 I CONTROL  [initandlisten] ** WARNING: /sys/kernel/mm/transparent_hugepage/enabled is &#39;always&#39;.
+</span><span class='line'>2016-12-04T07:40:24.545-0500 I CONTROL  [initandlisten] **        We suggest setting it to &#39;never&#39;
+</span><span class='line'>2016-12-04T07:40:24.545-0500 I CONTROL  [initandlisten]
+</span><span class='line'>&gt; show databases
+</span><span class='line'>local  0.000GB
+</span><span class='line'>&gt; use snipcode
+</span><span class='line'>switched to db snipcode
+</span><span class='line'>&gt; db.users.insert({name: &quot;John Doe&quot;, country: &quot;United States&quot;, &quot;sex&quot;: &#39;M&#39;, dob: ISODate(&#39;1970-01-01&#39;)})
+</span><span class='line'>WriteResult({ &quot;nInserted&quot; : 1 })
+</span><span class='line'>&gt; db.users.find()
+</span><span class='line'>{ &quot;_id&quot; : ObjectId(&quot;58441a27d01af6e5b1ae6f74&quot;), &quot;name&quot; : &quot;John Doe&quot;, &quot;country&quot; : &quot;United States&quot;, &quot;sex&quot; : &quot;M&quot;, &quot;dob&quot; : ISODate(&quot;1970-01-01T00:00:00Z&quot;) ers.insert({name: &quot;Jane Doe&quot;, country: &quot;United States&quot;, &quot;sex&quot;: &#39;F&#39;, dob: ISODate(&#39;1970-01-01&#39;)})
+</span><span class='line'>WriteResult({ &quot;nInserted&quot; : 1 })
+</span><span class='line'>&gt; db.users.find()
+</span><span class='line'>{ &quot;_id&quot; : ObjectId(&quot;58441a27d01af6e5b1ae6f74&quot;), &quot;name&quot; : &quot;John Doe&quot;, &quot;country&quot; : &quot;United States&quot;, &quot;sex&quot; : &quot;M&quot;, &quot;dob&quot; : ISODate(&quot;1970-01-01T00:00:00Z&quot;) }
+</span><span class='line'>{ &quot;_id&quot; : ObjectId(&quot;58441a5bd01af6e5b1ae6f75&quot;), &quot;name&quot; : &quot;Jane Doe&quot;, &quot;country&quot; : &quot;United States&quot;, &quot;sex&quot; : &quot;F&quot;, &quot;dob&quot; : ISODate(&quot;1970-01-01T00:00:00Z&quot;) }
+</span><span class='line'>&gt; db.users.find({sex: &#39;F&#39;})
+</span><span class='line'>{ &quot;_id&quot; : ObjectId(&quot;58441a5bd01af6e5b1ae6f75&quot;), &quot;name&quot; : &quot;Jane Doe&quot;, &quot;country&quot; : &quot;United States&quot;, &quot;sex&quot; : &quot;F&quot;, &quot;dob&quot; : ISODate(&quot;1970-01-01T00:00:00Z&quot;) }
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Similar to MySQL and friends (MariaDB, Aurora), Mongodb organizes it&rsquo;s data in databases. We don&rsquo;t need to explicitly
+create a database unlike MySQL. It gets created as soon as we try to write something to it. Inside a Mongodb database,
+the database is organized in collections. A collection is analogous to tables in RDBMS, and more flexible. A
+collection doesn&rsquo;t have a fixed schema. So, one document (record/row in RDBMS) can have fields different from others
+in the same collection. In the above example, we switched to database named <code>snipcode</code>. Then we inserted a document
+describing a user named &lsquo;John Doe&rsquo;. Upon doing a <code>find()</code> (which is analogous to SQL&rsquo;s SELECT) on that collection we
+got the record, along with a unique record ID called ObjectID. Then we inserted another record for <code>Jane Doe</code>. Then we
+ran a query which returns all female users. For this, we provided the query condition <code>sex: 'F'</code> which is similar to
+WHERE sex = &lsquo;F&rsquo; in SQL.</p>
+
+<p>As of now, this much familiarity is enough for us to get started. We will dive deeper as and when we need.</p>
+
+<h2>Next part</h2>
+
+<p>In this part we got bootstrapped and got our hands dirty. In the next part we will start with data modeling and
+continue further. Stay tuned for it.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Elegant solutions to common interview problems - Part 1 - Linked Lists]]></title>

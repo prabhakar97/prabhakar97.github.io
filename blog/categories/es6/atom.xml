@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Linux | Prab's Code Blog]]></title>
-  <link href="http://prabhakar97.github.io/blog/categories/linux/atom.xml" rel="self"/>
+  <title><![CDATA[Category: Es6 | Prab's Code Blog]]></title>
+  <link href="http://prabhakar97.github.io/blog/categories/es6/atom.xml" rel="self"/>
   <link href="http://prabhakar97.github.io/"/>
   <updated>2017-03-22T11:56:33-04:00</updated>
   <id>http://prabhakar97.github.io/</id>
@@ -326,69 +326,6 @@ WHERE sex = &lsquo;F&rsquo; in SQL.</p>
 
 <p>In this part we got bootstrapped and got our hands dirty. In the next part we will start with data modeling and
 continue further. Stay tuned for it.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Compile Goaccess From Source on CentOS 7]]></title>
-    <link href="http://prabhakar97.github.io/blog/2016/07/07/compile-goaccess-from-source-on-centos-7/"/>
-    <updated>2016-07-07T22:00:32-04:00</updated>
-    <id>http://prabhakar97.github.io/blog/2016/07/07/compile-goaccess-from-source-on-centos-7</id>
-    <content type="html"><![CDATA[<p><a href="https://goaccess.io">Goaccess</a> is a neat little utility which scans through your web server (I use nginx) logs and generates a nice HTML report of
-your site&rsquo;s access statistics. Here is a <a href="http://rt.goaccess.io">sample from their site</a>. I run CentOS 7 on an EC2 Instance where I run a pet project. I wanted a light web analyzer that just works. I have
-<a href="https://fedoraproject.org/wiki/EPEL">epel</a> enabled on my instance so I just installed goaccess by <code>sudo yum install goaccess</code>. It worked and I was able
-to see some stats. But then I figured out that the version from repositories is quite an old one at 0.9.8. The latest one is 1.0.2 from the website.
-So, I just uninstalled it <code>sudo yum remove goaccess</code>.</p>
-
-<p>I downloaded the source tarball and after a few hiccups I was able to get it running. There are two quirks you need to watch out for. First one is
-that, enabling geoip in goaccess requires installation of maxmind&rsquo;s geoip database. The installed database from yum is very small, so you need to
-update it and change symlink /usr/share/GeoIP/GeoIP.dat to point to /usr/share/GeoIP/GeoLiteCountry.dat. Second quirk is that by default the configure
-script doesn&rsquo;t figure out the geoip devel libs path so you need to manually point to it while configuring.</p>
-
-<pre><code class="sh">sudo yum install GeoIP
-geoipupdate
-sudo rm /usr/share/GeoIP.dat
-sudo ln -s /usr/share/{GeoLiteCountry,GeoIP}.dat 
-
-wget http://tar.goaccess.io/goaccess-1.0.2.tar.gz
-tar -xzvf goaccess-1.0.2.tar.gz
-cd goaccess-1.0.2
-LD_FLAGS='-L/usr/lib64/' ./configure --enable-utf8 --enable-geoip
-make
-sudo make install
-</code></pre>
-
-<p>I also created a daily crontab entry to generate reports daily and put it in my <code>public</code> folder of rails directory, all the files in which I serve
-statically from nginx. So I can just type <a href="http://mydomain.com/access.html">http://mydomain.com/access.html</a> and see the reports. Here is my crontab entry.</p>
-
-<pre><code class="sh crontab">@daily /bin/zcat -f /var/log/nginx/access.log* | /usr/local/bin/goaccess -a -o /home/ec2-user/my_rails_dir/public/access.html
-</code></pre>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Find Below]]></title>
-    <link href="http://prabhakar97.github.io/blog/2015/04/21/find-below/"/>
-    <updated>2015-04-21T03:22:00-04:00</updated>
-    <id>http://prabhakar97.github.io/blog/2015/04/21/find-below</id>
-    <content type="html"><![CDATA[<p>This is a small piece of snippet that can go into your <code>.zshrc</code> and make your life easier sometimes. This whips up a new command named <code>findbelow</code> for you. This command takes as argument, a string and returns all the files below your current directory whose names contain the entered string as a substring.</p>
-
-<pre><code class="sh findbelow">findbelow () {
-  find ./ -regex ".*/$1.*"
-}
-</code></pre>
-
-<h3>Bonus</h3>
-
-<p>The below piece of snippet enables you to jump n directories upwards from your current <code>pwd</code> by typing <code>u n</code>. For example: <code>u 5</code> will take you 5 directories up from your current position.
-<code>sh u
-u () {
-  set -A ud
-  ud[1+${1-1}]=
-  cd ${(j:../:)ud}
-}
-</code>
-This has been tested on zsh.</p>
 ]]></content>
   </entry>
   
