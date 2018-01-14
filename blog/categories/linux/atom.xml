@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Linux | Prab's Code Blog]]></title>
   <link href="http://prabhakar97.github.io/blog/categories/linux/atom.xml" rel="self"/>
   <link href="http://prabhakar97.github.io/"/>
-  <updated>2017-03-22T15:29:29-04:00</updated>
+  <updated>2018-01-14T21:00:46+05:30</updated>
   <id>http://prabhakar97.github.io/</id>
   <author>
     <name><![CDATA[Prabhakar Kumar]]></name>
@@ -14,9 +14,72 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Boot Linux From Grub Rescue Prompt]]></title>
+    <link href="http://prabhakar97.github.io/blog/2018/01/14/boot-linux-from-grub-rescue-prompt/"/>
+    <updated>2018-01-14T20:20:50+05:30</updated>
+    <id>http://prabhakar97.github.io/blog/2018/01/14/boot-linux-from-grub-rescue-prompt</id>
+    <content type="html"><![CDATA[<p>If you have a dual boot setup of a Linux based OS and Windows 10, and you have setup grub to choose which OS
+to boot; you might have experienced the <em>grub rescue prompt</em> which comes up after a Windows 10 update screws up
+with the boot files.</p>
+
+<p>Panic not, for it&rsquo;s easy to get back to your beloved Linux distro and fix grub. Here are the steps.</p>
+
+<ul>
+<li>Find out the Linux partition (skip, if you already know)
+
+<ul>
+<li>Run <code>ls</code> and it should show you a list of partitions like <code>(hd0,msdos1) (hd0,msdos2) ...</code> or in the form <code>(hd0,gpt1), (hd0,gpt2) ...</code></li>
+<li>Run ls with the name of the partition followed by a / to see the files on the partition. Like so <code>ls (hd0,gpt1)/</code>. Remember, that forward slash is important. You have to do this for each parition until you find your linux partition - i.e. you see the list of files named <code>dev, proc, usr, etc, mnt</code> etc.</li>
+</ul>
+</li>
+<li>Set the grub modules prefix
+
+<ul>
+<li>Run this <code>set prefix=(hd0,msdos3)/boot/grub</code>. This assumes, your Linux partition in previous step was msdos3.</li>
+</ul>
+</li>
+<li>Set the root partition
+
+<ul>
+<li>You can set the linux partition as your root partition by running <code>set root=(hd0,msdos3)</code></li>
+</ul>
+</li>
+<li>Load the needed modules
+
+<ul>
+<li>We need to load the linux module to be able to boot Linux. Run <code>insmod linux</code> to do that. If your Linux root filesystem is not on ext2/&frac34; partitions, you will see the error <code>Unknown filesystem</code> and nothing will be listed. In that case, you need to load your filesystem specific module, for example <code>insmod btrfs</code> for btrfs.</li>
+</ul>
+</li>
+<li>Find where your kernel and initramfs are located
+
+<ul>
+<li>You can run <code>ls /boot/</code> and it should show a file named <code>vmlinuz-linux</code>. That&rsquo;s your Kernel. At least that&rsquo;s how it is named in Arch Linux and related distros like Antergos and Manjaro. Kernel and Ramdisk has different names on different distros. Centos, Fedora and RHEL have names similar to <code>vmlinuz-3.10.0-693.11.1.el7.x86_64</code> for the Kernel. I assume you are smart enough to figure the naming out.</li>
+<li>You can similarly find your initramfs image. Usually it is named something like <code>initramfs-linux.img</code>.</li>
+<li>Caveats to look out for when finding the Kernel and initramfs image files - Number one, if the file names are versioned, choose the latest ones. Number two, choose the same version for Kernel and initramfs. And the last and number three, don&rsquo;t choose the names that contain <code>rescue</code> or <code>memtest</code>. They are not the ones we are interested in.</li>
+</ul>
+</li>
+<li>Boot Linux!
+
+<ul>
+<li>Having found out the Kernel and Ramdisk images, let&rsquo;s load them up. Run <code>linux /boot/vmlinuz-linux root=/dev/sda3 fb rw quiet</code>. sda3 can probably be hda3 if you have an older machine. And the digit at the end should be same as the root partition number we found in the first step i.e. msdos3 in my case. Now load the Ramdisk by running <code>initrd initramfs-linux.img</code>.</li>
+<li>Having loaded &lsquo;em both, let&rsquo;s boot. Run <code>boot</code> and bingo, your system should now boot normally!</li>
+</ul>
+</li>
+<li>Fix grub so that you don&rsquo;t have to go through this ordeal next time
+
+<ul>
+<li>Running <code>sudo grub-install /dev/sda</code> or in some cases hda instead of sda, should reinstall grub correctly and fix your booting problems.</li>
+</ul>
+</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Ship a REST API With Node, ES6 and MongoDB - Part 1]]></title>
     <link href="http://prabhakar97.github.io/blog/2017/03/22/bootstrap-a-restful-api-app-with-node-es6-mongo-linux/"/>
-    <updated>2017-03-22T12:22:40-04:00</updated>
+    <updated>2017-03-22T21:52:40+05:30</updated>
     <id>http://prabhakar97.github.io/blog/2017/03/22/bootstrap-a-restful-api-app-with-node-es6-mongo-linux</id>
     <content type="html"><![CDATA[<h2>Introduction</h2>
 
@@ -154,7 +217,7 @@ native iOS app, an Android app, a mobile website and a web application. These cl
 display relevant data and perform operations upon user interactions.</p>
 
 <p>In terms of technical scalability, the people working on the backend can independently scale the most used operations
-in the API. For instance, if we are getting millions of calls for our compute intensive <code>createQuiz</code> operation in a
+in the API. For instance, if we are getting millions of calls for our compute intensive <code>findBugs</code> operation in a
 day, we can intelligently increase the resources it needs. One way would be to have a dedicated independent machine of
 high configuration just for this operation in the API. And we leverage the power of distributed systems and horizontal
 scalability! We will get into the details of this when we talk about shipping once we are code complete.</p>
@@ -331,9 +394,9 @@ continue further. Stay tuned for it.</p>
   
   <entry>
     <title type="html"><![CDATA[Compile Goaccess From Source on CentOS 7]]></title>
-    <link href="http://prabhakar97.github.io/blog/2016/07/07/compile-goaccess-from-source-on-centos-7/"/>
-    <updated>2016-07-07T22:00:32-04:00</updated>
-    <id>http://prabhakar97.github.io/blog/2016/07/07/compile-goaccess-from-source-on-centos-7</id>
+    <link href="http://prabhakar97.github.io/blog/2016/07/08/compile-goaccess-from-source-on-centos-7/"/>
+    <updated>2016-07-08T07:30:32+05:30</updated>
+    <id>http://prabhakar97.github.io/blog/2016/07/08/compile-goaccess-from-source-on-centos-7</id>
     <content type="html"><![CDATA[<p><a href="https://goaccess.io">Goaccess</a> is a neat little utility which scans through your web server (I use nginx) logs and generates a nice HTML report of
 your site&rsquo;s access statistics. Here is a <a href="http://rt.goaccess.io">sample from their site</a>. I run CentOS 7 on an EC2 Instance where I run a pet project. I wanted a light web analyzer that just works. I have
 <a href="https://fedoraproject.org/wiki/EPEL">epel</a> enabled on my instance so I just installed goaccess by <code>sudo yum install goaccess</code>. It worked and I was able
@@ -369,7 +432,7 @@ statically from nginx. So I can just type <a href="http://mydomain.com/access.ht
   <entry>
     <title type="html"><![CDATA[Find Below]]></title>
     <link href="http://prabhakar97.github.io/blog/2015/04/21/find-below/"/>
-    <updated>2015-04-21T03:22:00-04:00</updated>
+    <updated>2015-04-21T03:22:00+05:30</updated>
     <id>http://prabhakar97.github.io/blog/2015/04/21/find-below</id>
     <content type="html"><![CDATA[<p>This is a small piece of snippet that can go into your <code>.zshrc</code> and make your life easier sometimes. This whips up a new command named <code>findbelow</code> for you. This command takes as argument, a string and returns all the files below your current directory whose names contain the entered string as a substring.</p>
 

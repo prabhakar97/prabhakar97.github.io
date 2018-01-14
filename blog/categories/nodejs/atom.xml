@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Nodejs | Prab's Code Blog]]></title>
   <link href="http://prabhakar97.github.io/blog/categories/nodejs/atom.xml" rel="self"/>
   <link href="http://prabhakar97.github.io/"/>
-  <updated>2017-03-22T15:29:29-04:00</updated>
+  <updated>2018-01-14T21:00:46+05:30</updated>
   <id>http://prabhakar97.github.io/</id>
   <author>
     <name><![CDATA[Prabhakar Kumar]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Ship a REST API With Node, ES6 and MongoDB - Part 1]]></title>
     <link href="http://prabhakar97.github.io/blog/2017/03/22/bootstrap-a-restful-api-app-with-node-es6-mongo-linux/"/>
-    <updated>2017-03-22T12:22:40-04:00</updated>
+    <updated>2017-03-22T21:52:40+05:30</updated>
     <id>http://prabhakar97.github.io/blog/2017/03/22/bootstrap-a-restful-api-app-with-node-es6-mongo-linux</id>
     <content type="html"><![CDATA[<h2>Introduction</h2>
 
@@ -154,7 +154,7 @@ native iOS app, an Android app, a mobile website and a web application. These cl
 display relevant data and perform operations upon user interactions.</p>
 
 <p>In terms of technical scalability, the people working on the backend can independently scale the most used operations
-in the API. For instance, if we are getting millions of calls for our compute intensive <code>createQuiz</code> operation in a
+in the API. For instance, if we are getting millions of calls for our compute intensive <code>findBugs</code> operation in a
 day, we can intelligently increase the resources it needs. One way would be to have a dedicated independent machine of
 high configuration just for this operation in the API. And we leverage the power of distributed systems and horizontal
 scalability! We will get into the details of this when we talk about shipping once we are code complete.</p>
@@ -332,7 +332,7 @@ continue further. Stay tuned for it.</p>
   <entry>
     <title type="html"><![CDATA[Earthquake Alert System in Nodejs]]></title>
     <link href="http://prabhakar97.github.io/blog/2015/04/27/earthquake-alert-system-in-nodejs/"/>
-    <updated>2015-04-27T01:01:00-04:00</updated>
+    <updated>2015-04-27T01:01:00+05:30</updated>
     <id>http://prabhakar97.github.io/blog/2015/04/27/earthquake-alert-system-in-nodejs</id>
     <content type="html"><![CDATA[<p>Afflicted by the recent earthquake in Nepal which took so many lives in India as well, my mind under the shower spawned up an idea of an earthquake alert system that attempts to notify people a few tens of seconds before the quake strikes.
 The premise of the idea is that <em>Electromagnetic waves travel way faster than seismic waves. 300,000 KM/s vs 10 KM/s</em>. Our communication systems (internet, sms) transmit on electronic waves and even after considering some added overhead (like buffers, processing etc) they can win the race with seismic waves easily. For instance, Kathmandu to New Delhi is around 800 kilometers. A quake epicentred in Kathmandu would be felt in Delhi after around 80 seconds. If we find some way to detect the quake in Kathmandu immediately after it strikes and transmit this information over the public communication infrastructure (web, SMS etc.), we could give the people more than a minute to move to safety. I made following assumptions:</p>

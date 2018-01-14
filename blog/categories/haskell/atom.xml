@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Haskell | Prab's Code Blog]]></title>
   <link href="http://prabhakar97.github.io/blog/categories/haskell/atom.xml" rel="self"/>
   <link href="http://prabhakar97.github.io/"/>
-  <updated>2017-03-22T15:29:29-04:00</updated>
+  <updated>2018-01-14T21:00:46+05:30</updated>
   <id>http://prabhakar97.github.io/</id>
   <author>
     <name><![CDATA[Prabhakar Kumar]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Starting With Yesod on Arch Linux]]></title>
-    <link href="http://prabhakar97.github.io/blog/2016/06/23/starting-with-yesod-on-arch-linux/"/>
-    <updated>2016-06-23T19:59:39-04:00</updated>
-    <id>http://prabhakar97.github.io/blog/2016/06/23/starting-with-yesod-on-arch-linux</id>
+    <link href="http://prabhakar97.github.io/blog/2016/06/24/starting-with-yesod-on-arch-linux/"/>
+    <updated>2016-06-24T05:29:39+05:30</updated>
+    <id>http://prabhakar97.github.io/blog/2016/06/24/starting-with-yesod-on-arch-linux</id>
     <content type="html"><![CDATA[<p>As part of my eagerness to learn Haskell, I thought it might be a good idea to start building real world applications in Haskell. I chose
 <a href="http://www.yesodweb.com/">Yesod</a> to start building a dynamic web application backed by as database. However, the getting started page on
 Yesod website didn&rsquo;t exactly work as advertised, probably because the <a href="http://docs.haskellstack.org/en/stable/README/">Haskell Stack</a>
@@ -70,7 +70,7 @@ the next step doesn&rsquo;t work.</p></li>
   <entry>
     <title type="html"><![CDATA[Functional Programming Series - Part 1]]></title>
     <link href="http://prabhakar97.github.io/blog/2016/05/13/getting-started-with-haskell/"/>
-    <updated>2016-05-13T20:02:00-04:00</updated>
+    <updated>2016-05-13T20:02:00+05:30</updated>
     <id>http://prabhakar97.github.io/blog/2016/05/13/getting-started-with-haskell</id>
     <content type="html"><![CDATA[<p>I have been intrigued by functional programming for past couple of years, but never quite prioritized it bigtime. Recently I came across this amazing talk which inspired me
 to go all-in to learn FP.</p>

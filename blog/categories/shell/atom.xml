@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Shell | Prab's Code Blog]]></title>
   <link href="http://prabhakar97.github.io/blog/categories/shell/atom.xml" rel="self"/>
   <link href="http://prabhakar97.github.io/"/>
-  <updated>2017-03-22T15:29:29-04:00</updated>
+  <updated>2018-01-14T21:00:46+05:30</updated>
   <id>http://prabhakar97.github.io/</id>
   <author>
     <name><![CDATA[Prabhakar Kumar]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Find Below]]></title>
     <link href="http://prabhakar97.github.io/blog/2015/04/21/find-below/"/>
-    <updated>2015-04-21T03:22:00-04:00</updated>
+    <updated>2015-04-21T03:22:00+05:30</updated>
     <id>http://prabhakar97.github.io/blog/2015/04/21/find-below</id>
     <content type="html"><![CDATA[<p>This is a small piece of snippet that can go into your <code>.zshrc</code> and make your life easier sometimes. This whips up a new command named <code>findbelow</code> for you. This command takes as argument, a string and returns all the files below your current directory whose names contain the entered string as a substring.</p>
 

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Ruby | Prab's Code Blog]]></title>
   <link href="http://prabhakar97.github.io/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://prabhakar97.github.io/"/>
-  <updated>2017-03-22T15:29:29-04:00</updated>
+  <updated>2018-01-14T21:00:46+05:30</updated>
   <id>http://prabhakar97.github.io/</id>
   <author>
     <name><![CDATA[Prabhakar Kumar]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Configure DatabaseCleaner With Rspec for Mongoid 5 and Beyond]]></title>
-    <link href="http://prabhakar97.github.io/blog/2016/06/26/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond/"/>
-    <updated>2016-06-26T21:05:22-04:00</updated>
-    <id>http://prabhakar97.github.io/blog/2016/06/26/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond</id>
+    <link href="http://prabhakar97.github.io/blog/2016/06/27/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond/"/>
+    <updated>2016-06-27T06:35:22+05:30</updated>
+    <id>http://prabhakar97.github.io/blog/2016/06/27/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond</id>
     <content type="html"><![CDATA[<p><a href="https://github.com/DatabaseCleaner/database_cleaner">Database Cleaner</a> is a nifty gem for streamlining tests. Configuring it is straightforward
 but it didn&rsquo;t work for me out of the box for Mongoid 5.</p>
 
@@ -76,7 +76,7 @@ to have:</p>
   <entry>
     <title type="html"><![CDATA[Start/restart Unicorn Safely Without Downtime]]></title>
     <link href="http://prabhakar97.github.io/blog/2015/11/22/start-slash-restart-unicorn-safely-without-downtime/"/>
-    <updated>2015-11-22T00:42:00-05:00</updated>
+    <updated>2015-11-22T00:42:00+05:30</updated>
     <id>http://prabhakar97.github.io/blog/2015/11/22/start-slash-restart-unicorn-safely-without-downtime</id>
     <content type="html"><![CDATA[<p><a href="http://unicorn.bogomips.org/">Unicorn</a> is a cool application server for Rails. If you have a high traffic website, you would like to restart Unicorn without any downtime, upon a new
 code deployment or a Gem update which updates unicorn. I wrote an script, exactly for this purpose after learning signal handling basics of Unicorn. Here&rsquo;s the script. The comments
@@ -121,7 +121,7 @@ unicorn loaded with new code and/or new binary. The explanation of signal behavi
   <entry>
     <title type="html"><![CDATA[Include Filename and Line Number in Rails Logger]]></title>
     <link href="http://prabhakar97.github.io/blog/2015/11/21/include-filename-and-line-number-in-rails-logger/"/>
-    <updated>2015-11-21T23:50:00-05:00</updated>
+    <updated>2015-11-21T23:50:00+05:30</updated>
     <id>http://prabhakar97.github.io/blog/2015/11/21/include-filename-and-line-number-in-rails-logger</id>
     <content type="html"><![CDATA[<p>Rails logging is straightforward and works out of the box. But, sometimes I feel it would
 be really awesome if the log lines would contain the line number and file name which emit
@@ -199,7 +199,7 @@ end
   <entry>
     <title type="html"><![CDATA[Metaprogramming 101 in Ruby]]></title>
     <link href="http://prabhakar97.github.io/blog/2014/03/01/metaprogramming-101-in-ruby/"/>
-    <updated>2014-03-01T23:36:00-05:00</updated>
+    <updated>2014-03-01T23:36:00+05:30</updated>
     <id>http://prabhakar97.github.io/blog/2014/03/01/metaprogramming-101-in-ruby</id>
     <content type="html"><![CDATA[<p>Metaprogramming is fun! Dynamically modifying a program garners a lot of power to the programmer. In this post I show an example situation which is beautifully solved by metaprogramming.
 I am a Ruby dilettante.</p>
@@ -238,7 +238,7 @@ end
   <entry>
     <title type="html"><![CDATA[Ruby Script to Generate 3D Subtitles From Srt Files]]></title>
     <link href="http://prabhakar97.github.io/blog/2014/01/27/script-to-generate-3d-subtitles-from-srt-files/"/>
-    <updated>2014-01-27T00:09:00-05:00</updated>
+    <updated>2014-01-27T00:09:00+05:30</updated>
     <id>http://prabhakar97.github.io/blog/2014/01/27/script-to-generate-3d-subtitles-from-srt-files</id>
     <content type="html"><![CDATA[<p>So, you&rsquo;ve got a bunch of 3D movies with SRT subtitles which your 3D TV can play from a USB storage and show the subtitles correctly but can not if you are running the movie on your laptop and sending the display to TV over HDMI; for obvious reasons.
 The solution is to use <em>.ass</em> format subtitles with your media player(I recommed mplayer/smplayer). Just run this script from a directory that contains all your movies in separate directories under that directory. Make sure, <code>srt</code> file is present in each 3D movie directory and has the same name as the movie file. Also make sure, the directories for 3D movies have 3D in their names somewhere. Moreover, you must have the program <code>sub3dtool</code> installed. Get it from <a href="https://code.google.com/p/sub3dtool/">here</a>. After you run the script, all your 3D movie directories will be populated with .ass files automatically. Remember, VLC media player does not play well with <code>.ass</code> subtitles. It skips many dialogues.</p>

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Recursion | Prab's Code Blog]]></title>
   <link href="http://prabhakar97.github.io/blog/categories/recursion/atom.xml" rel="self"/>
   <link href="http://prabhakar97.github.io/"/>
-  <updated>2017-03-22T15:29:29-04:00</updated>
+  <updated>2018-01-14T21:00:46+05:30</updated>
   <id>http://prabhakar97.github.io/</id>
   <author>
     <name><![CDATA[Prabhakar Kumar]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Functional Programming Series - Part 1]]></title>
     <link href="http://prabhakar97.github.io/blog/2016/05/13/getting-started-with-haskell/"/>
-    <updated>2016-05-13T20:02:00-04:00</updated>
+    <updated>2016-05-13T20:02:00+05:30</updated>
     <id>http://prabhakar97.github.io/blog/2016/05/13/getting-started-with-haskell</id>
     <content type="html"><![CDATA[<p>I have been intrigued by functional programming for past couple of years, but never quite prioritized it bigtime. Recently I came across this amazing talk which inspired me
 to go all-in to learn FP.</p>

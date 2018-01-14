@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Web Apps | Prab's Code Blog]]></title>
   <link href="http://prabhakar97.github.io/blog/categories/web-apps/atom.xml" rel="self"/>
   <link href="http://prabhakar97.github.io/"/>
-  <updated>2017-03-22T15:29:29-04:00</updated>
+  <updated>2018-01-14T21:00:46+05:30</updated>
   <id>http://prabhakar97.github.io/</id>
   <author>
     <name><![CDATA[Prabhakar Kumar]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Compile Goaccess From Source on CentOS 7]]></title>
-    <link href="http://prabhakar97.github.io/blog/2016/07/07/compile-goaccess-from-source-on-centos-7/"/>
-    <updated>2016-07-07T22:00:32-04:00</updated>
-    <id>http://prabhakar97.github.io/blog/2016/07/07/compile-goaccess-from-source-on-centos-7</id>
+    <link href="http://prabhakar97.github.io/blog/2016/07/08/compile-goaccess-from-source-on-centos-7/"/>
+    <updated>2016-07-08T07:30:32+05:30</updated>
+    <id>http://prabhakar97.github.io/blog/2016/07/08/compile-goaccess-from-source-on-centos-7</id>
     <content type="html"><![CDATA[<p><a href="https://goaccess.io">Goaccess</a> is a neat little utility which scans through your web server (I use nginx) logs and generates a nice HTML report of
 your site&rsquo;s access statistics. Here is a <a href="http://rt.goaccess.io">sample from their site</a>. I run CentOS 7 on an EC2 Instance where I run a pet project. I wanted a light web analyzer that just works. I have
 <a href="https://fedoraproject.org/wiki/EPEL">epel</a> enabled on my instance so I just installed goaccess by <code>sudo yum install goaccess</code>. It worked and I was able
@@ -52,9 +52,9 @@ statically from nginx. So I can just type <a href="http://mydomain.com/access.ht
   
   <entry>
     <title type="html"><![CDATA[Starting With Yesod on Arch Linux]]></title>
-    <link href="http://prabhakar97.github.io/blog/2016/06/23/starting-with-yesod-on-arch-linux/"/>
-    <updated>2016-06-23T19:59:39-04:00</updated>
-    <id>http://prabhakar97.github.io/blog/2016/06/23/starting-with-yesod-on-arch-linux</id>
+    <link href="http://prabhakar97.github.io/blog/2016/06/24/starting-with-yesod-on-arch-linux/"/>
+    <updated>2016-06-24T05:29:39+05:30</updated>
+    <id>http://prabhakar97.github.io/blog/2016/06/24/starting-with-yesod-on-arch-linux</id>
     <content type="html"><![CDATA[<p>As part of my eagerness to learn Haskell, I thought it might be a good idea to start building real world applications in Haskell. I chose
 <a href="http://www.yesodweb.com/">Yesod</a> to start building a dynamic web application backed by as database. However, the getting started page on
 Yesod website didn&rsquo;t exactly work as advertised, probably because the <a href="http://docs.haskellstack.org/en/stable/README/">Haskell Stack</a>
