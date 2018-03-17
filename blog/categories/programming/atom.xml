@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Programming | Prab's Code Blog]]></title>
+  <link href="http://prabhakar97.github.io/blog/categories/programming/atom.xml" rel="self"/>
+  <link href="http://prabhakar97.github.io/"/>
+  <updated>2018-03-17T20:38:07+05:30</updated>
+  <id>http://prabhakar97.github.io/</id>
+  <author>
+    <name><![CDATA[Prabhakar Kumar]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Make Your if Statements Concise]]></title>
+    <link href="http://prabhakar97.github.io/blog/2018/03/17/make-your-if-statements-concise/"/>
+    <updated>2018-03-17T20:17:27+05:30</updated>
+    <id>http://prabhakar97.github.io/blog/2018/03/17/make-your-if-statements-concise</id>
+    <content type="html"><![CDATA[<p>Sometimes you may encounter a situation where you need to do something if two conditions are satisfied or they both are not satisfied; and do something else
+if exactly one of them is satisfied. An example would be:</p>
+
+<pre><code class="java">if ((resultFromServer1 == null &amp;&amp; resultFromServer2 == null) || (resultFromServer1 != null &amp;&amp; resultFromServer2 != null)) {
+    log.warn("Both servers are aware or unaware of the operation");
+    doSomething();
+} else if ((resultFromServer1 == null &amp;&amp; resultFromServer2 != null) || (resultFromServer1 != null &amp;&amp; resultFromServer2 == null)) {
+    log.err("Only one server is aware of the operation");
+    doSomethingElse();
+}
+</code></pre>
+
+<p>These conditions look messy. We can fix them using XOR! XOR returns true if two conditions are different and false if both conditions are same.
+So we can write the above complexity as:</p>
+
+<pre><code class="java">if ((resultFromServer1 == null) ^ (resultFromServer2 == null)) {
+    log.err("Only one server is aware of the operation");
+    doSomethingElse();
+} else {
+    log.warn("Both servers are aware or unaware of the operation");
+    doSomething();
+}
+</code></pre>
+
+<p>The reverse of XOR is EX-NOR. And interesting thing about that is, in case of booleans EX-NOR is equivalent to both conditions being equal. So, it is also
+called as equality gate. Hence, we can write:</p>
+
+<pre><code class="java">if ((resultFromServer1 == null) == (resultFromServer2 == null)) {
+    log.warn("Both servers are aware or unaware of the operation");
+    doSomething();
+} else {
+    log.err("Only one server is aware of the operation");
+    doSomethingElse();
+}
+</code></pre>
+]]></content>
+  </entry>
+  
+</feed>

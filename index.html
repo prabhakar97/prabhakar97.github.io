@@ -9,8 +9,7 @@
   <meta name="author" content="Prabhakar Kumar">
 
   
-  <meta name="description" content="A fluent builder makes creating objects more readable than constructors and more concise than setting properties through setters
-on an uninitialized &hellip;">
+  <meta name="description" content="Sometimes you may encounter a situation where you need to do something if two conditions are satisfied or they both are not satisfied; and do &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +80,100 @@ on an uninitialized &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2018/03/17/make-your-if-statements-concise/">Make Your if Statements Concise</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2018-03-17T20:17:27+05:30" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Sometimes you may encounter a situation where you need to do something if two conditions are satisfied or they both are not satisfied; and do something else
+if exactly one of them is satisfied. An example would be:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="k">if</span> <span class="o">((</span><span class="n">resultFromServer1</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">resultFromServer2</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">||</span> <span class="o">(</span><span class="n">resultFromServer1</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">resultFromServer2</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">log</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="s">&quot;Both servers are aware or unaware of the operation&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">doSomething</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span> <span class="k">else</span> <span class="nf">if</span> <span class="o">((</span><span class="n">resultFromServer1</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">resultFromServer2</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">||</span> <span class="o">(</span><span class="n">resultFromServer1</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">resultFromServer2</span> <span class="o">==</span> <span class="kc">null</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">log</span><span class="o">.</span><span class="na">err</span><span class="o">(</span><span class="s">&quot;Only one server is aware of the operation&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">doSomethingElse</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>These conditions look messy. We can fix them using XOR! XOR returns true if two conditions are different and false if both conditions are same.
+So we can write the above complexity as:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="k">if</span> <span class="o">((</span><span class="n">resultFromServer1</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">^</span> <span class="o">(</span><span class="n">resultFromServer2</span> <span class="o">==</span> <span class="kc">null</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">log</span><span class="o">.</span><span class="na">err</span><span class="o">(</span><span class="s">&quot;Only one server is aware of the operation&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">doSomethingElse</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">log</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="s">&quot;Both servers are aware or unaware of the operation&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">doSomething</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The reverse of XOR is EX-NOR. And interesting thing about that is, in case of booleans EX-NOR is equivalent to both conditions being equal. So, it is also
+called as equality gate. Hence, we can write:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="k">if</span> <span class="o">((</span><span class="n">resultFromServer1</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">==</span> <span class="o">(</span><span class="n">resultFromServer2</span> <span class="o">==</span> <span class="kc">null</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">log</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="s">&quot;Both servers are aware or unaware of the operation&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">doSomething</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">log</span><span class="o">.</span><span class="na">err</span><span class="o">(</span><span class="s">&quot;Only one server is aware of the operation&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">doSomethingElse</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -915,84 +1008,6 @@ continue further. Stay tuned for it.</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2016/07/08/compile-goaccess-from-source-on-centos-7/">Compile Goaccess From Source on CentOS 7</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2016-07-08T07:30:32+05:30" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="https://goaccess.io">Goaccess</a> is a neat little utility which scans through your web server (I use nginx) logs and generates a nice HTML report of
-your site&rsquo;s access statistics. Here is a <a href="http://rt.goaccess.io">sample from their site</a>. I run CentOS 7 on an EC2 Instance where I run a pet project. I wanted a light web analyzer that just works. I have
-<a href="https://fedoraproject.org/wiki/EPEL">epel</a> enabled on my instance so I just installed goaccess by <code>sudo yum install goaccess</code>. It worked and I was able
-to see some stats. But then I figured out that the version from repositories is quite an old one at 0.9.8. The latest one is 1.0.2 from the website.
-So, I just uninstalled it <code>sudo yum remove goaccess</code>.</p>
-
-<p>I downloaded the source tarball and after a few hiccups I was able to get it running. There are two quirks you need to watch out for. First one is
-that, enabling geoip in goaccess requires installation of maxmind&rsquo;s geoip database. The installed database from yum is very small, so you need to
-update it and change symlink /usr/share/GeoIP/GeoIP.dat to point to /usr/share/GeoIP/GeoLiteCountry.dat. Second quirk is that by default the configure
-script doesn&rsquo;t figure out the geoip devel libs path so you need to manually point to it while configuring.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo yum install GeoIP
-</span><span class='line'>geoipupdate
-</span><span class='line'>sudo rm /usr/share/GeoIP.dat
-</span><span class='line'>sudo ln -s /usr/share/<span class="o">{</span>GeoLiteCountry,GeoIP<span class="o">}</span>.dat
-</span><span class='line'>
-</span><span class='line'>wget http://tar.goaccess.io/goaccess-1.0.2.tar.gz
-</span><span class='line'>tar -xzvf goaccess-1.0.2.tar.gz
-</span><span class='line'><span class="nb">cd </span>goaccess-1.0.2
-</span><span class='line'><span class="nv">LD_FLAGS</span><span class="o">=</span><span class="s1">&#39;-L/usr/lib64/&#39;</span> ./configure --enable-utf8 --enable-geoip
-</span><span class='line'>make
-</span><span class='line'>sudo make install
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I also created a daily crontab entry to generate reports daily and put it in my <code>public</code> folder of rails directory, all the files in which I serve
-statically from nginx. So I can just type <a href="http://mydomain.com/access.html">http://mydomain.com/access.html</a> and see the reports. Here is my crontab entry.</p>
-
-<figure class='code'><figcaption><span>crontab</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>@daily /bin/zcat -f /var/log/nginx/access.log* <span class="p">|</span> /usr/local/bin/goaccess -a -o /home/ec2-user/my_rails_dir/public/access.html
-</span></code></pre></td></tr></table></div></figure>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="2">&larr; Older</a>
@@ -1005,11 +1020,15 @@ statically from nginx. So I can just type <a href="http://mydomain.com/access.ht
   
     <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/arch-linux'>arch linux (1)</a></li><li><a href='/blog/categories/blabber'>blabber (1)</a></li><li><a href='/blog/categories/c-number'>c#, (1)</a></li><li><a href='/blog/categories/design'>design (1)</a></li><li><a href='/blog/categories/es6'>es6 (1)</a></li><li><a href='/blog/categories/functional-programming'>functional programming (1)</a></li><li><a href='/blog/categories/haskell'>haskell (2)</a></li><li><a href='/blog/categories/linux'>linux (4)</a></li><li><a href='/blog/categories/mongodb'>mongodb (2)</a></li><li><a href='/blog/categories/nodejs'>nodejs (2)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/patterns'>patterns (1)</a></li><li><a href='/blog/categories/rails'>rails (3)</a></li><li><a href='/blog/categories/recursion'>recursion (1)</a></li><li><a href='/blog/categories/ruby'>ruby (5)</a></li><li><a href='/blog/categories/shell'>shell (1)</a></li><li><a href='/blog/categories/web-apps'>web apps (2)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/arch-linux'>arch linux (1)</a></li><li><a href='/blog/categories/blabber'>blabber (1)</a></li><li><a href='/blog/categories/c-number'>c#, (1)</a></li><li><a href='/blog/categories/design'>design (1)</a></li><li><a href='/blog/categories/es6'>es6 (1)</a></li><li><a href='/blog/categories/functional-programming'>functional programming (1)</a></li><li><a href='/blog/categories/haskell'>haskell (2)</a></li><li><a href='/blog/categories/linux'>linux (4)</a></li><li><a href='/blog/categories/mongodb'>mongodb (2)</a></li><li><a href='/blog/categories/nodejs'>nodejs (2)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/patterns'>patterns (1)</a></li><li><a href='/blog/categories/programming'>programming (1)</a></li><li><a href='/blog/categories/rails'>rails (3)</a></li><li><a href='/blog/categories/recursion'>recursion (1)</a></li><li><a href='/blog/categories/ruby'>ruby (5)</a></li><li><a href='/blog/categories/shell'>shell (1)</a></li><li><a href='/blog/categories/web-apps'>web apps (2)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2018/03/17/make-your-if-statements-concise/">Make Your if Statements Concise</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2018/03/17/heres-a-fluent-builder-in-c-number/">Here's a Fluent Builder in C#</a>
@@ -1025,10 +1044,6 @@ statically from nginx. So I can just type <a href="http://mydomain.com/access.ht
     
       <li class="post">
         <a href="/blog/2017/03/11/elegant-solutions-to-common-interview-problems/">Elegant Solutions to Common Interview Problems - Part 1 - Linked Lists</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/07/08/compile-goaccess-from-source-on-centos-7/">Compile Goaccess From Source on CentOS 7</a>
       </li>
     
   </ul>

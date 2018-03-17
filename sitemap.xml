@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://prabhakar97.github.io/blog/2018/03/17/make-your-if-statements-concise/</loc>
+<lastmod>2018-03-17T20:17:27+05:30</lastmod>
+</url>
+<url>
 <loc>http://prabhakar97.github.io/blog/2018/03/17/heres-a-fluent-builder-in-c-number/</loc>
 <lastmod>2018-03-17T20:01:34+05:30</lastmod>
 </url>
@@ -123,5 +127,8 @@
 </url>
 <url>
 <loc>http://prabhakar97.github.io/blog/categories/patterns/</loc>
+</url>
+<url>
+<loc>http://prabhakar97.github.io/blog/categories/programming/</loc>
 </url>
 </urlset>
