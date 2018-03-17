@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Patterns | Prab's Code Blog]]></title>
+  <link href="http://prabhakar97.github.io/blog/categories/patterns/atom.xml" rel="self"/>
+  <link href="http://prabhakar97.github.io/"/>
+  <updated>2018-03-17T20:13:24+05:30</updated>
+  <id>http://prabhakar97.github.io/</id>
+  <author>
+    <name><![CDATA[Prabhakar Kumar]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Here's a Fluent Builder in C#]]></title>
+    <link href="http://prabhakar97.github.io/blog/2018/03/17/heres-a-fluent-builder-in-c-number/"/>
+    <updated>2018-03-17T20:01:34+05:30</updated>
+    <id>http://prabhakar97.github.io/blog/2018/03/17/heres-a-fluent-builder-in-c-number</id>
+    <content type="html"><![CDATA[<p>A fluent builder makes creating objects more readable than constructors and more concise than setting properties through setters.
+Java devs can use Lombok&rsquo;s <code>@Builder</code> annotation to get a fluent builder wired into their classes. Unfortunately, in C# world
+no such thing exists. So here&rsquo;s how you can roll out your own.</p>
+
+<pre><code class="c#">public class Animal
+{
+  public string Name { get; set; }
+
+  public string Type { get; set; }
+
+
+  #region Fluent builder
+  public static Animal Builder()
+  {
+    return new Animal();
+  }
+
+  public Animal WithName(string name)
+  {
+    this.Name = name;
+    return this;
+  }
+
+  public Animal WithType(string type)
+  {
+    this.Type = type;
+    return this;
+  }
+
+  public Animal Build()
+  {
+    return this;
+  }
+  #endregion
+}
+</code></pre>
+
+<p>And, to construct and object you can simply use:</p>
+
+<pre><code class="c#">Animal a = Animal.Builder().WithName("Tommy").WithType("Dog").Build();
+</code></pre>
+]]></content>
+  </entry>
+  
+</feed>

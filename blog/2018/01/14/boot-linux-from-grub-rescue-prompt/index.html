@@ -136,13 +136,13 @@ with the boot files.</p>
 <li>Load the needed modules
 
 <ul>
-<li>We need to load the linux module to be able to boot Linux. Run <code>insmod linux</code> to do that. If your Linux root filesystem is not on ext2/&frac34; partitions, you will see the error <code>Unknown filesystem</code> and nothing will be listed. In that case, you need to load your filesystem specific module, for example <code>insmod btrfs</code> for btrfs.</li>
+<li>We need to load the linux module to be able to boot Linux. Run <code>insmod linux</code> to do that.</li>
 </ul>
 </li>
 <li>Find where your kernel and initramfs are located
 
 <ul>
-<li>You can run <code>ls /boot/</code> and it should show a file named <code>vmlinuz-linux</code>. That&rsquo;s your Kernel. At least that&rsquo;s how it is named in Arch Linux and related distros like Antergos and Manjaro. Kernel and Ramdisk has different names on different distros. Centos, Fedora and RHEL have names similar to <code>vmlinuz-3.10.0-693.11.1.el7.x86_64</code> for the Kernel. I assume you are smart enough to figure the naming out.</li>
+<li>You can run <code>ls /boot/</code> and it should show a file named <code>vmlinuz-linux</code>. That&rsquo;s your Kernel. At least that&rsquo;s how it is named in Arch Linux and related distros like Antergos and Manjaro. Kernel and Ramdisk have different names on different distros. Centos, Fedora and RHEL have names similar to <code>vmlinuz-3.10.0-693.11.1.el7.x86_64</code> for the Kernel. I assume you are smart enough to figure the naming out.</li>
 <li>You can similarly find your initramfs image. Usually it is named something like <code>initramfs-linux.img</code>.</li>
 <li>Caveats to look out for when finding the Kernel and initramfs image files - Number one, if the file names are versioned, choose the latest ones. Number two, choose the same version for Kernel and initramfs. And the last and number three, don&rsquo;t choose the names that contain <code>rescue</code> or <code>memtest</code>. They are not the ones we are interested in.</li>
 </ul>
@@ -214,6 +214,8 @@ with the boot files.</p>
         <a class="basic-alignment left" href="/blog/2017/03/22/bootstrap-a-restful-api-app-with-node-es6-mongo-linux/" title="Previous Post: Ship a REST API with Node, ES6 and MongoDB - Part 1">&laquo; Ship a REST API with Node, ES6 and MongoDB - Part 1</a>
       
       
+        <a class="basic-alignment right" href="/blog/2018/03/17/heres-a-fluent-builder-in-c-number/" title="Next Post: Here's a fluent builder in C#">Here's a fluent builder in C# &raquo;</a>
+      
     </p>
   </footer>
 </article>
@@ -230,11 +232,15 @@ with the boot files.</p>
   
     <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/arch-linux'>arch linux (1)</a></li><li><a href='/blog/categories/blabber'>blabber (1)</a></li><li><a href='/blog/categories/es6'>es6 (1)</a></li><li><a href='/blog/categories/functional-programming'>functional programming (1)</a></li><li><a href='/blog/categories/haskell'>haskell (2)</a></li><li><a href='/blog/categories/linux'>linux (4)</a></li><li><a href='/blog/categories/mongodb'>mongodb (2)</a></li><li><a href='/blog/categories/nodejs'>nodejs (2)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/rails'>rails (3)</a></li><li><a href='/blog/categories/recursion'>recursion (1)</a></li><li><a href='/blog/categories/ruby'>ruby (5)</a></li><li><a href='/blog/categories/shell'>shell (1)</a></li><li><a href='/blog/categories/web-apps'>web apps (2)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/arch-linux'>arch linux (1)</a></li><li><a href='/blog/categories/blabber'>blabber (1)</a></li><li><a href='/blog/categories/c-number'>c#, (1)</a></li><li><a href='/blog/categories/design'>design (1)</a></li><li><a href='/blog/categories/es6'>es6 (1)</a></li><li><a href='/blog/categories/functional-programming'>functional programming (1)</a></li><li><a href='/blog/categories/haskell'>haskell (2)</a></li><li><a href='/blog/categories/linux'>linux (4)</a></li><li><a href='/blog/categories/mongodb'>mongodb (2)</a></li><li><a href='/blog/categories/nodejs'>nodejs (2)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/patterns'>patterns (1)</a></li><li><a href='/blog/categories/rails'>rails (3)</a></li><li><a href='/blog/categories/recursion'>recursion (1)</a></li><li><a href='/blog/categories/ruby'>ruby (5)</a></li><li><a href='/blog/categories/shell'>shell (1)</a></li><li><a href='/blog/categories/web-apps'>web apps (2)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2018/03/17/heres-a-fluent-builder-in-c-number/">Here's a Fluent Builder in C#</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2018/01/14/boot-linux-from-grub-rescue-prompt/">Boot Linux From Grub Rescue Prompt</a>
@@ -250,10 +256,6 @@ with the boot files.</p>
     
       <li class="post">
         <a href="/blog/2016/07/08/compile-goaccess-from-source-on-centos-7/">Compile Goaccess From Source on CentOS 7</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/06/27/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond/">Configure DatabaseCleaner With Rspec for Mongoid 5 and Beyond</a>
       </li>
     
   </ul>

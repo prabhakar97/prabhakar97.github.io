@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Linux | Prab's Code Blog]]></title>
   <link href="http://prabhakar97.github.io/blog/categories/linux/atom.xml" rel="self"/>
   <link href="http://prabhakar97.github.io/"/>
-  <updated>2018-01-14T21:00:46+05:30</updated>
+  <updated>2018-03-17T20:13:24+05:30</updated>
   <id>http://prabhakar97.github.io/</id>
   <author>
     <name><![CDATA[Prabhakar Kumar]]></name>
@@ -47,13 +47,13 @@ with the boot files.</p>
 <li>Load the needed modules
 
 <ul>
-<li>We need to load the linux module to be able to boot Linux. Run <code>insmod linux</code> to do that. If your Linux root filesystem is not on ext2/&frac34; partitions, you will see the error <code>Unknown filesystem</code> and nothing will be listed. In that case, you need to load your filesystem specific module, for example <code>insmod btrfs</code> for btrfs.</li>
+<li>We need to load the linux module to be able to boot Linux. Run <code>insmod linux</code> to do that.</li>
 </ul>
 </li>
 <li>Find where your kernel and initramfs are located
 
 <ul>
-<li>You can run <code>ls /boot/</code> and it should show a file named <code>vmlinuz-linux</code>. That&rsquo;s your Kernel. At least that&rsquo;s how it is named in Arch Linux and related distros like Antergos and Manjaro. Kernel and Ramdisk has different names on different distros. Centos, Fedora and RHEL have names similar to <code>vmlinuz-3.10.0-693.11.1.el7.x86_64</code> for the Kernel. I assume you are smart enough to figure the naming out.</li>
+<li>You can run <code>ls /boot/</code> and it should show a file named <code>vmlinuz-linux</code>. That&rsquo;s your Kernel. At least that&rsquo;s how it is named in Arch Linux and related distros like Antergos and Manjaro. Kernel and Ramdisk have different names on different distros. Centos, Fedora and RHEL have names similar to <code>vmlinuz-3.10.0-693.11.1.el7.x86_64</code> for the Kernel. I assume you are smart enough to figure the naming out.</li>
 <li>You can similarly find your initramfs image. Usually it is named something like <code>initramfs-linux.img</code>.</li>
 <li>Caveats to look out for when finding the Kernel and initramfs image files - Number one, if the file names are versioned, choose the latest ones. Number two, choose the same version for Kernel and initramfs. And the last and number three, don&rsquo;t choose the names that contain <code>rescue</code> or <code>memtest</code>. They are not the ones we are interested in.</li>
 </ul>

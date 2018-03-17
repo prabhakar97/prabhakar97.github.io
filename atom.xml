@@ -4,7 +4,7 @@
   <title><![CDATA[Prab's Code Blog]]></title>
   <link href="http://prabhakar97.github.io/atom.xml" rel="self"/>
   <link href="http://prabhakar97.github.io/"/>
-  <updated>2018-01-14T21:00:46+05:30</updated>
+  <updated>2018-03-17T20:13:24+05:30</updated>
   <id>http://prabhakar97.github.io/</id>
   <author>
     <name><![CDATA[Prabhakar Kumar]]></name>
@@ -12,6 +12,91 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Here's a fluent builder in C#]]></title>
+    <link href="http://prabhakar97.github.io/blog/2018/03/17/heres-a-fluent-builder-in-c-number/"/>
+    <updated>2018-03-17T20:01:34+05:30</updated>
+    <id>http://prabhakar97.github.io/blog/2018/03/17/heres-a-fluent-builder-in-c-number</id>
+    <content type="html"><![CDATA[<p>A fluent builder makes creating objects more readable than constructors and more concise than setting properties through setters.
+Java devs can use Lombok&rsquo;s <code>@Builder</code> annotation to get a fluent builder wired into their classes. Unfortunately, in C# world
+no such thing exists. So here&rsquo;s how you can roll out your own.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="k">public</span> <span class="k">class</span> <span class="nc">Animal</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">public</span> <span class="kt">string</span> <span class="n">Type</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>  <span class="cp">#region Fluent builder</span>
+</span><span class='line'>  <span class="k">public</span> <span class="k">static</span> <span class="n">Animal</span> <span class="nf">Builder</span><span class="p">()</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">new</span> <span class="nf">Animal</span><span class="p">();</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">public</span> <span class="n">Animal</span> <span class="nf">WithName</span><span class="p">(</span><span class="kt">string</span> <span class="n">name</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="n">Name</span> <span class="p">=</span> <span class="n">name</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">public</span> <span class="n">Animal</span> <span class="nf">WithType</span><span class="p">(</span><span class="kt">string</span> <span class="n">type</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="n">Type</span> <span class="p">=</span> <span class="n">type</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">public</span> <span class="n">Animal</span> <span class="nf">Build</span><span class="p">()</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="cp">#endregion</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And, to construct and object you can simply use:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="n">Animal</span> <span class="n">a</span> <span class="p">=</span> <span class="n">Animal</span><span class="p">.</span><span class="n">Builder</span><span class="p">().</span><span class="n">WithName</span><span class="p">(</span><span class="s">&quot;Tommy&quot;</span><span class="p">).</span><span class="n">WithType</span><span class="p">(</span><span class="s">&quot;Dog&quot;</span><span class="p">).</span><span class="n">Build</span><span class="p">();</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Boot linux from grub rescue prompt]]></title>
@@ -47,13 +132,13 @@ with the boot files.</p>
 <li>Load the needed modules
 
 <ul>
-<li>We need to load the linux module to be able to boot Linux. Run <code>insmod linux</code> to do that. If your Linux root filesystem is not on ext2/&frac34; partitions, you will see the error <code>Unknown filesystem</code> and nothing will be listed. In that case, you need to load your filesystem specific module, for example <code>insmod btrfs</code> for btrfs.</li>
+<li>We need to load the linux module to be able to boot Linux. Run <code>insmod linux</code> to do that.</li>
 </ul>
 </li>
 <li>Find where your kernel and initramfs are located
 
 <ul>
-<li>You can run <code>ls /boot/</code> and it should show a file named <code>vmlinuz-linux</code>. That&rsquo;s your Kernel. At least that&rsquo;s how it is named in Arch Linux and related distros like Antergos and Manjaro. Kernel and Ramdisk has different names on different distros. Centos, Fedora and RHEL have names similar to <code>vmlinuz-3.10.0-693.11.1.el7.x86_64</code> for the Kernel. I assume you are smart enough to figure the naming out.</li>
+<li>You can run <code>ls /boot/</code> and it should show a file named <code>vmlinuz-linux</code>. That&rsquo;s your Kernel. At least that&rsquo;s how it is named in Arch Linux and related distros like Antergos and Manjaro. Kernel and Ramdisk have different names on different distros. Centos, Fedora and RHEL have names similar to <code>vmlinuz-3.10.0-693.11.1.el7.x86_64</code> for the Kernel. I assume you are smart enough to figure the naming out.</li>
 <li>You can similarly find your initramfs image. Usually it is named something like <code>initramfs-linux.img</code>.</li>
 <li>Caveats to look out for when finding the Kernel and initramfs image files - Number one, if the file names are versioned, choose the latest ones. Number two, choose the same version for Kernel and initramfs. And the last and number three, don&rsquo;t choose the names that contain <code>rescue</code> or <code>memtest</code>. They are not the ones we are interested in.</li>
 </ul>

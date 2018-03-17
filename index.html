@@ -9,8 +9,8 @@
   <meta name="author" content="Prabhakar Kumar">
 
   
-  <meta name="description" content="If you have a dual boot setup of a Linux based OS and Windows 10, and you have setup grub to choose which OS
-to boot; you might have experienced the &hellip;">
+  <meta name="description" content="A fluent builder makes creating objects more readable than constructors and more concise than setting properties through setters.
+Java devs can use &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -87,6 +87,118 @@ to boot; you might have experienced the &hellip;">
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2018/03/17/heres-a-fluent-builder-in-c-number/">Here's a Fluent Builder in C#</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2018-03-17T20:01:34+05:30" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>A fluent builder makes creating objects more readable than constructors and more concise than setting properties through setters.
+Java devs can use Lombok&rsquo;s <code>@Builder</code> annotation to get a fluent builder wired into their classes. Unfortunately, in C# world
+no such thing exists. So here&rsquo;s how you can roll out your own.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="k">public</span> <span class="k">class</span> <span class="nc">Animal</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">public</span> <span class="kt">string</span> <span class="n">Type</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>  <span class="cp">#region Fluent builder</span>
+</span><span class='line'>  <span class="k">public</span> <span class="k">static</span> <span class="n">Animal</span> <span class="nf">Builder</span><span class="p">()</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">new</span> <span class="nf">Animal</span><span class="p">();</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">public</span> <span class="n">Animal</span> <span class="nf">WithName</span><span class="p">(</span><span class="kt">string</span> <span class="n">name</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="n">Name</span> <span class="p">=</span> <span class="n">name</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">public</span> <span class="n">Animal</span> <span class="nf">WithType</span><span class="p">(</span><span class="kt">string</span> <span class="n">type</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="n">Type</span> <span class="p">=</span> <span class="n">type</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">public</span> <span class="n">Animal</span> <span class="nf">Build</span><span class="p">()</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="cp">#endregion</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And, to construct and object you can simply use:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="n">Animal</span> <span class="n">a</span> <span class="p">=</span> <span class="n">Animal</span><span class="p">.</span><span class="n">Builder</span><span class="p">().</span><span class="n">WithName</span><span class="p">(</span><span class="s">&quot;Tommy&quot;</span><span class="p">).</span><span class="n">WithType</span><span class="p">(</span><span class="s">&quot;Dog&quot;</span><span class="p">).</span><span class="n">Build</span><span class="p">();</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2018/01/14/boot-linux-from-grub-rescue-prompt/">Boot Linux From Grub Rescue Prompt</a></h1>
     
     
@@ -139,13 +251,13 @@ with the boot files.</p>
 <li>Load the needed modules
 
 <ul>
-<li>We need to load the linux module to be able to boot Linux. Run <code>insmod linux</code> to do that. If your Linux root filesystem is not on ext2/&frac34; partitions, you will see the error <code>Unknown filesystem</code> and nothing will be listed. In that case, you need to load your filesystem specific module, for example <code>insmod btrfs</code> for btrfs.</li>
+<li>We need to load the linux module to be able to boot Linux. Run <code>insmod linux</code> to do that.</li>
 </ul>
 </li>
 <li>Find where your kernel and initramfs are located
 
 <ul>
-<li>You can run <code>ls /boot/</code> and it should show a file named <code>vmlinuz-linux</code>. That&rsquo;s your Kernel. At least that&rsquo;s how it is named in Arch Linux and related distros like Antergos and Manjaro. Kernel and Ramdisk has different names on different distros. Centos, Fedora and RHEL have names similar to <code>vmlinuz-3.10.0-693.11.1.el7.x86_64</code> for the Kernel. I assume you are smart enough to figure the naming out.</li>
+<li>You can run <code>ls /boot/</code> and it should show a file named <code>vmlinuz-linux</code>. That&rsquo;s your Kernel. At least that&rsquo;s how it is named in Arch Linux and related distros like Antergos and Manjaro. Kernel and Ramdisk have different names on different distros. Centos, Fedora and RHEL have names similar to <code>vmlinuz-3.10.0-693.11.1.el7.x86_64</code> for the Kernel. I assume you are smart enough to figure the naming out.</li>
 <li>You can similarly find your initramfs image. Usually it is named something like <code>initramfs-linux.img</code>.</li>
 <li>Caveats to look out for when finding the Kernel and initramfs image files - Number one, if the file names are versioned, choose the latest ones. Number two, choose the same version for Kernel and initramfs. And the last and number three, don&rsquo;t choose the names that contain <code>rescue</code> or <code>memtest</code>. They are not the ones we are interested in.</li>
 </ul>
@@ -880,126 +992,6 @@ statically from nginx. So I can just type <a href="http://mydomain.com/access.ht
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2016/06/27/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond/">Configure DatabaseCleaner With Rspec for Mongoid 5 and Beyond</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2016-06-27T06:35:22+05:30" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="https://github.com/DatabaseCleaner/database_cleaner">Database Cleaner</a> is a nifty gem for streamlining tests. Configuring it is straightforward
-but it didn&rsquo;t work for me out of the box for Mongoid 5.</p>
-
-<p>Here&rsquo;s my Gemfile segment for testing.</p>
-
-<figure class='code'><figcaption><span>Gemfile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">group</span> <span class="ss">:test</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">gem</span> <span class="s2">&quot;factory_girl_rails&quot;</span>
-</span><span class='line'>  <span class="n">gem</span> <span class="s2">&quot;rspec-rails&quot;</span><span class="p">,</span> <span class="s1">&#39;~&gt; 3.4&#39;</span>
-</span><span class='line'>  <span class="n">gem</span> <span class="s1">&#39;faker&#39;</span>
-</span><span class='line'>  <span class="n">gem</span> <span class="s1">&#39;database_cleaner&#39;</span><span class="p">,</span> <span class="ss">git</span><span class="p">:</span> <span class="s1">&#39;git://github.com/DatabaseCleaner/database_cleaner.git&#39;</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I added a <code>require 'support/database_cleaner'</code> in my <code>spec_helper</code>. And here&rsquo;s my <code>database_cleaner.rb</code>.</p>
-
-<figure class='code'><figcaption><span>spec/support/database_cleaner.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">RSpec</span><span class="o">.</span><span class="n">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">before</span><span class="p">(</span><span class="ss">:suite</span><span class="p">)</span> <span class="k">do</span>
-</span><span class='line'>    <span class="no">DatabaseCleaner</span><span class="o">.</span><span class="n">strategy</span> <span class="o">=</span> <span class="ss">:truncation</span>
-</span><span class='line'>    <span class="no">DatabaseCleaner</span><span class="o">.</span><span class="n">clean</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">before</span><span class="p">(</span><span class="ss">:each</span><span class="p">)</span> <span class="k">do</span>
-</span><span class='line'>    <span class="no">DatabaseCleaner</span><span class="o">.</span><span class="n">start</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">after</span><span class="p">(</span><span class="ss">:each</span><span class="p">)</span> <span class="k">do</span>
-</span><span class='line'>    <span class="no">DatabaseCleaner</span><span class="o">.</span><span class="n">clean</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>When I ran my spec, I was greeted with an unexpected ugly error.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='text'><span class='line'>/home/prabhakar/.rbenv/versions/2.3.0/lib/ruby/gems/2.3.0/bundler/gems/database_cleaner-f052d64d3be9/lib/database_cleaner/mongo2/truncation_mixin.rb:29:in `collections&#39;: undefined method `collections&#39; for #&lt;Mongo::Client:0x47021052998580 cluster=127.0.0.1:27017&gt; (NoMethodError)
-</span><span class='line'>  from /home/prabhakar/.rbenv/versions/2.3.0/lib/ruby/gems/2.3.0/bundler/gems/database_cleaner-f052d64d3be9/lib/database_cleaner/mongo2/truncation_mixin.rb:9:in `clean&#39;
-</span><span class='line'>  from /home/prabhakar/.rbenv/versions/2.3.0/lib/ruby/gems/2.3.0/bundler/gems/database_cleaner-f052d64d3be9/lib/database_cleaner/base.rb:92:in `clean&#39;
-</span><span class='line'>  from /home/prabhakar/.rbenv/versions/2.3.0/lib/ruby/gems/2.3.0/bundler/gems/database_cleaner-f052d64d3be9/lib/database_cleaner/configuration.rb:79:in `block in clean&#39;
-</span><span class='line'>  from /home/prabhakar/.rbenv/versions/2.3.0/lib/ruby/gems/2.3.0/bundler/gems/database_cleaner-f052d64d3be9/lib/database_cleaner/configuration.rb:79:in `each&#39;
-</span><span class='line'>  from /home/prabhakar/.rbenv/versions/2.3.0/lib/ruby/gems/2.3.0/bundler/gems/database_cleaner-f052d64d3be9/lib/database_cleaner/configuration.rb:79:in `clean&#39;
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>After looking at the code in the gem, I finally found out what was wrong in it. I created a
-<a href="https://github.com/prabhakar97/database_cleaner/commit/3cf0d1b81e4a118fd173d697f032a9aff4f431de">commit for fix</a> and submitted a pull request to
-the maintainer. Looking at my commit and the relevant files <a href="https://github.com/DatabaseCleaner/database_cleaner/blob/master/lib/database_cleaner/mongoid/truncation.rb">truncation.rb</a> and <a href="https://github.com/DatabaseCleaner/database_cleaner/blob/master/lib/database_cleaner/mongo2/truncation_mixin.rb">truncation_mixin.rb</a>, you should be able to piece together the problem.</p>
-
-<p>Meanwhile, if you are using Mongoid 5 and aren&rsquo;t able to get it working you could simply point to my fork of database_cleaner by updating your Gemfile
-to have:</p>
-
-<figure class='code'><figcaption><span>Gemfile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gem</span> <span class="s1">&#39;database_cleaner&#39;</span><span class="p">,</span> <span class="ss">git</span><span class="p">:</span> <span class="s1">&#39;git://github.com/prabhakar97/database_cleaner.git&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="2">&larr; Older</a>
@@ -1012,11 +1004,15 @@ to have:</p>
   
     <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/arch-linux'>arch linux (1)</a></li><li><a href='/blog/categories/blabber'>blabber (1)</a></li><li><a href='/blog/categories/es6'>es6 (1)</a></li><li><a href='/blog/categories/functional-programming'>functional programming (1)</a></li><li><a href='/blog/categories/haskell'>haskell (2)</a></li><li><a href='/blog/categories/linux'>linux (4)</a></li><li><a href='/blog/categories/mongodb'>mongodb (2)</a></li><li><a href='/blog/categories/nodejs'>nodejs (2)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/rails'>rails (3)</a></li><li><a href='/blog/categories/recursion'>recursion (1)</a></li><li><a href='/blog/categories/ruby'>ruby (5)</a></li><li><a href='/blog/categories/shell'>shell (1)</a></li><li><a href='/blog/categories/web-apps'>web apps (2)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/arch-linux'>arch linux (1)</a></li><li><a href='/blog/categories/blabber'>blabber (1)</a></li><li><a href='/blog/categories/c-number'>c#, (1)</a></li><li><a href='/blog/categories/design'>design (1)</a></li><li><a href='/blog/categories/es6'>es6 (1)</a></li><li><a href='/blog/categories/functional-programming'>functional programming (1)</a></li><li><a href='/blog/categories/haskell'>haskell (2)</a></li><li><a href='/blog/categories/linux'>linux (4)</a></li><li><a href='/blog/categories/mongodb'>mongodb (2)</a></li><li><a href='/blog/categories/nodejs'>nodejs (2)</a></li><li><a href='/blog/categories/octopress'>octopress (1)</a></li><li><a href='/blog/categories/patterns'>patterns (1)</a></li><li><a href='/blog/categories/rails'>rails (3)</a></li><li><a href='/blog/categories/recursion'>recursion (1)</a></li><li><a href='/blog/categories/ruby'>ruby (5)</a></li><li><a href='/blog/categories/shell'>shell (1)</a></li><li><a href='/blog/categories/web-apps'>web apps (2)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2018/03/17/heres-a-fluent-builder-in-c-number/">Here's a Fluent Builder in C#</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2018/01/14/boot-linux-from-grub-rescue-prompt/">Boot Linux From Grub Rescue Prompt</a>
@@ -1032,10 +1028,6 @@ to have:</p>
     
       <li class="post">
         <a href="/blog/2016/07/08/compile-goaccess-from-source-on-centos-7/">Compile Goaccess From Source on CentOS 7</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/06/27/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond/">Configure DatabaseCleaner With Rspec for Mongoid 5 and Beyond</a>
       </li>
     
   </ul>
