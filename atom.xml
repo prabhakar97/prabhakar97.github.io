@@ -4,7 +4,7 @@
   <title><![CDATA[Prab's Code Blog]]></title>
   <link href="http://prabhakar97.github.io/atom.xml" rel="self"/>
   <link href="http://prabhakar97.github.io/"/>
-  <updated>2018-03-17T20:13:24+05:30</updated>
+  <updated>2018-03-17T20:15:49+05:30</updated>
   <id>http://prabhakar97.github.io/</id>
   <author>
     <name><![CDATA[Prabhakar Kumar]]></name>
@@ -18,7 +18,8 @@
     <link href="http://prabhakar97.github.io/blog/2018/03/17/heres-a-fluent-builder-in-c-number/"/>
     <updated>2018-03-17T20:01:34+05:30</updated>
     <id>http://prabhakar97.github.io/blog/2018/03/17/heres-a-fluent-builder-in-c-number</id>
-    <content type="html"><![CDATA[<p>A fluent builder makes creating objects more readable than constructors and more concise than setting properties through setters.
+    <content type="html"><![CDATA[<p>A fluent builder makes creating objects more readable than constructors and more concise than setting properties through setters
+on an uninitialized object.
 Java devs can use Lombok&rsquo;s <code>@Builder</code> annotation to get a fluent builder wired into their classes. Unfortunately, in C# world
 no such thing exists. So here&rsquo;s how you can roll out your own.</p>
 
