@@ -4,7 +4,7 @@
   <title><![CDATA[Prab's Code Blog]]></title>
   <link href="http://prabhakar97.github.io/atom.xml" rel="self"/>
   <link href="http://prabhakar97.github.io/"/>
-  <updated>2018-03-17T20:38:07+05:30</updated>
+  <updated>2018-03-29T20:44:09+05:30</updated>
   <id>http://prabhakar97.github.io/</id>
   <author>
     <name><![CDATA[Prabhakar Kumar]]></name>
@@ -661,15 +661,7 @@ continue further. Stay tuned for it.</p>
 <span class='line-number'>14</span>
 <span class='line-number'>15</span>
 <span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
 </pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">Node</span><span class="o">*</span> <span class="nf">reverseIterative</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">head</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="c1">// Empty list is already reversed</span>
-</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">head</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
 </span><span class='line'>    <span class="c1">// Initialize two pointers, current(ptr) and previous</span>
 </span><span class='line'>    <span class="n">Node</span><span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="n">head</span><span class="p">;</span>
 </span><span class='line'>    <span class="n">Node</span><span class="o">*</span> <span class="n">prev</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
