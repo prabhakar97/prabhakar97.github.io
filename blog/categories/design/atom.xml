@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Design | Prab's Code Blog]]></title>
   <link href="http://prabhakar97.github.io/blog/categories/design/atom.xml" rel="self"/>
   <link href="http://prabhakar97.github.io/"/>
-  <updated>2018-03-29T21:13:21+05:30</updated>
+  <updated>2018-07-22T08:43:20+05:30</updated>
   <id>http://prabhakar97.github.io/</id>
   <author>
     <name><![CDATA[Prabhakar Kumar]]></name>
@@ -59,6 +59,18 @@ no such thing exists. So here&rsquo;s how you can roll out your own.</p>
 <p>And, to construct and object you can simply use:</p>
 
 <pre><code class="c#">Animal a = Animal.Builder().WithName("Tommy").WithType("Dog").Build();
+</code></pre>
+
+<h2>Update</h2>
+
+<p>C# doesn&rsquo;t need this. I figured it out after reading and writing lot of C# code. C# already has a nice intializer which can be used instead
+of a fluent builder:</p>
+
+<pre><code class="c#">Animal a = new Animal
+{
+    Name = "Tommy",
+    Type = "Dog"
+}
 </code></pre>
 ]]></content>
   </entry>
