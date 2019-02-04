@@ -1,0 +1,5 @@
+<div class="highlight"><pre><span class="nf">countChars</span> <span class="ow">::</span> <span class="kt">Char</span> <span class="ow">-&gt;</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">Int</span>
+<span class="nf">countChars</span> <span class="n">y</span> <span class="kt">[]</span> <span class="ow">=</span> <span class="mi">0</span>
+<span class="nf">countChars</span> <span class="n">y</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="o">|</span> <span class="n">y</span> <span class="o">==</span> <span class="n">x</span> <span class="ow">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">countChars</span> <span class="n">y</span> <span class="n">xs</span>
+                    <span class="o">|</span> <span class="n">otherwise</span> <span class="ow">=</span> <span class="n">countChars</span> <span class="n">y</span> <span class="n">xs</span>
+</pre></div>

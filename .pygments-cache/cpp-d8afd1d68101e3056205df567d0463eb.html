@@ -1,0 +1,17 @@
+<div class="highlight"><pre><span class="n">Node</span><span class="o">*</span> <span class="nf">reverseIterative</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">head</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Initialize two pointers, current(ptr) and previous</span>
+    <span class="n">Node</span><span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="n">head</span><span class="p">;</span>
+    <span class="n">Node</span><span class="o">*</span> <span class="n">prev</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="c1">// At each node, we point it&#39;s next to previous</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">ptr</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">Node</span><span class="o">*</span> <span class="n">next</span> <span class="o">=</span> <span class="n">ptr</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+        <span class="n">ptr</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">prev</span><span class="p">;</span>
+        <span class="c1">// Advance both pointers</span>
+        <span class="n">prev</span> <span class="o">=</span> <span class="n">ptr</span><span class="p">;</span>
+        <span class="n">ptr</span> <span class="o">=</span> <span class="n">next</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="c1">// Point head to last node</span>
+    <span class="n">head</span> <span class="o">=</span> <span class="n">prev</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">head</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>

@@ -1,0 +1,12 @@
+<div class="highlight"><pre>sudo yum install GeoIP
+geoipupdate
+sudo rm /usr/share/GeoIP.dat
+sudo ln -s /usr/share/<span class="o">{</span>GeoLiteCountry,GeoIP<span class="o">}</span>.dat 
+
+wget http://tar.goaccess.io/goaccess-1.0.2.tar.gz
+tar -xzvf goaccess-1.0.2.tar.gz
+<span class="nb">cd </span>goaccess-1.0.2
+<span class="nv">LD_FLAGS</span><span class="o">=</span><span class="s1">&#39;-L/usr/lib64/&#39;</span> ./configure --enable-utf8 --enable-geoip
+make
+sudo make install
+</pre></div>

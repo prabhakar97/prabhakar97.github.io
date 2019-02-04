@@ -1,0 +1,11 @@
+<div class="highlight"><pre><span class="n">Node</span><span class="o">*</span> <span class="nf">reverseRecursive</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">head</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">head</span> <span class="o">||</span> <span class="o">!</span><span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">head</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">Node</span><span class="o">*</span> <span class="n">rest</span> <span class="o">=</span> <span class="n">reverseRecursive</span><span class="p">(</span><span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">);</span>
+    <span class="c1">// Point head&#39;s next node towards head</span>
+    <span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">head</span><span class="p">;</span>
+    <span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">rest</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>

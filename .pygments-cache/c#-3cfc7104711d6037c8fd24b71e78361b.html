@@ -1,0 +1,32 @@
+<div class="highlight"><pre><span class="k">public</span> <span class="k">class</span> <span class="nc">Animal</span>
+<span class="p">{</span>
+  <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+  <span class="k">public</span> <span class="kt">string</span> <span class="n">Type</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+
+  <span class="cp">#region Fluent builder</span>
+  <span class="k">public</span> <span class="k">static</span> <span class="n">Animal</span> <span class="nf">Builder</span><span class="p">()</span>
+  <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nf">Animal</span><span class="p">();</span>
+  <span class="p">}</span>
+
+  <span class="k">public</span> <span class="n">Animal</span> <span class="nf">WithName</span><span class="p">(</span><span class="kt">string</span> <span class="n">name</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="n">Name</span> <span class="p">=</span> <span class="n">name</span><span class="p">;</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">public</span> <span class="n">Animal</span> <span class="nf">WithType</span><span class="p">(</span><span class="kt">string</span> <span class="n">type</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="n">Type</span> <span class="p">=</span> <span class="n">type</span><span class="p">;</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">public</span> <span class="n">Animal</span> <span class="nf">Build</span><span class="p">()</span>
+  <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="cp">#endregion</span>
+<span class="p">}</span>
+</pre></div>

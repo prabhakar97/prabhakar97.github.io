@@ -1,0 +1,5 @@
+<div class="highlight"><pre><span class="nf">removeFst</span> <span class="ow">::</span> <span class="p">(</span><span class="kt">Eq</span> <span class="n">a</span><span class="p">)</span> <span class="ow">=&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span>
+<span class="nf">removeFst</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="n">y</span> <span class="ow">=</span> <span class="kr">if</span> <span class="n">x</span> <span class="o">==</span> <span class="n">y</span>
+						<span class="kr">then</span> <span class="n">xs</span>
+                        <span class="kr">else</span> <span class="n">x</span> <span class="kt">:</span> <span class="n">removeFst</span> <span class="n">xs</span> <span class="n">y</span>
+</pre></div>

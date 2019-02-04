@@ -1,0 +1,32 @@
+<div class="highlight"><pre><span class="k">module</span> <span class="nn">ApplicationName</span>
+
+  <span class="k">class</span> <span class="nc">QLogFormatter</span>
+    <span class="no">HOSTNAME</span> <span class="o">=</span> <span class="no">Socket</span><span class="o">.</span><span class="n">gethostname</span>
+    <span class="no">SEVERITY_TO_COLOR_MAP</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="s1">&#39;DEBUG&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;35&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;INFO&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;32&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;WARN&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;33&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;ERROR&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;31&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;FATAL&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;31&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;UNKNOWN&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;37&#39;</span>
+    <span class="p">}</span>
+    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">severity</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">progname</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
+      <span class="k">return</span> <span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">blank?</span> <span class="o">||</span> <span class="n">msg</span><span class="o">.</span><span class="n">strip</span><span class="o">.</span><span class="n">blank?</span><span class="p">)</span>
+      <span class="n">formatted_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-%d %H:%M:%S.&quot;</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">time</span><span class="o">.</span><span class="n">usec</span><span class="o">.</span><span class="n">to_s</span><span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="mi">2</span><span class="o">]</span>
+      <span class="n">color</span> <span class="o">=</span> <span class="no">SEVERITY_TO_COLOR_MAP</span><span class="o">[</span><span class="n">severity</span><span class="o">]</span>
+      <span class="n">callee</span> <span class="o">=</span> <span class="nb">caller</span><span class="o">[</span><span class="mi">5</span><span class="o">].</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">last</span>
+      <span class="n">callee</span> <span class="o">=</span> <span class="n">callee</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span><span class="o">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="o">].</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+      <span class="n">log_line</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[0;37m</span><span class="si">#{</span><span class="no">HOSTNAME</span><span class="si">}</span><span class="s2">@</span><span class="si">#{</span><span class="n">formatted_time</span><span class="si">}</span><span class="se">\033</span><span class="s2">[0m [</span><span class="se">\033</span><span class="s2">[01;</span><span class="si">#{</span><span class="n">color</span><span class="si">}</span><span class="s2">m</span><span class="si">#{</span><span class="n">severity</span><span class="si">}</span><span class="se">\033</span><span class="s2">[0m]&quot;</span>
+      <span class="k">unless</span> <span class="p">(</span><span class="n">callee</span><span class="o">.</span><span class="n">start_with?</span><span class="p">(</span><span class="s1">&#39;logger&#39;</span><span class="p">)</span> <span class="o">||</span> <span class="n">callee</span><span class="o">.</span><span class="n">start_with?</span><span class="p">(</span><span class="s1">&#39;log_&#39;</span><span class="p">))</span>
+        <span class="n">log_line</span> <span class="o">+=</span> <span class="s2">&quot;[</span><span class="se">\033</span><span class="s2">[01;36m</span><span class="si">#{</span><span class="n">callee</span><span class="si">}</span><span class="se">\033</span><span class="s2">[0m]&quot;</span>
+      <span class="k">end</span>
+      <span class="n">log_line</span> <span class="o">+=</span> <span class="s2">&quot; </span><span class="si">#{</span><span class="n">msg</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="k">class</span> <span class="nc">Application</span> <span class="o">&lt;</span> <span class="ss">Rails</span><span class="p">:</span><span class="ss">:Application</span>
+    <span class="c1"># All your other configs</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">log_formatter</span> <span class="o">=</span> <span class="no">QLogFormatter</span><span class="o">.</span><span class="n">new</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
