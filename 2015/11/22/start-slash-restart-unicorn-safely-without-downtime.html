@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Start/restart unicorn safely without downtime | Prab’s Code Blog</title>
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="Start/restart unicorn safely without downtime" />
+<meta name="author" content="Prabhakar Kumar" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Unicorn is a cool application server for Rails. If you have a high traffic website, you would like to restart Unicorn without any downtime, upon a new code deployment or a Gem update which updates unicorn. I wrote an script, exactly for this purpose after learning signal handling basics of Unicorn. Here’s the script. The comments are self-explanatory and fairly give the idea of what is happening." />
+<meta property="og:description" content="Unicorn is a cool application server for Rails. If you have a high traffic website, you would like to restart Unicorn without any downtime, upon a new code deployment or a Gem update which updates unicorn. I wrote an script, exactly for this purpose after learning signal handling basics of Unicorn. Here’s the script. The comments are self-explanatory and fairly give the idea of what is happening." />
+<link rel="canonical" href="http://localhost:4000/blog/2015/11/22/start-slash-restart-unicorn-safely-without-downtime.html" />
+<meta property="og:url" content="http://localhost:4000/blog/2015/11/22/start-slash-restart-unicorn-safely-without-downtime.html" />
+<meta property="og:site_name" content="Prab’s Code Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2015-11-22T00:42:00+05:30" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"Prabhakar Kumar"},"headline":"Start/restart unicorn safely without downtime","dateModified":"2015-11-22T00:42:00+05:30","description":"Unicorn is a cool application server for Rails. If you have a high traffic website, you would like to restart Unicorn without any downtime, upon a new code deployment or a Gem update which updates unicorn. I wrote an script, exactly for this purpose after learning signal handling basics of Unicorn. Here’s the script. The comments are self-explanatory and fairly give the idea of what is happening.","datePublished":"2015-11-22T00:42:00+05:30","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/blog/2015/11/22/start-slash-restart-unicorn-safely-without-downtime.html"},"url":"http://localhost:4000/blog/2015/11/22/start-slash-restart-unicorn-safely-without-downtime.html","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/blog/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/blog/feed.xml" title="Prab's Code Blog" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/blog/">Prab&#39;s Code Blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/blog/about.html">About Me</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Start/restart unicorn safely without downtime</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2015-11-22T00:42:00+05:30" itemprop="datePublished">Nov 22, 2015
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p><a href="http://unicorn.bogomips.org/">Unicorn</a> is a cool application server for Rails. If you have a high traffic website, you would like to restart Unicorn without any downtime, upon a new
+code deployment or a Gem update which updates unicorn. I wrote an script, exactly for this purpose after learning signal handling basics of Unicorn. Here’s the script. The comments
+are self-explanatory and fairly give the idea of what is happening.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+
+<span class="c"># Check if unicorn is already running</span>
+<span class="nv">unicorn_pid</span><span class="o">=</span><span class="k">$(</span>ps <span class="nt">-ef</span> | <span class="nb">grep</span> <span class="s2">"unicorn_rails master"</span> | <span class="nb">grep</span> <span class="nt">-v</span> <span class="nb">grep</span> | <span class="nb">awk</span> <span class="s1">'{print $2}'</span><span class="k">)</span>
+<span class="k">if</span> <span class="o">[[</span> <span class="o">!</span> <span class="nt">-z</span> <span class="nv">$unicorn_pid</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then
+  </span><span class="nb">echo</span> <span class="s2">"Unicorn is already running. Sending USR2 to it"</span>
+  <span class="nb">kill</span> <span class="nt">-USR2</span> <span class="nv">$unicorn_pid</span>
+  <span class="c"># Wait till new master comes up so two instances of workers are there</span>
+  <span class="k">while</span> <span class="o">[[</span> <span class="k">$(</span>ps <span class="nt">-ef</span> | <span class="nb">grep</span> <span class="s1">'unicorn_rails worker\[0\]'</span> | <span class="nb">grep</span> <span class="nt">-v</span> <span class="nb">grep</span> | <span class="nb">wc</span> <span class="nt">-l</span><span class="k">)</span> <span class="nt">-ne</span> 2 <span class="o">]]</span><span class="p">;</span> <span class="k">do
+    </span><span class="nb">echo</span> <span class="s2">"Waiting till new master comes up and spawns new workers"</span>
+    <span class="nb">sleep </span>1
+  <span class="k">done</span>
+  <span class="c"># Send WINCH to old master</span>
+  <span class="nb">echo</span> <span class="s2">"Winching ID </span><span class="nv">$unicorn_pid</span><span class="s2">"</span>
+  <span class="nb">kill</span> <span class="nt">-WINCH</span> <span class="nv">$unicorn_pid</span>
+  <span class="c"># Wait till old workers die</span>
+  <span class="k">while</span> <span class="o">[[</span> <span class="k">$(</span>ps <span class="nt">-ef</span> | <span class="nb">grep</span> <span class="s1">'unicorn_rails worker\[0\]'</span> | <span class="nb">grep</span> <span class="nt">-v</span> <span class="nb">grep</span> | <span class="nb">wc</span> <span class="nt">-l</span><span class="k">)</span> <span class="nt">-ne</span> 1 <span class="o">]]</span><span class="p">;</span> <span class="k">do
+    </span><span class="nb">echo</span> <span class="s2">"Waiting till old workers die"</span>
+    <span class="nb">sleep </span>1
+  <span class="k">done
+  </span><span class="nb">echo</span> <span class="s2">"Killing ID </span><span class="nv">$unicorn_pid</span><span class="s2">"</span>
+  <span class="nb">kill</span> <span class="nt">-QUIT</span> <span class="nv">$unicorn_pid</span>
+<span class="k">else
+  </span><span class="nb">echo</span> <span class="s2">"Start fresh copy of unicorn"</span>
+  unicorn_rails <span class="nt">-c</span> config/unicorn.rb <span class="nt">-D</span>
+<span class="k">fi</span>
+</code></pre></div></div>
+
+<p>Unicorn provides the facility to reload without losing connected clients. The process can be initiated by sending a <code class="highlighter-rouge">USR2</code> signal to the unicorn master process. Upon recieving this, unicorn will
+spawn a new master process and name the old process as <code class="highlighter-rouge">unicorn master (old)</code>. The new master process will also spawn it’s own new workers. Once you are sure that the new workers have been
+spawned, you can send a <code class="highlighter-rouge">WINCH</code> signal to old unicorn master upon receipt of which, old unicorn will shutdown it’s workers gracefully. Gracefully here means that the workers will die once
+they are done serving their connected clients. Once the old master has shut down all it’s workers, we send a QUIT signal to the old master which then dies peacefully. And now we have the new 
+unicorn loaded with new code and/or new binary. The explanation of signal behavior can be found <a href="http://unicorn.bogomips.org/SIGNALS.html">here</a>.</p>
+
+  </div>  <div id="disqus_thread"></div>
+  <script>
+    var disqus_config = function () {
+      this.page.url = '/2015/11/22/start-slash-restart-unicorn-safely-without-downtime.html';
+      this.page.identifier = '/2015/11/22/start-slash-restart-unicorn-safely-without-downtime.html';
+    };
+
+    (function() {
+      var d = document, s = d.createElement('script');
+
+      s.src = 'https://techbite.disqus.com/embed.js';
+
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+<a class="u-url" href="/blog/2015/11/22/start-slash-restart-unicorn-safely-without-downtime.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/blog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Prabhakar Kumar</li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://www.facebook.com/prabhakar97"><svg class="svg-icon"><use xlink:href="/blog/assets/minima-social-icons.svg#facebook"></use></svg> <span class="username">prabhakar97</span></a></li><li><a href="https://github.com/prabhakar97"><svg class="svg-icon"><use xlink:href="/blog/assets/minima-social-icons.svg#github"></use></svg> <span class="username">prabhakar97</span></a></li><li><a href="https://instagram.com/prabhakar97"><svg class="svg-icon"><use xlink:href="/blog/assets/minima-social-icons.svg#instagram"></use></svg> <span class="username">prabhakar97</span></a></li><li><a href="https://www.linkedin.com/in/prabhakar97"><svg class="svg-icon"><use xlink:href="/blog/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">prabhakar97</span></a></li><li><a href="https://www.twitter.com/prab97"><svg class="svg-icon"><use xlink:href="/blog/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">prab97</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>My blog about programming and software development.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

@@ -1,0 +1,751 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/blog/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/blog/" rel="alternate" type="text/html" /><updated>2019-02-04T22:36:58+05:30</updated><id>http://localhost:4000/blog/feed.xml</id><title type="html">Prab’s Code Blog</title><subtitle>My blog about programming and software development.</subtitle><author><name>Prabhakar Kumar</name></author><entry><title type="html">Make your if statements concise</title><link href="http://localhost:4000/blog/2018/03/17/make-your-if-statements-concise.html" rel="alternate" type="text/html" title="Make your if statements concise" /><published>2018-03-17T20:17:27+05:30</published><updated>2018-03-17T20:17:27+05:30</updated><id>http://localhost:4000/blog/2018/03/17/make-your-if-statements-concise</id><content type="html" xml:base="http://localhost:4000/blog/2018/03/17/make-your-if-statements-concise.html">&lt;p&gt;Sometimes you may encounter a situation where you need to do something if two conditions are satisfied or they both are not satisfied; and do something else
+if exactly one of them is satisfied. An example would be:&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;resultFromServer1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;resultFromServer2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;resultFromServer1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;resultFromServer2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;warn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Both servers are aware or unaware of the operation&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;doSomething&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;resultFromServer1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;resultFromServer2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;resultFromServer1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;resultFromServer2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Only one server is aware of the operation&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;doSomethingElse&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;These conditions look messy. We can fix them using XOR! XOR returns true if two conditions are different and false if both conditions are same.
+So we can write the above complexity as:&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;resultFromServer1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;^&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;resultFromServer2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Only one server is aware of the operation&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;doSomethingElse&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;warn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Both servers are aware or unaware of the operation&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;doSomething&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The reverse of XOR is EX-NOR. And interesting thing about that is, in case of booleans EX-NOR is equivalent to both conditions being equal. So, it is also
+called as equality gate. Hence, we can write:&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;resultFromServer1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;resultFromServer2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;warn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Both servers are aware or unaware of the operation&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;doSomething&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Only one server is aware of the operation&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;doSomethingElse&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Prabhakar Kumar</name></author><category term="programming" /><summary type="html">Sometimes you may encounter a situation where you need to do something if two conditions are satisfied or they both are not satisfied; and do something else if exactly one of them is satisfied. An example would be:</summary></entry><entry><title type="html">Here’s a fluent builder in C#</title><link href="http://localhost:4000/blog/2018/03/17/heres-a-fluent-builder-in-c-number.html" rel="alternate" type="text/html" title="Here's a fluent builder in C#" /><published>2018-03-17T20:01:34+05:30</published><updated>2018-03-17T20:01:34+05:30</updated><id>http://localhost:4000/blog/2018/03/17/heres-a-fluent-builder-in-c-number</id><content type="html" xml:base="http://localhost:4000/blog/2018/03/17/heres-a-fluent-builder-in-c-number.html">&lt;p&gt;A fluent builder makes creating objects more readable than constructors and more concise than setting properties through setters
+on an uninitialized object.
+Java devs can use Lombok’s &lt;code class=&quot;highlighter-rouge&quot;&gt;@Builder&lt;/code&gt; annotation to get a fluent builder wired into their classes. Unfortunately, in C# world
+no such thing exists. So here’s how you can roll out your own.&lt;/p&gt;
+
+&lt;div class=&quot;language-c# highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Animal&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Type&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+
+  &lt;span class=&quot;err&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;region&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Fluent&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;builder&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Animal&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Builder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Animal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Animal&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;WithName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Animal&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;WithType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Type&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Animal&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Build&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;err&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;endregion&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;And, to construct and object you can simply use:&lt;/p&gt;
+
+&lt;div class=&quot;language-c# highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;Animal&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Animal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Builder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;WithName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Tommy&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;WithType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Dog&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Build&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;update&quot;&gt;Update&lt;/h2&gt;
+
+&lt;p&gt;C# doesn’t need this. I figured it out after reading and writing lot of C# code. C# already has a nice intializer which can be used instead
+of a fluent builder:&lt;/p&gt;
+
+&lt;div class=&quot;language-c# highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;Animal&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Animal&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Tommy&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Type&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Dog&quot;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Prabhakar Kumar</name></author><category term="c-sharp" /><category term="design-patterns" /><summary type="html">A fluent builder makes creating objects more readable than constructors and more concise than setting properties through setters on an uninitialized object. Java devs can use Lombok’s @Builder annotation to get a fluent builder wired into their classes. Unfortunately, in C# world no such thing exists. So here’s how you can roll out your own.</summary></entry><entry><title type="html">Boot linux from grub rescue prompt</title><link href="http://localhost:4000/blog/2018/01/14/boot-linux-from-grub-rescue-prompt.html" rel="alternate" type="text/html" title="Boot linux from grub rescue prompt" /><published>2018-01-14T20:20:50+05:30</published><updated>2018-01-14T20:20:50+05:30</updated><id>http://localhost:4000/blog/2018/01/14/boot-linux-from-grub-rescue-prompt</id><content type="html" xml:base="http://localhost:4000/blog/2018/01/14/boot-linux-from-grub-rescue-prompt.html">&lt;p&gt;If you have a dual boot setup of a Linux based OS and Windows 10, and you have setup grub to choose which OS
+to boot; you might have experienced the &lt;em&gt;grub rescue prompt&lt;/em&gt; which comes up after a Windows 10 update screws up
+with the boot files.&lt;/p&gt;
+
+&lt;p&gt;Panic not, for it’s easy to get back to your beloved Linux distro and fix grub. Here are the steps.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Find out the Linux partition (skip, if you already know)
+    &lt;ul&gt;
+      &lt;li&gt;Run &lt;code class=&quot;highlighter-rouge&quot;&gt;ls&lt;/code&gt; and it should show you a list of partitions like &lt;code class=&quot;highlighter-rouge&quot;&gt;(hd0,msdos1) (hd0,msdos2) ...&lt;/code&gt; or in the form &lt;code class=&quot;highlighter-rouge&quot;&gt;(hd0,gpt1), (hd0,gpt2) ...&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;Run ls with the name of the partition followed by a / to see the files on the partition. Like so &lt;code class=&quot;highlighter-rouge&quot;&gt;ls (hd0,gpt1)/&lt;/code&gt;. Remember, that forward slash is important. You have to do this for each parition until you find your linux partition - i.e. you see the list of files named &lt;code class=&quot;highlighter-rouge&quot;&gt;dev, proc, usr, etc, mnt&lt;/code&gt; etc.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Set the grub modules prefix
+    &lt;ul&gt;
+      &lt;li&gt;Run this &lt;code class=&quot;highlighter-rouge&quot;&gt;set prefix=(hd0,msdos3)/boot/grub&lt;/code&gt;. This assumes, your Linux partition in previous step was msdos3.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Set the root partition
+    &lt;ul&gt;
+      &lt;li&gt;You can set the linux partition as your root partition by running &lt;code class=&quot;highlighter-rouge&quot;&gt;set root=(hd0,msdos3)&lt;/code&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Load the needed modules
+    &lt;ul&gt;
+      &lt;li&gt;We need to load the linux module to be able to boot Linux. Run &lt;code class=&quot;highlighter-rouge&quot;&gt;insmod linux&lt;/code&gt; to do that.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Find where your kernel and initramfs are located
+    &lt;ul&gt;
+      &lt;li&gt;You can run &lt;code class=&quot;highlighter-rouge&quot;&gt;ls /boot/&lt;/code&gt; and it should show a file named &lt;code class=&quot;highlighter-rouge&quot;&gt;vmlinuz-linux&lt;/code&gt;. That’s your Kernel. At least that’s how it is named in Arch Linux and related distros like Antergos and Manjaro. Kernel and Ramdisk have different names on different distros. Centos, Fedora and RHEL have names similar to &lt;code class=&quot;highlighter-rouge&quot;&gt;vmlinuz-3.10.0-693.11.1.el7.x86_64&lt;/code&gt; for the Kernel. I assume you are smart enough to figure the naming out.&lt;/li&gt;
+      &lt;li&gt;You can similarly find your initramfs image. Usually it is named something like &lt;code class=&quot;highlighter-rouge&quot;&gt;initramfs-linux.img&lt;/code&gt;.&lt;/li&gt;
+      &lt;li&gt;Caveats to look out for when finding the Kernel and initramfs image files - Number one, if the file names are versioned, choose the latest ones. Number two, choose the same version for Kernel and initramfs. And the last and number three, don’t choose the names that contain &lt;code class=&quot;highlighter-rouge&quot;&gt;rescue&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;memtest&lt;/code&gt;. They are not the ones we are interested in.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Boot Linux!
+    &lt;ul&gt;
+      &lt;li&gt;Having found out the Kernel and Ramdisk images, let’s load them up. Run &lt;code class=&quot;highlighter-rouge&quot;&gt;linux /boot/vmlinuz-linux root=/dev/sda3 fb rw quiet&lt;/code&gt;. sda3 can probably be hda3 if you have an older machine. And the digit at the end should be same as the root partition number we found in the first step i.e. msdos3 in my case. Now load the Ramdisk by running &lt;code class=&quot;highlighter-rouge&quot;&gt;initrd initramfs-linux.img&lt;/code&gt;.&lt;/li&gt;
+      &lt;li&gt;Having loaded ‘em both, let’s boot. Run &lt;code class=&quot;highlighter-rouge&quot;&gt;boot&lt;/code&gt; and bingo, your system should now boot normally!&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Fix grub so that you don’t have to go through this ordeal next time
+    &lt;ul&gt;
+      &lt;li&gt;Running &lt;code class=&quot;highlighter-rouge&quot;&gt;sudo grub-install /dev/sda&lt;/code&gt; or in some cases hda instead of sda, should reinstall grub correctly and fix your booting problems.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Prabhakar Kumar</name></author><category term="linux" /><summary type="html">If you have a dual boot setup of a Linux based OS and Windows 10, and you have setup grub to choose which OS to boot; you might have experienced the grub rescue prompt which comes up after a Windows 10 update screws up with the boot files.</summary></entry><entry><title type="html">Ship a REST API with Node, ES6 and MongoDB - Part 1</title><link href="http://localhost:4000/blog/2017/03/22/bootstrap-a-restful-api-app-with-node-es6-mongo-linux.html" rel="alternate" type="text/html" title="Ship a REST API with Node, ES6 and MongoDB - Part 1" /><published>2017-03-22T21:52:40+05:30</published><updated>2017-03-22T21:52:40+05:30</updated><id>http://localhost:4000/blog/2017/03/22/bootstrap-a-restful-api-app-with-node-es6-mongo-linux</id><content type="html" xml:base="http://localhost:4000/blog/2017/03/22/bootstrap-a-restful-api-app-with-node-es6-mongo-linux.html">&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;NodeJS has been gaining a lot of traction recently, especially for web applications. Lots of new web applications
+are now being built with tools from  the Node ecosystem. A possible reason is the umpteen number of javascript
+developers out in the wild. Other one is  the blazing speed of
+&lt;a href=&quot;https://en.wikipedia.org/wiki/V8_(JavaScript_engine)&quot;&gt;V8 engine&lt;/a&gt;. Heck, even shiny desktop apps are now being built
+with Node viz. Popcorn Time.&lt;/p&gt;
+
+&lt;p&gt;In this post I will walk through everything I did to ship an API app. Ship as in - ready to serve production traffic.&lt;/p&gt;
+
+&lt;h3 id=&quot;about-the-stack&quot;&gt;About the stack&lt;/h3&gt;
+&lt;p&gt;We will be using &lt;a href=&quot;https://expressjs.com/&quot;&gt;Express&lt;/a&gt; as our web app framework. Express is minimalistic, fast and quietly
+gets out of our way when you want to detour through the dirt road. It is unlike convention over configuration style in
+&lt;a href=&quot;http://rubyonrails.org/&quot;&gt;Rails&lt;/a&gt; and &lt;a href=&quot;https://playframework.com/&quot;&gt;Play framework&lt;/a&gt; where you are good as long as you
+follow the conventions recommended by the framework. Going gets tough, if you start deviating. There are frameworks
+built specifically for facilitating API building. An example would be &lt;a href=&quot;http://restify.com/&quot;&gt;Restify&lt;/a&gt;. The reason of
+not choosing such a framework for this exercise is to understand the intricacies of building an API. Restify would
+shield us from understanding lots of stuff.&lt;/p&gt;
+
+&lt;p&gt;Also, we wil be writing our javascript in &lt;a href=&quot;http://es6-features.org/&quot;&gt;ES6&lt;/a&gt; which is cleaner and hands down a better
+language than the javascript specced in ES5. Latest version of node still doesn’t fully support ES6, so we will use a
+transpiler named &lt;a href=&quot;http://babeljs.io/&quot;&gt;Babel&lt;/a&gt; which transpiles code written by us into code conforming to ES5 for which
+node has full support. In the future when node catches up, we can turn off transpilation and run our ES6 code directly
+with node.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.mongodb.com/&quot;&gt;MongoDB&lt;/a&gt; will be our database. It is a document oriented NoSQL database. What that means
+is - it is unlike the RDBMSes like MySQL or Oracle which let you model the world by defining a schema in form
+of tables recording their properties and then linking them with primary and foreign keys. With MongoDB we model our
+worldly entities in form of documents which are similar to JSON objects . The biggest advantage of NoSQL databases like
+MongoDB is that they are designed to be horizontally scalable - whenever we need to increase performance, we just
+add few more machines to the DB cluster and the database engine takes care of redistributing data and query traffic
+across all available machines. RDBMSes are limited by theory, in terms of horizontal scalability. A discussion of this
+is beyond the scope of this article, but if you are interested in knowing more about it you can browse the interwebs
+for this nuisance called CAP theorem.&lt;/p&gt;
+
+&lt;h3 id=&quot;about-the-project&quot;&gt;About the project&lt;/h3&gt;
+&lt;p&gt;We are going to build an API which can power a web application and/or a mobile app. The app is a social code snippet
+sharing system where the users can share frequently encountered code snippets that are used in a developer’s day to
+day life for solving mundane problems which they are too lazy to code themselves. Usually, as developers we google for
+our problem, find link to a stackoverflow question and copy the snippet from there and use from. In our case we let
+the users share the snippet, enter a description, select the language, optionally add some tags and publish it. A user
+can also thumb up a snippet or mark it as junk. We also allow some experienced users to edit the snippets and/or
+descriptions for clarity. We define experience with a formula derived from number of upvotes to their questions by
+other users, their age on the site and their time spent on the site. Also, we do away with logins through passwords. 
+We provide OAuth based logins through Google, Facebook, Twitter etc. Apart from these functional features, we will
+also do some non-functional stuff like generate an SEO friendly URL for each snippet so that Googlebot can find our
+snippets and list in search results. Let’s wear the product manager hat for a moment and write down the high level
+product requirements for our application.&lt;/p&gt;
+
+&lt;h4 id=&quot;as-a-guest-user-i-should-be-able-to&quot;&gt;As a guest user I should be able to&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;search for snipppets through description and/or code matches&lt;/li&gt;
+  &lt;li&gt;list snippets by language, and sort them by
+    &lt;ul&gt;
+      &lt;li&gt;most voted&lt;/li&gt;
+      &lt;li&gt;most viewed&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;login using Google, Facebook or Twitter auth&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;as-a-logged-in-user-i-should-be-able-to&quot;&gt;As a logged-in user I should be able to&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;perform snippet operations
+    &lt;ul&gt;
+      &lt;li&gt;post a snippet&lt;/li&gt;
+      &lt;li&gt;edit my posted snippets&lt;/li&gt;
+      &lt;li&gt;view a snippet and see all previous versions of a snippet, if they have been edited&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;perform profile operations
+    &lt;ul&gt;
+      &lt;li&gt;view my profile&lt;/li&gt;
+      &lt;li&gt;refresh upstream information in the profile&lt;/li&gt;
+      &lt;li&gt;view others’ profiles&lt;/li&gt;
+      &lt;li&gt;view activity of a user, like snippets posted, snippets upvoted, snippets edited etc.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;perform friendship operations
+    &lt;ul&gt;
+      &lt;li&gt;send friend requests to people&lt;/li&gt;
+      &lt;li&gt;accept/reject others’ friend requests&lt;/li&gt;
+      &lt;li&gt;ignore/block a user&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;perform feed operations
+    &lt;ul&gt;
+      &lt;li&gt;view a feed which shows my friends’ activity on the website&lt;/li&gt;
+      &lt;li&gt;like and comment on activities in the feed&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;perform leaderboard operations
+    &lt;ul&gt;
+      &lt;li&gt;view leaderboard of snippets&lt;/li&gt;
+      &lt;li&gt;view leaderboard of users&lt;/li&gt;
+      &lt;li&gt;filter leaderboard by language, user location etc.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;perform messaging operations
+    &lt;ul&gt;
+      &lt;li&gt;send private messages to my friends&lt;/li&gt;
+      &lt;li&gt;send private messages to non-friends&lt;/li&gt;
+      &lt;li&gt;view my inbox, categorized with messages from friends/non-friends&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;why-api&quot;&gt;Why API?&lt;/h3&gt;
+&lt;p&gt;Let’s take a step back and understand why should we write an API? Why not a simple MVC web application? APIs are great
+for scaling, technically as well as logistically. With an API, we define a set of operations, which cover all the
+interactions of users and other systems with our application. Then we write client apps, which talk to the API and get
+the job done. So, next time you swipe left in gmail to archive an email, you should know that an API call has been
+made by the GMail app residing on your phone, to the GMail servers along with some parameters which did the actual
+archiving of the email.&lt;/p&gt;
+
+&lt;p&gt;What is logistic stability? Ok, I just made up this term! With an API as contract in place, the client app can
+independently scale with the actual functional implementation. We can have different people (or teams) working on the
+different client apps. As long as they have the API spec they can work independently. Also, the same API can power a
+native iOS app, an Android app, a mobile website and a web application. These client apps make API calls to fetch and
+display relevant data and perform operations upon user interactions.&lt;/p&gt;
+
+&lt;p&gt;In terms of technical scalability, the people working on the backend can independently scale the most used operations
+in the API. For instance, if we are getting millions of calls for our compute intensive &lt;code class=&quot;highlighter-rouge&quot;&gt;findBugs&lt;/code&gt; operation in a
+day, we can intelligently increase the resources it needs. One way would be to have a dedicated independent machine of
+high configuration just for this operation in the API. And we leverage the power of distributed systems and horizontal
+scalability! We will get into the details of this when we talk about shipping once we are code complete.&lt;/p&gt;
+
+&lt;h2 id=&quot;dev-env-setup&quot;&gt;Dev Env setup&lt;/h2&gt;
+&lt;p&gt;Before we design our data model, let’s get our hands dirty a bit, write a hello world app with Express and get MongoDB
+setup on our workstation.&lt;/p&gt;
+
+&lt;p&gt;I am an &lt;a href=&quot;https://www.archlinux.org/&quot;&gt;Arch Linux&lt;/a&gt; devotee. The instructions here should work perfectly on Arch. The
+onus of changing the commands to suit your package manager(apt, yum, emerge, brew) is upto you.&lt;/p&gt;
+
+&lt;h3 id=&quot;install-node-npm-and-mongodb&quot;&gt;Install node, npm and mongodb&lt;/h3&gt;
+&lt;p&gt;The following commands will install &lt;code class=&quot;highlighter-rouge&quot;&gt;node&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;npm&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;mongodb&lt;/code&gt; for us. &lt;code class=&quot;highlighter-rouge&quot;&gt;node&lt;/code&gt; is the javascript runtime executable
+which is actually going to run our code. &lt;code class=&quot;highlighter-rouge&quot;&gt;npm&lt;/code&gt; is the package manager which takes care of resolving dependencies on 
+third party libraries, downloading them and setting up their paths correctly so that we have a lot of pre-written
+code in form of modules available at our disposal.&lt;/p&gt;
+
+&lt;p&gt;Mongodb will also be started and enabled for autostart. If you don’t want it to be auto started everytime you boot,
+don’t execute the last command.&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;pacman &lt;span class=&quot;nt&quot;&gt;-Syu&lt;/span&gt; node npm mongodb
+
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;systemctl start mongodb
+
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;systemctl &lt;span class=&quot;nb&quot;&gt;enable &lt;/span&gt;mongodb
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;As of this writing, I got node 7.2, npm 4.0 and mongodb 3.2. The javascript ecosystem is a very fast moving one. Some
+of the code mentioned hereon might get obsolete in a couple of years but the general idea remains the same.&lt;/p&gt;
+
+&lt;h3 id=&quot;setup-the-initial-packagejson&quot;&gt;Setup the initial package.json&lt;/h3&gt;
+&lt;p&gt;In the node world &lt;code class=&quot;highlighter-rouge&quot;&gt;package.json&lt;/code&gt; is the file which contains the details of our dependencies and run configurations.
+In Rails world, it is analogous to &lt;code class=&quot;highlighter-rouge&quot;&gt;Gemfile&lt;/code&gt; but on steroids. In java world it is kind of analogous to &lt;code class=&quot;highlighter-rouge&quot;&gt;build.gradle&lt;/code&gt;
+or a &lt;code class=&quot;highlighter-rouge&quot;&gt;pom.xml&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;mkdir&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; ~/Documents/Projects/js-snipcode
+&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;$&lt;/span&gt;
+npm init
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;The second command might seem unfamiliar. !$ represents the last paramter of previous command in bash and zsh. So it
+will just take you to the newly created directory from the previous step.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;npm init&lt;/code&gt; is interactive and it will first ask you for a project name. Then configure the version and description.
+Next it asks for the entry point for the app. You can leave it as &lt;code class=&quot;highlighter-rouge&quot;&gt;index.js&lt;/code&gt;. Keep pressing enter to accept the
+defaults for other fields or change if you like. For now we ignore the test command. A &lt;code class=&quot;highlighter-rouge&quot;&gt;package.json&lt;/code&gt; file will be
+created in the end.&lt;/p&gt;
+
+&lt;h3 id=&quot;install-express&quot;&gt;Install Express&lt;/h3&gt;
+&lt;p&gt;Express is the web framework library that we are going to use. Now let’s add a dependency on Express, add babel
+transpilation of ES6 and get from zero to “Hello World!”.&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;npm &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;express &lt;span class=&quot;nt&quot;&gt;--save&lt;/span&gt;
+npm &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--save-dev&lt;/span&gt; babel-cli babel-preset-latest
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Running the above commands will download Express, babel-cli and babel’s latest preset. &lt;code class=&quot;highlighter-rouge&quot;&gt;--save&lt;/code&gt; flag makes an entry in
+the &lt;code class=&quot;highlighter-rouge&quot;&gt;dependencies&lt;/code&gt; section of package.json. Guess what does the &lt;code class=&quot;highlighter-rouge&quot;&gt;--save-dev&lt;/code&gt; flag do? You got it right! It makes an
+entry in &lt;code class=&quot;highlighter-rouge&quot;&gt;devDependencies&lt;/code&gt; in &lt;code class=&quot;highlighter-rouge&quot;&gt;package.json&lt;/code&gt;. Dev dependencies are different from dependencies in that they
+are not required for running the app. They are only used during development, for instance for transpilation during
+build. Let’s also add two target scripts named &lt;code class=&quot;highlighter-rouge&quot;&gt;build&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;start&lt;/code&gt; in the &lt;code class=&quot;highlighter-rouge&quot;&gt;package.json&lt;/code&gt;. Running &lt;code class=&quot;highlighter-rouge&quot;&gt;npm run build&lt;/code&gt; will
+tell babel to transpile everything in &lt;code class=&quot;highlighter-rouge&quot;&gt;src&lt;/code&gt; directory recursively and output the transpiled files in &lt;code class=&quot;highlighter-rouge&quot;&gt;dist&lt;/code&gt; directory.
+&lt;code class=&quot;highlighter-rouge&quot;&gt;npm run start&lt;/code&gt; in the root directory of our project will start our web server by running the command
+&lt;code class=&quot;highlighter-rouge&quot;&gt;node dist/index.js&lt;/code&gt;. Also, don’t forget &lt;code class=&quot;highlighter-rouge&quot;&gt;mkdir src; mv index.js src&lt;/code&gt;. Here’s the updated &lt;code class=&quot;highlighter-rouge&quot;&gt;package.json&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;js-snipcode&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;version&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;1.0.0&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;description&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;API in NodeJS for the Snipcode project.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;main&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;index.js&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;scripts&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;test&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;echo &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;Error: no test specified&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; &amp;amp;&amp;amp; exit 1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;build&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;babel src -d dist --presets latest&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;start&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;node dist/index.js&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;author&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Prabhakar Kumar&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;license&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ISC&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;dependencies&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;express&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;^4.14.0&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;devDependencies&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;babel-cli&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;^6.18.0&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;babel-preset-latest&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;^6.18.0&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;zero-to-hello-world&quot;&gt;Zero to Hello World!&lt;/h3&gt;
+&lt;p&gt;Let’s edit our &lt;code class=&quot;highlighter-rouge&quot;&gt;src/index.js&lt;/code&gt; and write relevant code to make a Hello World app.&lt;/p&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;express&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'express'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;express&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'/'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;send&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'Hello World!'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;listen&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; 
+  &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'Server is up on port 3000!'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now let’s build and run.&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;npm run build
+npm run start
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;If everything went well as we discussed, you will see a message on the console that says server is up on port 3000.
+Now if you fire up firefox or chromium and go to &lt;a href=&quot;http://localhost:3000&quot;&gt;localhost:3000&lt;/a&gt;, you will see the evergreen
+‘Hello world!’ message staring at you on a white screen.&lt;/p&gt;
+
+&lt;p&gt;Before we start writing more code, I’ll explain the meaning of the lines in our Hello World web app. But, before that
+let’s pivot and focus on learning our database and design a basic data model.&lt;/p&gt;
+
+&lt;h3 id=&quot;play-with-mongo-console&quot;&gt;Play with mongo console&lt;/h3&gt;
+&lt;p&gt;Let’s play with mongo console a bit to gain some familiarity with it.&lt;/p&gt;
+
+&lt;div class=&quot;language-text highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ mongo
+MongoDB shell version: 3.2.10
+connecting to: test
+Welcome to the MongoDB shell.
+For interactive help, type &quot;help&quot;.
+For more comprehensive documentation, see
+        http://docs.mongodb.org/
+Questions? Try the support group
+        http://groups.google.com/group/mongodb-user
+Server has startup warnings:
+2016-12-04T07:40:24.545-0500 I CONTROL  [initandlisten]
+2016-12-04T07:40:24.545-0500 I CONTROL  [initandlisten] ** WARNING: /sys/kernel/mm/transparent_hugepage/enabled is 'always'.
+2016-12-04T07:40:24.545-0500 I CONTROL  [initandlisten] **        We suggest setting it to 'never'
+2016-12-04T07:40:24.545-0500 I CONTROL  [initandlisten]
+&amp;gt; show databases
+local  0.000GB
+&amp;gt; use snipcode
+switched to db snipcode
+&amp;gt; db.users.insert({name: &quot;John Doe&quot;, country: &quot;United States&quot;, &quot;sex&quot;: 'M', dob: ISODate('1970-01-01')})
+WriteResult({ &quot;nInserted&quot; : 1 })
+&amp;gt; db.users.find()
+{ &quot;_id&quot; : ObjectId(&quot;58441a27d01af6e5b1ae6f74&quot;), &quot;name&quot; : &quot;John Doe&quot;, &quot;country&quot; : &quot;United States&quot;, &quot;sex&quot; : &quot;M&quot;, &quot;dob&quot; : ISODate(&quot;1970-01-01T00:00:00Z&quot;) ers.insert({name: &quot;Jane Doe&quot;, country: &quot;United States&quot;, &quot;sex&quot;: 'F', dob: ISODate('1970-01-01')})
+WriteResult({ &quot;nInserted&quot; : 1 })
+&amp;gt; db.users.find()
+{ &quot;_id&quot; : ObjectId(&quot;58441a27d01af6e5b1ae6f74&quot;), &quot;name&quot; : &quot;John Doe&quot;, &quot;country&quot; : &quot;United States&quot;, &quot;sex&quot; : &quot;M&quot;, &quot;dob&quot; : ISODate(&quot;1970-01-01T00:00:00Z&quot;) }
+{ &quot;_id&quot; : ObjectId(&quot;58441a5bd01af6e5b1ae6f75&quot;), &quot;name&quot; : &quot;Jane Doe&quot;, &quot;country&quot; : &quot;United States&quot;, &quot;sex&quot; : &quot;F&quot;, &quot;dob&quot; : ISODate(&quot;1970-01-01T00:00:00Z&quot;) }
+&amp;gt; db.users.find({sex: 'F'})
+{ &quot;_id&quot; : ObjectId(&quot;58441a5bd01af6e5b1ae6f75&quot;), &quot;name&quot; : &quot;Jane Doe&quot;, &quot;country&quot; : &quot;United States&quot;, &quot;sex&quot; : &quot;F&quot;, &quot;dob&quot; : ISODate(&quot;1970-01-01T00:00:00Z&quot;) }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Similar to MySQL and friends (MariaDB, Aurora), Mongodb organizes it’s data in databases. We don’t need to explicitly
+create a database unlike MySQL. It gets created as soon as we try to write something to it. Inside a Mongodb database,
+the database is organized in collections. A collection is analogous to tables in RDBMS, and more flexible. A
+collection doesn’t have a fixed schema. So, one document (record/row in RDBMS) can have fields different from others
+in the same collection. In the above example, we switched to database named &lt;code class=&quot;highlighter-rouge&quot;&gt;snipcode&lt;/code&gt;. Then we inserted a document
+describing a user named ‘John Doe’. Upon doing a &lt;code class=&quot;highlighter-rouge&quot;&gt;find()&lt;/code&gt; (which is analogous to SQL’s SELECT) on that collection we
+got the record, along with a unique record ID called ObjectID. Then we inserted another record for &lt;code class=&quot;highlighter-rouge&quot;&gt;Jane Doe&lt;/code&gt;. Then we
+ran a query which returns all female users. For this, we provided the query condition &lt;code class=&quot;highlighter-rouge&quot;&gt;sex: 'F'&lt;/code&gt; which is similar to
+WHERE sex = ‘F’ in SQL.&lt;/p&gt;
+
+&lt;p&gt;As of now, this much familiarity is enough for us to get started. We will dive deeper as and when we need.&lt;/p&gt;
+
+&lt;h2 id=&quot;next-part&quot;&gt;Next part&lt;/h2&gt;
+
+&lt;p&gt;In this part we got bootstrapped and got our hands dirty. In the next part we will start with data modeling and
+continue further. Stay tuned for it.&lt;/p&gt;</content><author><name>Prabhakar Kumar</name></author><category term="linux" /><category term="nodejs" /><category term="mongodb" /><category term="es6" /><summary type="html">Introduction NodeJS has been gaining a lot of traction recently, especially for web applications. Lots of new web applications are now being built with tools from the Node ecosystem. A possible reason is the umpteen number of javascript developers out in the wild. Other one is the blazing speed of V8 engine. Heck, even shiny desktop apps are now being built with Node viz. Popcorn Time.</summary></entry><entry><title type="html">Elegant solutions to common interview problems - Part 1 - Linked Lists</title><link href="http://localhost:4000/blog/2017/03/11/elegant-solutions-to-common-interview-problems.html" rel="alternate" type="text/html" title="Elegant solutions to common interview problems - Part 1 - Linked Lists" /><published>2017-03-11T00:18:24+05:30</published><updated>2017-03-11T00:18:24+05:30</updated><id>http://localhost:4000/blog/2017/03/11/elegant-solutions-to-common-interview-problems</id><content type="html" xml:base="http://localhost:4000/blog/2017/03/11/elegant-solutions-to-common-interview-problems.html">&lt;blockquote&gt;
+  &lt;p&gt;Define a linked list node for integers&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Node&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Node&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Reverse a singly linked list in-place iteratively&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span class=&quot;n&quot;&gt;Node&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;reverseIterative&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Node&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// Initialize two pointers, current(ptr) and previous&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Node&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ptr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Node&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;prev&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// At each node, we point it's next to previous&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ptr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Node&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;next&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ptr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;ptr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;prev&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;// Advance both pointers&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;prev&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ptr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;ptr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// Point head to last node&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;head&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;prev&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Reverse a singly linked list in-place recursively&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span class=&quot;n&quot;&gt;Node&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;reverseRecursive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Node&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Node&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rest&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;reverseRecursive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// Point head's next node towards head&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Traverse a linked list recursively&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;traverse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Node&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;cout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;endl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;traverse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Traverse a linked list recursively in reverse order&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;traverseReverse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Node&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;traverseReverse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;cout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;endl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Print nth element of linked list (counted from 1)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;printNthElement&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Node&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;cout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;printNthElement&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Print nth element from last in linked list&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;printNthLastElement&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Node&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;printNthLastElement&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;cout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;</content><author><name>Prabhakar Kumar</name></author><category term="computer-science" /><summary type="html">Define a linked list node for integers</summary></entry><entry><title type="html">Compile goaccess from source on CentOS 7</title><link href="http://localhost:4000/blog/2016/07/08/compile-goaccess-from-source-on-centos-7.html" rel="alternate" type="text/html" title="Compile goaccess from source on CentOS 7" /><published>2016-07-08T07:30:32+05:30</published><updated>2016-07-08T07:30:32+05:30</updated><id>http://localhost:4000/blog/2016/07/08/compile-goaccess-from-source-on-centos-7</id><content type="html" xml:base="http://localhost:4000/blog/2016/07/08/compile-goaccess-from-source-on-centos-7.html">&lt;p&gt;&lt;a href=&quot;https://goaccess.io&quot;&gt;Goaccess&lt;/a&gt; is a neat little utility which scans through your web server (I use nginx) logs and generates a nice HTML report of 
+your site’s access statistics. Here is a &lt;a href=&quot;http://rt.goaccess.io&quot;&gt;sample from their site&lt;/a&gt;. I run CentOS 7 on an EC2 Instance where I run a pet project. I wanted a light web analyzer that just works. I have
+&lt;a href=&quot;https://fedoraproject.org/wiki/EPEL&quot;&gt;epel&lt;/a&gt; enabled on my instance so I just installed goaccess by &lt;code class=&quot;highlighter-rouge&quot;&gt;sudo yum install goaccess&lt;/code&gt;. It worked and I was able
+to see some stats. But then I figured out that the version from repositories is quite an old one at 0.9.8. The latest one is 1.0.2 from the website.
+So, I just uninstalled it &lt;code class=&quot;highlighter-rouge&quot;&gt;sudo yum remove goaccess&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;I downloaded the source tarball and after a few hiccups I was able to get it running. There are two quirks you need to watch out for. First one is
+that, enabling geoip in goaccess requires installation of maxmind’s geoip database. The installed database from yum is very small, so you need to
+update it and change symlink /usr/share/GeoIP/GeoIP.dat to point to /usr/share/GeoIP/GeoLiteCountry.dat. Second quirk is that by default the configure
+script doesn’t figure out the geoip devel libs path so you need to manually point to it while configuring.&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;yum &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;GeoIP
+geoipupdate
+&lt;span class=&quot;nb&quot;&gt;sudo rm&lt;/span&gt; /usr/share/GeoIP.dat
+&lt;span class=&quot;nb&quot;&gt;sudo ln&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; /usr/share/&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;GeoLiteCountry,GeoIP&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;.dat 
+
+wget http://tar.goaccess.io/goaccess-1.0.2.tar.gz
+&lt;span class=&quot;nb&quot;&gt;tar&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-xzvf&lt;/span&gt; goaccess-1.0.2.tar.gz
+&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;goaccess-1.0.2
+&lt;span class=&quot;nv&quot;&gt;LD_FLAGS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'-L/usr/lib64/'&lt;/span&gt; ./configure &lt;span class=&quot;nt&quot;&gt;--enable-utf8&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--enable-geoip&lt;/span&gt;
+make
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;make &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;I also created a daily crontab entry to generate reports daily and put it in my &lt;code class=&quot;highlighter-rouge&quot;&gt;public&lt;/code&gt; folder of rails directory, all the files in which I serve
+statically from nginx. So I can just type http://mydomain.com/access.html and see the reports. Here is my crontab entry.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sh crontab
+@daily /bin/zcat -f /var/log/nginx/access.log* | /usr/local/bin/goaccess -a -o /home/ec2-user/my_rails_dir/public/access.html
+&lt;/code&gt;&lt;/p&gt;</content><author><name>Prabhakar Kumar</name></author><category term="linux" /><category term="web-apps" /><summary type="html">Goaccess is a neat little utility which scans through your web server (I use nginx) logs and generates a nice HTML report of your site’s access statistics. Here is a sample from their site. I run CentOS 7 on an EC2 Instance where I run a pet project. I wanted a light web analyzer that just works. I have epel enabled on my instance so I just installed goaccess by sudo yum install goaccess. It worked and I was able to see some stats. But then I figured out that the version from repositories is quite an old one at 0.9.8. The latest one is 1.0.2 from the website. So, I just uninstalled it sudo yum remove goaccess.</summary></entry><entry><title type="html">Configure DatabaseCleaner with Rspec for Mongoid 5 and beyond</title><link href="http://localhost:4000/blog/2016/06/27/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond.html" rel="alternate" type="text/html" title="Configure DatabaseCleaner with Rspec for Mongoid 5 and beyond" /><published>2016-06-27T06:35:22+05:30</published><updated>2016-06-27T06:35:22+05:30</updated><id>http://localhost:4000/blog/2016/06/27/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond</id><content type="html" xml:base="http://localhost:4000/blog/2016/06/27/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond.html">&lt;p&gt;&lt;a href=&quot;https://github.com/DatabaseCleaner/database_cleaner&quot;&gt;Database Cleaner&lt;/a&gt; is a nifty gem for streamlining tests. Configuring it is straightforward
+but it didn’t work for me out of the box for Mongoid 5.&lt;/p&gt;
+
+&lt;p&gt;Here’s my Gemfile segment for testing.&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;group&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:test&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;factory_girl_rails&quot;&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;rspec-rails&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'~&amp;gt; 3.4'&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'faker'&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'database_cleaner'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;git: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'git://github.com/DatabaseCleaner/database_cleaner.git'&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;I added a &lt;code class=&quot;highlighter-rouge&quot;&gt;require 'support/database_cleaner'&lt;/code&gt; in my &lt;code class=&quot;highlighter-rouge&quot;&gt;spec_helper&lt;/code&gt;. And here’s my &lt;code class=&quot;highlighter-rouge&quot;&gt;database_cleaner.rb&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;RSpec&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;configure&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+
+  &lt;span class=&quot;n&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;before&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:suite&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+    &lt;span class=&quot;no&quot;&gt;DatabaseCleaner&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;strategy&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:truncation&lt;/span&gt;
+    &lt;span class=&quot;no&quot;&gt;DatabaseCleaner&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;clean&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;n&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;before&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:each&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+    &lt;span class=&quot;no&quot;&gt;DatabaseCleaner&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;start&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;n&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;after&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:each&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+    &lt;span class=&quot;no&quot;&gt;DatabaseCleaner&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;clean&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;When I ran my spec, I was greeted with an unexpected ugly error.&lt;/p&gt;
+
+&lt;div class=&quot;language-text highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/home/prabhakar/.rbenv/versions/2.3.0/lib/ruby/gems/2.3.0/bundler/gems/database_cleaner-f052d64d3be9/lib/database_cleaner/mongo2/truncation_mixin.rb:29:in `collections': undefined method `collections' for #&amp;lt;Mongo::Client:0x47021052998580 cluster=127.0.0.1:27017&amp;gt; (NoMethodError)
+	from /home/prabhakar/.rbenv/versions/2.3.0/lib/ruby/gems/2.3.0/bundler/gems/database_cleaner-f052d64d3be9/lib/database_cleaner/mongo2/truncation_mixin.rb:9:in `clean'
+	from /home/prabhakar/.rbenv/versions/2.3.0/lib/ruby/gems/2.3.0/bundler/gems/database_cleaner-f052d64d3be9/lib/database_cleaner/base.rb:92:in `clean'
+	from /home/prabhakar/.rbenv/versions/2.3.0/lib/ruby/gems/2.3.0/bundler/gems/database_cleaner-f052d64d3be9/lib/database_cleaner/configuration.rb:79:in `block in clean'
+	from /home/prabhakar/.rbenv/versions/2.3.0/lib/ruby/gems/2.3.0/bundler/gems/database_cleaner-f052d64d3be9/lib/database_cleaner/configuration.rb:79:in `each'
+	from /home/prabhakar/.rbenv/versions/2.3.0/lib/ruby/gems/2.3.0/bundler/gems/database_cleaner-f052d64d3be9/lib/database_cleaner/configuration.rb:79:in `clean'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;After looking at the code in the gem, I finally found out what was wrong in it. I created a
+&lt;a href=&quot;https://github.com/prabhakar97/database_cleaner/commit/3cf0d1b81e4a118fd173d697f032a9aff4f431de&quot;&gt;commit for fix&lt;/a&gt; and submitted a pull request to
+the maintainer. Looking at my commit and the relevant files &lt;a href=&quot;https://github.com/DatabaseCleaner/database_cleaner/blob/master/lib/database_cleaner/mongoid/truncation.rb&quot;&gt;truncation.rb&lt;/a&gt; and &lt;a href=&quot;https://github.com/DatabaseCleaner/database_cleaner/blob/master/lib/database_cleaner/mongo2/truncation_mixin.rb&quot;&gt;truncation_mixin.rb&lt;/a&gt;, you should be able to piece together the problem.&lt;/p&gt;
+
+&lt;p&gt;Meanwhile, if you are using Mongoid 5 and aren’t able to get it working you could simply point to my fork of database_cleaner by updating your Gemfile
+to have:&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'database_cleaner'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;git: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'git://github.com/prabhakar97/database_cleaner.git'&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Prabhakar Kumar</name></author><category term="rails" /><category term="ruby" /><category term="mongodb" /><summary type="html">Database Cleaner is a nifty gem for streamlining tests. Configuring it is straightforward but it didn’t work for me out of the box for Mongoid 5.</summary></entry><entry><title type="html">Starting with Yesod on Arch Linux</title><link href="http://localhost:4000/blog/2016/06/24/starting-with-yesod-on-arch-linux.html" rel="alternate" type="text/html" title="Starting with Yesod on Arch Linux" /><published>2016-06-24T05:29:39+05:30</published><updated>2016-06-24T05:29:39+05:30</updated><id>http://localhost:4000/blog/2016/06/24/starting-with-yesod-on-arch-linux</id><content type="html" xml:base="http://localhost:4000/blog/2016/06/24/starting-with-yesod-on-arch-linux.html">&lt;p&gt;As part of my eagerness to learn Haskell, I thought it might be a good idea to start building real world applications in Haskell. I chose
+&lt;a href=&quot;http://www.yesodweb.com/&quot;&gt;Yesod&lt;/a&gt; to start building a dynamic web application backed by as database. However, the getting started page on
+Yesod website didn’t exactly work as advertised, probably because the &lt;a href=&quot;http://docs.haskellstack.org/en/stable/README/&quot;&gt;Haskell Stack&lt;/a&gt;
+had some API change. These steps worked for me.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Install haskell-stack. It lets you develop, build and test Haskell apps without creating dependency version issues across projects.
+If you are coming from a ruby world, it is similar to rbenv.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sudo pacman -S haskell-stack&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Checkout the &lt;em&gt;yesod-mongodb&lt;/em&gt; template. This is going to create a &lt;code class=&quot;highlighter-rouge&quot;&gt;haskell-webapp&lt;/code&gt; directory and checkout stuff from the &lt;code class=&quot;highlighter-rouge&quot;&gt;yesod-mongo&lt;/code&gt; template.
+Make sure that you don’t provide a directory name which is the name of a package, like yesod, ghci etc.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;stack new haskell-webapp yesod-mongo&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Install &lt;a href=&quot;https://aur.archlinux.org/packages/libtinfo/&quot;&gt;libtinfo from AUR&lt;/a&gt; because Arch screwed up (from stack perspective). There is
+another nuance to take care of. Edit the &lt;em&gt;PKGBUILD&lt;/em&gt; and ensure that the line that simlinks &lt;code class=&quot;highlighter-rouge&quot;&gt;/usr/lib/libtinfo.so.5&lt;/code&gt; is uncommented. Otherwise
+the next step doesn’t work.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Setup GHCi and friends.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;stack build yesod-bin cabal-install --install-ghc&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Build the libs.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;stack build&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Hello World!&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;stack exec -- yesod devel&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;To access your server visit &lt;a href=&quot;http://localhost:3000&quot;&gt;http://localhost:3000&lt;/a&gt;&lt;/p&gt;</content><author><name>Prabhakar Kumar</name></author><category term="haskell" /><category term="web-apps" /><summary type="html">As part of my eagerness to learn Haskell, I thought it might be a good idea to start building real world applications in Haskell. I chose Yesod to start building a dynamic web application backed by as database. However, the getting started page on Yesod website didn’t exactly work as advertised, probably because the Haskell Stack had some API change. These steps worked for me.</summary></entry><entry><title type="html">Functional Programming Series - Part 1</title><link href="http://localhost:4000/blog/2016/05/13/getting-started-with-haskell.html" rel="alternate" type="text/html" title="Functional Programming Series - Part 1" /><published>2016-05-13T20:02:00+05:30</published><updated>2016-05-13T20:02:00+05:30</updated><id>http://localhost:4000/blog/2016/05/13/getting-started-with-haskell</id><content type="html" xml:base="http://localhost:4000/blog/2016/05/13/getting-started-with-haskell.html">&lt;p&gt;I have been intrigued by functional programming for past couple of years, but never quite prioritized it bigtime. Recently I came across this amazing talk which inspired me
+to go all-in to learn FP.&lt;/p&gt;
+
+&lt;style&gt;.embed-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; } .embed-container iframe, .embed-container object, .embed-container embed { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }&lt;/style&gt;
+&lt;div class=&quot;embed-container&quot;&gt;    &lt;iframe title=&quot;YouTube video player&quot; width=&quot;640&quot; height=&quot;390&quot; src=&quot;//www.youtube.com/embed/E8I19uA-wGY&quot; frameborder=&quot;0&quot; allowfullscreen=&quot;&quot;&gt;&lt;/iframe&gt;&lt;/div&gt;
+
+&lt;p&gt;I chose Haskell as my preferred language and started with the book &lt;a href=&quot;http://www.amazon.com/dp/0954300696&quot;&gt;The Haskell Road to Logic, Maths and Programming&lt;/a&gt;. The reason was
+primarily because this book induces functional thinking without being too theoretical.&lt;/p&gt;
+
+&lt;p&gt;I started solving exercises from the book. This post and a few subsequent ones will document my solutions to some of the exercise problems. These solutions may not be most concise 
+or efficient because I am just beginning to learn Haskell.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Define a method removeFst which removes the first instance of an element from a list&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;```hs removeFst.hs
+removeFst :: (Eq a) =&amp;gt; [a] -&amp;gt; a -&amp;gt; [a]
+removeFst (x:xs) y = if x == y
+						then xs
+                        else x : removeFst xs y&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+&amp;gt; Define a function which counts number of instances of an element in a list
+
+```hs countChars.hs
+countChars :: Char -&amp;gt; String -&amp;gt; Int
+countChars y [] = 0
+countChars y (x:xs) | y == x = 1 + countChars y xs
+                    | otherwise = countChars y xs
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Define a function named blowUp that takes an string and creates a new string from it by repeating ith character in i times. For example: abcdef should return abbcccddddeeeeeffffff&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;```hs blowUp.hs
+blowUp :: Int -&amp;gt; String -&amp;gt; String
+blowUp n [x] = take n [x,x..]
+blowUp n (x:xs) = (blowUp n [x]) ++ (blowUp (n+1) xs)&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+&amp;gt; Write a function to sort a list of orderable elements
+
+This is a translation of the famous quick sort algorithm to Haskell.
+
+```hs sort.hs
+sort :: (Ord a) =&amp;gt; [a] -&amp;gt; [a]
+sort [] = []
+sort [x] = [x]
+sort (x:xs) = sort greater ++ [x] ++ sort lesser
+                where greater = [y | y &amp;lt;- xs, y &amp;gt; x]
+                      lesser = [y | y &amp;lt;- xs, y &amp;lt; x ]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Write a function that takes a big string and a small string and tells whether the big string starts with the small string&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;```hs startWith.hs
+startWith :: String -&amp;gt; String -&amp;gt; Bool
+startWith (x:xs) [y] = y == x
+startWith (x:xs) (y:ys) = y == x &amp;amp;&amp;amp; startWith xs ys&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+&amp;gt; Write a function that takes a big string and a small string and tells whether the big string contains the small string as a substring
+
+I use the previously defined startWith function to solve this.
+
+```hs substring.hs
+contains :: String -&amp;gt; String -&amp;gt; Bool
+contains (x:xs) [] = True
+contains (x:xs) y = startWith (x:xs) y || startWith xs y
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Prabhakar Kumar</name></author><category term="functional-programming" /><category term="haskell" /><category term="recursion" /><summary type="html">I have been intrigued by functional programming for past couple of years, but never quite prioritized it bigtime. Recently I came across this amazing talk which inspired me to go all-in to learn FP.</summary></entry><entry><title type="html">Start/restart unicorn safely without downtime</title><link href="http://localhost:4000/blog/2015/11/22/start-slash-restart-unicorn-safely-without-downtime.html" rel="alternate" type="text/html" title="Start/restart unicorn safely without downtime" /><published>2015-11-22T00:42:00+05:30</published><updated>2015-11-22T00:42:00+05:30</updated><id>http://localhost:4000/blog/2015/11/22/start-slash-restart-unicorn-safely-without-downtime</id><content type="html" xml:base="http://localhost:4000/blog/2015/11/22/start-slash-restart-unicorn-safely-without-downtime.html">&lt;p&gt;&lt;a href=&quot;http://unicorn.bogomips.org/&quot;&gt;Unicorn&lt;/a&gt; is a cool application server for Rails. If you have a high traffic website, you would like to restart Unicorn without any downtime, upon a new
+code deployment or a Gem update which updates unicorn. I wrote an script, exactly for this purpose after learning signal handling basics of Unicorn. Here’s the script. The comments
+are self-explanatory and fairly give the idea of what is happening.&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Check if unicorn is already running&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;unicorn_pid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;ps &lt;span class=&quot;nt&quot;&gt;-ef&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;unicorn_rails master&quot;&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-v&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;awk&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'{print $2}'&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-z&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$unicorn_pid&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then
+  &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Unicorn is already running. Sending USR2 to it&quot;&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;kill&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-USR2&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$unicorn_pid&lt;/span&gt;
+  &lt;span class=&quot;c&quot;&gt;# Wait till new master comes up so two instances of workers are there&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;ps &lt;span class=&quot;nt&quot;&gt;-ef&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'unicorn_rails worker\[0\]'&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-v&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;wc&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-ne&lt;/span&gt; 2 &lt;span class=&quot;o&quot;&gt;]]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do
+    &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Waiting till new master comes up and spawns new workers&quot;&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;sleep &lt;/span&gt;1
+  &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;
+  &lt;span class=&quot;c&quot;&gt;# Send WINCH to old master&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Winching ID &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$unicorn_pid&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;kill&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-WINCH&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$unicorn_pid&lt;/span&gt;
+  &lt;span class=&quot;c&quot;&gt;# Wait till old workers die&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;ps &lt;span class=&quot;nt&quot;&gt;-ef&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'unicorn_rails worker\[0\]'&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-v&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;wc&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-ne&lt;/span&gt; 1 &lt;span class=&quot;o&quot;&gt;]]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do
+    &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Waiting till old workers die&quot;&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;sleep &lt;/span&gt;1
+  &lt;span class=&quot;k&quot;&gt;done
+  &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Killing ID &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$unicorn_pid&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;kill&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-QUIT&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$unicorn_pid&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;else
+  &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Start fresh copy of unicorn&quot;&lt;/span&gt;
+  unicorn_rails &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; config/unicorn.rb &lt;span class=&quot;nt&quot;&gt;-D&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Unicorn provides the facility to reload without losing connected clients. The process can be initiated by sending a &lt;code class=&quot;highlighter-rouge&quot;&gt;USR2&lt;/code&gt; signal to the unicorn master process. Upon recieving this, unicorn will
+spawn a new master process and name the old process as &lt;code class=&quot;highlighter-rouge&quot;&gt;unicorn master (old)&lt;/code&gt;. The new master process will also spawn it’s own new workers. Once you are sure that the new workers have been
+spawned, you can send a &lt;code class=&quot;highlighter-rouge&quot;&gt;WINCH&lt;/code&gt; signal to old unicorn master upon receipt of which, old unicorn will shutdown it’s workers gracefully. Gracefully here means that the workers will die once
+they are done serving their connected clients. Once the old master has shut down all it’s workers, we send a QUIT signal to the old master which then dies peacefully. And now we have the new 
+unicorn loaded with new code and/or new binary. The explanation of signal behavior can be found &lt;a href=&quot;http://unicorn.bogomips.org/SIGNALS.html&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;</content><author><name>Prabhakar Kumar</name></author><category term="ruby" /><category term="rails" /><summary type="html">Unicorn is a cool application server for Rails. If you have a high traffic website, you would like to restart Unicorn without any downtime, upon a new code deployment or a Gem update which updates unicorn. I wrote an script, exactly for this purpose after learning signal handling basics of Unicorn. Here’s the script. The comments are self-explanatory and fairly give the idea of what is happening.</summary></entry></feed>
