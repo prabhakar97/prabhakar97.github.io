@@ -4,6 +4,7 @@ title: "About Me"
 date: 2016-05-14 12:15
 comments: true
 sharing: true
+category: page
 footer: true
 ---
 I am a software engineer who loves building and scaling big systems from scratch using modern technologies. I am good at architecting, designing and implementing

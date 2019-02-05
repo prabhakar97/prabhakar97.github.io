@@ -19,6 +19,13 @@ layout: default
     {{ content }}
   </div>
 
+	<span>Tags: [
+		{% for tag in page.tags %}
+			{% capture tag_name %}{{ tag }}{% endcapture %}
+			<a href="/tag/{{ tag_name }}"><code class="highligher-rouge"><nobr>{{ tag_name }}</nobr></code></a>
+		{% endfor %}
+	]</span>
+
   {%- if site.disqus_shortname -%}
     {%- include disqus_comments.html -%}
   {%- endif -%}

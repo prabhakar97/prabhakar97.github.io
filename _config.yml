@@ -38,8 +38,14 @@ plugins:
   - jekyll-feed
   - jekyll-youtube
   - jekyll-seo-tag
+  - jekyll-archives
 
-    #remote_theme: pages-themes/midnight
+jekyll-archives:
+  enabled: ['tags']
+  layout: archive
+  permalinks:
+    tag: '/tag/:name/'
+
 defaults:
   -
     scope:
