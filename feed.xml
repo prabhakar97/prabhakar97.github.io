@@ -1,4 +1,425 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://prabhakar97.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://prabhakar97.github.io/" rel="alternate" type="text/html" /><updated>2019-02-05T11:25:19+05:30</updated><id>http://prabhakar97.github.io/feed.xml</id><title type="html">Prab’s Code Blog</title><subtitle>My blog about programming and software development.</subtitle><author><name>Prabhakar Kumar</name></author><entry><title type="html">Make your if statements concise</title><link href="http://prabhakar97.github.io/2018/03/17/make-your-if-statements-concise.html" rel="alternate" type="text/html" title="Make your if statements concise" /><published>2018-03-17T20:17:27+05:30</published><updated>2018-03-17T20:17:27+05:30</updated><id>http://prabhakar97.github.io/2018/03/17/make-your-if-statements-concise</id><content type="html" xml:base="http://prabhakar97.github.io/2018/03/17/make-your-if-statements-concise.html">&lt;p&gt;Sometimes you may encounter a situation where you need to do something if two conditions are satisfied or they both are not satisfied; and do something else
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://prabhakar97.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://prabhakar97.github.io/" rel="alternate" type="text/html" /><updated>2019-04-11T23:41:12+05:30</updated><id>http://prabhakar97.github.io/feed.xml</id><title type="html">Prab’s Code Blog</title><subtitle>My blog about programming and software development.</subtitle><author><name>Prabhakar Kumar</name></author><entry><title type="html">Run your webapps on Kubernetes for cheap</title><link href="http://prabhakar97.github.io/2019/01/29/run-your-webapps-on-kubernetes-for-cheap.html" rel="alternate" type="text/html" title="Run your webapps on Kubernetes for cheap" /><published>2019-01-29T22:18:53+05:30</published><updated>2019-01-29T22:18:53+05:30</updated><id>http://prabhakar97.github.io/2019/01/29/run-your-webapps-on-kubernetes-for-cheap</id><content type="html" xml:base="http://prabhakar97.github.io/2019/01/29/run-your-webapps-on-kubernetes-for-cheap.html">&lt;h3 id=&quot;tldr&quot;&gt;TL;DR&lt;/h3&gt;
+
+&lt;p&gt;This post details how to spin off a 3 node Kubernetes cluster on Google Cloud, paying close to 7 dollars a month for it and host multiple database backed dynamic websites and APIs.&lt;/p&gt;
+
+&lt;h3 id=&quot;intro&quot;&gt;Intro&lt;/h3&gt;
+
+&lt;p&gt;Kubernetes is the new cool kid on the block (bye bye blockchain). Listing it as an skill in your LinkedIn profile will definitely get you some recruiter attention.
+It is &lt;em&gt;the&lt;/em&gt; solution for all your dev-ops woes.&lt;/p&gt;
+
+&lt;p&gt;I used to run all of my hobby projects in docker containers with lifecycles managed by docker-compose files. I had a VM from &lt;a href=&quot;https://scaleway.com&quot;&gt;scaleway&lt;/a&gt; with 4 gigs of memory,
+100 gigs of SSD storage and dual core x86 CPU for which I used to pay less than 5 Euros a month. I was happy until I learnt about Kubernetes and then I figured &lt;em&gt;ignorance is bliss&lt;/em&gt;.
+After reading this post, you will be able to spin off a 3 node Kubernetes cluster on Google Cloud with 3.75GB memory each and 1 vCPU each and pay roughly ~40 dollars a month for it!
+If you do not want to pay as much, you can choose &lt;em&gt;f1-micro&lt;/em&gt; VM size and pay close to ~7 dollars a month. It might not be as beefy as the 40 dollar cluster, but it can do the job of
+hosting a few hobby webapps. With 11.25GB of memory at your disposal and three compute cores, you can do wonders - host several moderate traffic webapps backed by different databases!
+Adding to that, with Google Cloud’s free trial program you can have this cluster running for free for almost an year!&lt;/p&gt;
+
+&lt;p&gt;My three node cluster currently runs &lt;code class=&quot;highlighter-rouge&quot;&gt;mongodb&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;postgres&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;nginx&lt;/code&gt;, two rails web applications, a nodeJS web application, a dotnetcore web application, a spring boot based Java REST API application
+which powers an Android app, and still has a lot of resources remaining to do 3-4 times more of what it currently does. All the web apps are fronted by nginx and configured as virtual hosts,
+and have their own domain names with letsencrypt https certificates automatically renewed every three months. Two of the apps use mongodb and the other two postgres.&lt;/p&gt;
+
+&lt;h4 id=&quot;single-vm-vs-cluster&quot;&gt;Single VM vs Cluster&lt;/h4&gt;
+
+&lt;p&gt;Running all my workloads in a single VM is like putting all the eggs in the same basket. If ever I need to restart the VM for updating the Kernel, or something else; all my apps incur downtime.
+Running on Kubernetes is better, because:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;GCP manages updates and patches on your VMs, so you don’t need to explicitly restart nodes. In case of node restarts, Kubernetes ensures relocating workloads running on the unavailable VM.&lt;/li&gt;
+  &lt;li&gt;Kubernetes restarts containers automatically when underlying process crashes due to some issue.&lt;/li&gt;
+  &lt;li&gt;Kubernetes handles load balancing of requests and scaling of resources. For example, you can tell Kubernetes declaratively to run more instance of your webapp when the load is higher.&lt;/li&gt;
+  &lt;li&gt;Kubernetes sets up internal networking in the cluster so that your apps can talk to each other. This enables you to build microservices based large scale services.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Besides, using Kubernetes to run your compute infrastructure is considered cool in 2019!&lt;/p&gt;
+
+&lt;h3 id=&quot;what-is-kubernetes&quot;&gt;What is Kubernetes?&lt;/h3&gt;
+
+&lt;p&gt;Kubernetes’s official website tells this:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Kubernetes is a portable, extensible open-source platform for managing containerized workloads and services, that facilitates both declarative configuration and automation.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;This might not be quite an approachable description for everybody. Let me take a shot at it:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Kubernetes is like an operating system, for your distributed computing cluster that lets you run your scalable applications without being bothered about nodes in the cluster going down, request routing, load balancing, networking and other devops hassles.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;lets-get-started&quot;&gt;Let’s get started&lt;/h3&gt;
+
+&lt;h4 id=&quot;step-1-setup-a-3-node-cluster-on-google-cloud&quot;&gt;Step 1: Setup a 3-node cluster on Google Cloud&lt;/h4&gt;
+
+&lt;p&gt;Register on Google Cloud, if you already haven’t. Create a project, setup billing. Click the hamburger menu icon (&lt;img src=&quot;/images/hamburger.png&quot; alt=&quot;menu&quot; /&gt;) on the top left, and in &lt;em&gt;Compute&lt;/em&gt; section,
+click &lt;em&gt;Kubernetes Engine&lt;/em&gt;. Click the &lt;code class=&quot;highlighter-rouge&quot;&gt;Create Clusters&lt;/code&gt; button. Make sure that in the left pane, cluster template is set to &lt;code class=&quot;highlighter-rouge&quot;&gt;Standard cluster&lt;/code&gt;. In the right pane, name your cluster;
+for example &lt;em&gt;my-awesome-cluster&lt;/em&gt;. Fill in the settings as listed below:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;em&gt;Location type&lt;/em&gt;: Zonal&lt;/li&gt;
+  &lt;li&gt;&lt;em&gt;Zone&lt;/em&gt;: us-central1-a&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Under node pools:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;em&gt;Number of nodes&lt;/em&gt;: 3&lt;/li&gt;
+  &lt;li&gt;&lt;em&gt;Machine type&lt;/em&gt;: &lt;code class=&quot;highlighter-rouge&quot;&gt;n1-standard-1&lt;/code&gt; (this will cost roughly $40/month for 3 nodes). Choose &lt;code class=&quot;highlighter-rouge&quot;&gt;f1-micro&lt;/code&gt; for $7/month instead.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Click &lt;em&gt;More node pool options&lt;/em&gt; and ensure that the following are set:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;em&gt;Enable autoscaling&lt;/em&gt;: off&lt;/li&gt;
+  &lt;li&gt;&lt;em&gt;Boot disk type&lt;/em&gt;: Standard persistent disk&lt;/li&gt;
+  &lt;li&gt;&lt;em&gt;Boot disk size&lt;/em&gt;: 10 GB&lt;/li&gt;
+  &lt;li&gt;&lt;em&gt;Enable pre-emptible nodes&lt;/em&gt;: Yes - you must do this for cost cutting. These nodes get terminated within 24 hours and cost around one-fourth of regular nodes. Since Kubernetes can handle
+node downtimes, we need not worry about our app going down.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Click &lt;em&gt;Availability, networking, security, and additional features&lt;/em&gt; and ensure the following:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;em&gt;Enable HTTP load balancing&lt;/em&gt;: No - this is costly! We will use Kubernetes’s default balancer&lt;/li&gt;
+  &lt;li&gt;&lt;em&gt;Enable Stackdriver Logging service&lt;/em&gt;: No&lt;/li&gt;
+  &lt;li&gt;&lt;em&gt;Enable Stackdriver Monitoring service&lt;/em&gt;: No&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Leave all the other settings to their sane defaults. Changing some of them might cost you extra money. Click the &lt;code class=&quot;highlighter-rouge&quot;&gt;Create&lt;/code&gt; button and wait for the cluster to come up. The clusters page should
+show your newly created cluster.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/kubernetesclusters.png&quot; alt=&quot;Clusters&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;step-2-connect-to-your-newly-minted-cluster&quot;&gt;Step 2: Connect to your newly minted cluster&lt;/h4&gt;
+
+&lt;p&gt;Install &lt;code class=&quot;highlighter-rouge&quot;&gt;kubectl&lt;/code&gt; command line utility for your OS. In the &lt;em&gt;Clusters&lt;/em&gt; page, click &lt;em&gt;Connect&lt;/em&gt; and it will show you a &lt;code class=&quot;highlighter-rouge&quot;&gt;gcloud&lt;/code&gt; command which downloads the necessary authentication information
+for the &lt;code class=&quot;highlighter-rouge&quot;&gt;kubectl&lt;/code&gt; command.&lt;/p&gt;
+
+&lt;p&gt;Once you have done that, test your connection by running &lt;code class=&quot;highlighter-rouge&quot;&gt;kubectl get nodes&lt;/code&gt; which should return you a list of three nodes.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;% kubectl get nodes
+NAME                                          STATUS   ROLES    AGE   VERSION
+gke-blog-cluster-default-pool-edcca0b2-4mf2   Ready    &amp;lt;none&amp;gt;   1m    v1.11.7-gke.12
+gke-blog-cluster-default-pool-edcca0b2-hd1p   Ready    &amp;lt;none&amp;gt;   1m    v1.11.7-gke.12
+gke-blog-cluster-default-pool-edcca0b2-z6f1   Ready    &amp;lt;none&amp;gt;   1m    v1.11.7-gke.12
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;step-3-prepare-your-first-application&quot;&gt;Step 3: Prepare your first application&lt;/h4&gt;
+
+&lt;p&gt;Let’s prepare a rails application that uses a &lt;code class=&quot;highlighter-rouge&quot;&gt;postgresql&lt;/code&gt; database to deploy on this cluster. We will name it &lt;code class=&quot;highlighter-rouge&quot;&gt;RailsPortal&lt;/code&gt;, you are free to name whatever you want.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gem &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;bundler                                                                                                                                                                                              
+gem &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;rails                                                                                                                                                                                                
+rails new RailsPortal                                                                                                                                                                                            
+bundle &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;rails s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Last command should start a local server at port 3000 and you should be able to access it at &lt;code class=&quot;highlighter-rouge&quot;&gt;localhost:3000&lt;/code&gt;. Stop the server by running &lt;code class=&quot;highlighter-rouge&quot;&gt;Ctrl-C&lt;/code&gt;. Open &lt;code class=&quot;highlighter-rouge&quot;&gt;config/database.yml&lt;/code&gt; and around the
+end change the production db connection settings so that they look like this:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;production:                                                                                                                                                                                                      
+  &amp;lt;&amp;lt;: &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;default 
+  adapter: postgresql
+  url: &amp;lt;%&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; ENV[&lt;span class=&quot;s1&quot;&gt;'DATABASE_URL'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; %&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Also, edit the &lt;code class=&quot;highlighter-rouge&quot;&gt;Gemfile&lt;/code&gt; and add a line &lt;code class=&quot;highlighter-rouge&quot;&gt;gem 'pg'&lt;/code&gt; then run &lt;code class=&quot;highlighter-rouge&quot;&gt;bundle update&lt;/code&gt;. The above changes will configure the production instance of app to use postgresql instead of default sqlite and 
+will let us pass the &lt;code class=&quot;highlighter-rouge&quot;&gt;postgresql&lt;/code&gt; connection string through an environment variable that Kubernetes will setup for us later.&lt;/p&gt;
+
+&lt;p&gt;Let’s create a scaffold with two fields and see whether things are working fine.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;bundle &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;rails g scaffold User name:string about:string
+bin/rails db:migrate &lt;span class=&quot;nv&quot;&gt;RAILS_ENV&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;development
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This will generate necessary views and controllers which we can use to insert some data and ensure that things are working fine. Second command will commit pending database migrations.
+Start the server again  by running &lt;code class=&quot;highlighter-rouge&quot;&gt;bundle exec rails s&lt;/code&gt; and access the url &lt;code class=&quot;highlighter-rouge&quot;&gt;http://localhost:3000/users&lt;/code&gt; and click &lt;code class=&quot;highlighter-rouge&quot;&gt;New User&lt;/code&gt; and try adding a new record.&lt;/p&gt;
+
+&lt;p&gt;Now that our test application is ready, let’s containerize it. If you do not have docker installed, now is the time to install it and start the docker service.
+Once we build the container, we want to push it to a private docker repository. &lt;a href=&quot;https://hub.docker.com&quot;&gt;Docker Hub&lt;/a&gt; lets you store container images for free. Register on their website then connect
+your local &lt;code class=&quot;highlighter-rouge&quot;&gt;docker&lt;/code&gt; command to your docker hub account by running the following command:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker login &lt;span class=&quot;nt&quot;&gt;--username&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;DockerHubUsername &lt;span class=&quot;nt&quot;&gt;--email&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;DockerHubEmail
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;For building the container image, we need to create a file named &lt;code class=&quot;highlighter-rouge&quot;&gt;Dockerfile&lt;/code&gt; which tells docker how to build the container. Create this &lt;em&gt;Dockerfile&lt;/em&gt; in rails portal’s root directory.&lt;/p&gt;
+
+&lt;div class=&quot;language-docker highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; ruby:2.5-alpine&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;RUN &lt;/span&gt;apk add &lt;span class=&quot;nt&quot;&gt;--no-cache&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--update&lt;/span&gt; nodejs postgresql-dev libpq tzdata imagemagick
+&lt;span class=&quot;k&quot;&gt;RUN &lt;/span&gt;apk add &lt;span class=&quot;nt&quot;&gt;--no-cache&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--update&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--virtual&lt;/span&gt; build-deps build-base git
+&lt;span class=&quot;k&quot;&gt;RUN &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cp&lt;/span&gt; /usr/share/zoneinfo/UTC /etc/localtime
+
+&lt;span class=&quot;k&quot;&gt;COPY&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; . /app&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;WORKDIR&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; /app&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;RUN &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'gem: --no-document'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; /etc/gemrc
+&lt;span class=&quot;k&quot;&gt;RUN &lt;/span&gt;bundle &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--jobs&lt;/span&gt; 4 &lt;span class=&quot;nt&quot;&gt;--without&lt;/span&gt; development &lt;span class=&quot;nb&quot;&gt;test&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;RUN &lt;/span&gt;apk del build-deps
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Make sure the ruby version in Dockerfile is consistent with the one in Gemfile. Now build and push the container to docker hub by running following commands:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker build &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; DockerHubUsername/RailsPortal &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+docker push DockerHubUsername/RailsPortal
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;step-4-architect-your-infrastructure&quot;&gt;Step 4. Architect your infrastructure&lt;/h4&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/kube_rails.png&quot; alt=&quot;Rails on Kubernetes&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;We are going to use a simple architecture &lt;em&gt;client -&amp;gt; Webserver (nginx) -&amp;gt; Web app (rails) -&amp;gt; Database (postgres)&lt;/em&gt; which is quite popular for single VM setups too. Only difference is that instead
+of processes running on a VM, these will be containers and will be run on different nodes of the cluster by Kubernetes.&lt;/p&gt;
+
+&lt;h4 id=&quot;step-5-plan-kubernetes-resources&quot;&gt;Step 5. Plan Kubernetes resources&lt;/h4&gt;
+
+&lt;p&gt;Kubernetes has the concept of resources. The ones we are going to use in this project are:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Deployment&lt;/li&gt;
+  &lt;li&gt;Service&lt;/li&gt;
+  &lt;li&gt;PersistentVolume&lt;/li&gt;
+  &lt;li&gt;PersitentVolumeClaim&lt;/li&gt;
+  &lt;li&gt;StorageClass&lt;/li&gt;
+  &lt;li&gt;Secret&lt;/li&gt;
+  &lt;li&gt;ConfigMap&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;A &lt;em&gt;deployment&lt;/em&gt; describes a container to run along with the volumes it needs, environment variables, ports it should listen to, number of replicas of it Kubernetes should run in the clister etc.
+There are many more things we can configure for a deployment, but these are the ones we are going to use in our little project. In this article, I might use the terms deployment and container
+interchangeably - because in practice a Kubernetes deployment is a container running in the cluster.&lt;/p&gt;
+
+&lt;p&gt;A &lt;em&gt;service&lt;/em&gt; fronts a deployment by giving it a stable private or public endpoint on which the deployment (running container) can be accessed. Private endpoints are exposed by service of type
+ClusterIP and public endpoints are exposed by service of type LoadBalancer. Private endpoints are accessible only inside the cluster, from other containers. For example, a postgres deployment
+should only be accessible from deployments running in the cluster, for example a web application.&lt;/p&gt;
+
+&lt;p&gt;A &lt;em&gt;storage class&lt;/em&gt; is to define a type of volume that can be created on demand. We create this once and create persistent volume claims that refer to it.&lt;/p&gt;
+
+&lt;p&gt;A &lt;em&gt;persistent volume&lt;/em&gt; is a storage accessible from any of the running containers on the cluster which are configured to run it. As containers are stateless, we need a reliable persistent store
+to store our stateful data, for example postgres’s data files.&lt;/p&gt;
+
+&lt;p&gt;A &lt;em&gt;persistent volume claim&lt;/em&gt; is an access mechanism for a container to access a persistent volume. We will talk about it ahead in the article when we need it.&lt;/p&gt;
+
+&lt;p&gt;A &lt;em&gt;secret&lt;/em&gt; is used to store authentication credentials and expose it to only the resources that need it.&lt;/p&gt;
+
+&lt;p&gt;A &lt;em&gt;config map&lt;/em&gt; is a keyvalue pair, that can be used to store configuration information in the cluster which can be used from a container.&lt;/p&gt;
+
+&lt;p&gt;Kubernetes provides us a declarative way of telling it about the resources we need to create (a &lt;em&gt;goal state&lt;/em&gt; of our infrastructure) and then it tries to create those resources (or achieve the
+&lt;em&gt;goal state&lt;/em&gt;). We declare the properties for resources in &lt;em&gt;yaml&lt;/em&gt; files and Kubernetes takes care of it.&lt;/p&gt;
+
+&lt;p&gt;For our little project, we will be creating the following resources:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;A deployment for nginx, which we will use to front our web applications (rails)&lt;/li&gt;
+  &lt;li&gt;A service of type load balancer for nginx, such that users can access our applications from external the internet&lt;/li&gt;
+  &lt;li&gt;A config map for the nginx configuration files&lt;/li&gt;
+  &lt;li&gt;A secret to store authentication information for docker hub so that kubernetes can pull the rails application container that we pushed to our private docker hub repository&lt;/li&gt;
+  &lt;li&gt;A deployment for rails portal, whose container we built in step 4&lt;/li&gt;
+  &lt;li&gt;A service for rails portal, so that nginx can access it forward requests to it&lt;/li&gt;
+  &lt;li&gt;A deployment for postgres, which will run the container&lt;/li&gt;
+  &lt;li&gt;A service for postgres so that rails application can connect to it&lt;/li&gt;
+  &lt;li&gt;A storage class for postgres that defines the kind of storage to be used for persistent volumes. E.g, SSD/magnetic etc.&lt;/li&gt;
+  &lt;li&gt;A persistent volume claim for postgres so that the postgres deployment can access the persistent volume&lt;/li&gt;
+  &lt;li&gt;A persistent volume for postgres, so that we can have postgres store its data files there&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Let’s get started by setting up nginx and trying to access it from outside world.&lt;/p&gt;
+
+&lt;h4 id=&quot;step-7-setting-up-nginx&quot;&gt;Step 7. Setting up nginx&lt;/h4&gt;
+
+&lt;p&gt;Let’s begin by creating a deployment for nginx. Create a directory named nginx. Below gist is for a yaml file that we will use to describe nginx deployment on Kubernetes. Copy
+its contents to a file named &lt;code class=&quot;highlighter-rouge&quot;&gt;nginx-dep.yml&lt;/code&gt; on your local computer.&lt;/p&gt;
+
+&lt;noscript&gt;&lt;pre&gt;400: Invalid request
+&lt;/pre&gt;&lt;/noscript&gt;
+&lt;script src=&quot;https://gist.github.com/6e870acd7e91273a747996961a2a04c2.js&quot;&gt; &lt;/script&gt;
+
+&lt;p&gt;It declares that we want to create a resource of type &lt;code class=&quot;highlighter-rouge&quot;&gt;Deployment&lt;/code&gt;, label it with name &lt;code class=&quot;highlighter-rouge&quot;&gt;nginx&lt;/code&gt;, use the container &lt;code class=&quot;highlighter-rouge&quot;&gt;nginx&lt;/code&gt; with tag &lt;code class=&quot;highlighter-rouge&quot;&gt;mainline-alpine&lt;/code&gt;, and expose the container’s port 80.
+By default the container image is pulled from docker hub. Now run &lt;code class=&quot;highlighter-rouge&quot;&gt;kubectl apply -f nginx-dep.yml&lt;/code&gt; to let Kubernetes do its magic.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;% kubectl apply &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; nginx-dep.yml
+deployment.apps/nginx-dep created
+% kubectl get pods
+NAME                         READY   STATUS    RESTARTS   AGE
+nginx-dep-776c646dc6-g4w9x   1/1     Running   0          25s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The output of last command tells us that an nginx deployment is running since 25 seconds. Yes, you just noticed that we used a new term &lt;code class=&quot;highlighter-rouge&quot;&gt;pods&lt;/code&gt; in the command. A pod can be considered as an application
+for all practical purposes. You can find about it more in official Kubernetes documentation.&lt;/p&gt;
+
+&lt;p&gt;Let’s create an LB now so that we can access the running container from outside. Copy the below contents to a file named &lt;code class=&quot;highlighter-rouge&quot;&gt;nginx-svc.yml&lt;/code&gt;.&lt;/p&gt;
+
+&lt;noscript&gt;&lt;pre&gt;400: Invalid request
+&lt;/pre&gt;&lt;/noscript&gt;
+&lt;script src=&quot;https://gist.github.com/d76f720c5b9d666965e959861e5e33b3.js&quot;&gt; &lt;/script&gt;
+
+&lt;p&gt;This file declares that we want a resource of kind service of type LoadBalancer which should accept connections on port 80 and direct to port 80 of a service. Which service? The service is selected
+using the selector parameter which says to match it with the &lt;code class=&quot;highlighter-rouge&quot;&gt;app: nginx&lt;/code&gt; which we had specified in our &lt;code class=&quot;highlighter-rouge&quot;&gt;nginx-dep.yml&lt;/code&gt; file. Let’s deploy this file too.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;% kubectl apply &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; nginx-svc.yml
+service/nginx-lb created
+% kubectl get svc
+NAME         TYPE           CLUSTER-IP      EXTERNAL-IP   PORT&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;S&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;        AGE
+kubernetes   ClusterIP      10.59.240.1     &amp;lt;none&amp;gt;        443/TCP        4m
+nginx-lb     LoadBalancer   10.59.240.108   &amp;lt;pending&amp;gt;     80:31463/TCP   24s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This shows that the resource with name nginx-lb and type LoadBalancer has been created. But it is pending an external ip. Wait for some time and run the command again to get the external ip.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;% kubectl get svc
+NAME         TYPE           CLUSTER-IP      EXTERNAL-IP    PORT&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;S&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;        AGE
+kubernetes   ClusterIP      10.59.240.1     &amp;lt;none&amp;gt;         443/TCP        5m
+nginx-lb     LoadBalancer   10.59.240.108   34.66.92.238   80:31463/TCP   1m
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now, if you try typing the shown external ip in a browser, you should be able to get the nginx’s welcome page! Awesome! You can change a domain’s A record to point to this IP address and this
+will be accessible from any browser through the domain name.&lt;/p&gt;
+
+&lt;p&gt;Now let’s move forward and deploy &lt;code class=&quot;highlighter-rouge&quot;&gt;postgres&lt;/code&gt;, so that rails can talk to it.&lt;/p&gt;
+
+&lt;h4 id=&quot;step-8-setting-up-postgres&quot;&gt;Step 8. Setting up postgres&lt;/h4&gt;
+
+&lt;p&gt;Since we need postgres’s data to be persistent across container and node restarts, we need to create a persistent volume. For that we first create a storage class with type SSD. Then we
+create a persistent volume claim that uses this newly created storage class. A persistent volume gets automatically created, when we try to create a persistent volume claim
+using the storage class of &lt;code class=&quot;highlighter-rouge&quot;&gt;kubernetes.io/gce-pd&lt;/code&gt;. We can also club two related storage related declarations into a single yaml file as shown below.&lt;/p&gt;
+
+&lt;noscript&gt;&lt;pre&gt;400: Invalid request
+&lt;/pre&gt;&lt;/noscript&gt;
+&lt;script src=&quot;https://gist.github.com/45ddec715c5e9840e715db5d1b0282ab.js&quot;&gt; &lt;/script&gt;
+
+&lt;p&gt;Let’s create the resources from this yml file and check their statuses.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;% kubectl apply &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; postgres-storage.yml
+storageclass.storage.k8s.io/postgres-ssd created
+persistentvolumeclaim/postgres-disk-claim created
+% kubectl get pvc
+NAME                  STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+postgres-disk-claim   Bound    pvc-79f8200b-5c64-11e9-978f-42010a800070   1Gi        RWO            postgres-ssd   12s
+% kubectl get pv
+NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                         STORAGECLASS   REASON   AGE
+pvc-79f8200b-5c64-11e9-978f-42010a800070   1Gi        RWO            Delete           Bound    default/postgres-disk-claim   postgres-ssd            12s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now that our storage for postgres is all set, we can create the deployment and service. Let’s club both the declarations in the same yaml file as we did with the storage. Its a good practice to 
+club logically related resources in a single file.&lt;/p&gt;
+
+&lt;noscript&gt;&lt;pre&gt;400: Invalid request
+&lt;/pre&gt;&lt;/noscript&gt;
+&lt;script src=&quot;https://gist.github.com/62e68cf0f42e24c09e9a91e6cf393b08.js&quot;&gt; &lt;/script&gt;
+
+&lt;p&gt;In the deployment, we specify that we will run the &lt;em&gt;postgres&lt;/em&gt; container with tag &lt;em&gt;10-alpine&lt;/em&gt; from docker hub. We also set environment variables for username, password and data directory. You
+should note that we specify a volume mount and configure it to use the persistent volume claim we created in pervious step and we mount that 1GB storage volume at &lt;em&gt;/data&lt;/em&gt; directory in the container.
+We also create a service (ClusterIP being the default) and configure its app selector to postgres and specify that port 5432 on the container be made available for other apps in the cluster.&lt;/p&gt;
+
+&lt;p&gt;Let’s create the service and deployment and check the status on the cluster.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;% kubectl apply &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; postgres-dep.yml
+deployment.extensions/postgres created
+service/postgres created
+% kubectl get pods
+NAME                         READY   STATUS    RESTARTS   AGE
+nginx-dep-776c646dc6-g4w9x   1/1     Running   0          8m
+postgres-6969669b9f-4f42h    1/1     Running   0          54s
+% kubectl get svc
+NAME         TYPE           CLUSTER-IP      EXTERNAL-IP    PORT&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;S&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;        AGE
+kubernetes   ClusterIP      10.59.240.1     &amp;lt;none&amp;gt;         443/TCP        15m
+nginx-lb     LoadBalancer   10.59.240.108   34.66.92.238   80:31463/TCP   7m
+postgres     ClusterIP      10.59.243.25    &amp;lt;none&amp;gt;         5432/TCP       48s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Great! We got postgres running and available on our cluster. Let’s login to the container and create a database that will be used by the rails portal to store its data.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;% kubectl get pods
+NAME                         READY   STATUS    RESTARTS   AGE
+nginx-dep-776c646dc6-g4w9x   1/1     Running   0          17m
+postgres-6969669b9f-4f42h    1/1     Running   0          2m
+% kubectl &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-it&lt;/span&gt; postgres-6969669b9f-4f42h &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt; /bin/sh
+/ &lt;span class=&quot;c&quot;&gt;# su postgres&lt;/span&gt;
+/ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;psql &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; postgres
+&lt;span class=&quot;nv&quot;&gt;postgres&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;c&quot;&gt;# CREATE DATABASE railsportal;&lt;/span&gt;
+CREATE DATABASE
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Through the first command we copied the name of the pod. Then the next command connected to the running container, and mounted its shell (tty) in interactive mode with our terminal and then ran /bin/sh
+on the terminal. This directly dropped us into the container’s shell, wehere we switched to the user &lt;code class=&quot;highlighter-rouge&quot;&gt;postgres&lt;/code&gt;, then ran psql and created a database. Logging-in to a running container comes handy
+for debugging purposes.&lt;/p&gt;
+
+&lt;p&gt;Now, let’s run the rails application and test the whole setup in conjunction.&lt;/p&gt;
+
+&lt;h4 id=&quot;deploy-the-rails-application&quot;&gt;Deploy the rails application&lt;/h4&gt;
+
+&lt;p&gt;Since, we pushed our rails application to a private docker repository on docker hub and we do not want the world to be able to access it, Kubernetes won’t be able to pull the image directly. We need
+to provide the credentials to do it. Let’s create a secret that stores our docker hub username and password.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl create secret docker-registry dockeraccess &lt;span class=&quot;nt&quot;&gt;--docker-server&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;https://index.docker.io/v1/ &lt;span class=&quot;nt&quot;&gt;--docker-username&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;YourDockerHubUsername &lt;span class=&quot;nt&quot;&gt;--docker-password&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;YourDockerHubPassword &lt;span class=&quot;nt&quot;&gt;--docker-email&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;YourDockerHubEmail
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The deployment yml file looks as follows:&lt;/p&gt;
+
+&lt;noscript&gt;&lt;pre&gt;400: Invalid request
+&lt;/pre&gt;&lt;/noscript&gt;
+&lt;script src=&quot;https://gist.github.com/0da2905368a607196a02108e47628bee.js&quot;&gt; &lt;/script&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;% kubectl apply &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; rails-portal-dep.yml
+deployment.extensions/railsportal created
+service/railsportal created
+% kubectl get pods
+NAME                           READY   STATUS    RESTARTS   AGE
+nginx-dep-776c646dc6-g4w9x     1/1     Running   0          1h
+postgres-6969669b9f-4f42h      1/1     Running   0          1h
+railsportal-7d6d74f865-n6x56   1/1     Running   0          31s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;If your container status is CrashLoopBackoff because of some changes you made, you may debug by using the command &lt;code class=&quot;highlighter-rouge&quot;&gt;kubectl describe pod PodName&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;We need to make changes to nginx config so that nginx forwards all the requests to RailsPortal. For that, let’s go back and change the config so that we pass a nginx config file
+while starting the container. Create a file named &lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt; with the following content:&lt;/p&gt;
+
+&lt;noscript&gt;&lt;pre&gt;400: Invalid request
+&lt;/pre&gt;&lt;/noscript&gt;
+&lt;script src=&quot;https://gist.github.com/5a1c295e457121234407136c80a23bd2.js&quot;&gt; &lt;/script&gt;
+
+&lt;p&gt;Create another file named &lt;code class=&quot;highlighter-rouge&quot;&gt;railsportal.nginx.conf&lt;/code&gt; with the following content:&lt;/p&gt;
+
+&lt;noscript&gt;&lt;pre&gt;400: Invalid request
+&lt;/pre&gt;&lt;/noscript&gt;
+&lt;script src=&quot;https://gist.github.com/58a6630d678e0ffabfb88c4eece4caaa.js&quot;&gt; &lt;/script&gt;
+
+&lt;p&gt;Now create two config maps for these files in the cluster:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;% kubectl create configmap nginxconfig &lt;span class=&quot;nt&quot;&gt;--from-file&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;./nginx.conf
+configmap/nginxconfig created
+% kubectl create configmap railsportalnginxconfig &lt;span class=&quot;nt&quot;&gt;--from-file&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;./railsportal.nginx.conf
+configmap/railsportalnginxconfig created
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Update the &lt;code class=&quot;highlighter-rouge&quot;&gt;nginx-dep.yml&lt;/code&gt; and append the config map settings at the end of the file so that it becomes like below:&lt;/p&gt;
+
+&lt;noscript&gt;&lt;pre&gt;400: Invalid request
+&lt;/pre&gt;&lt;/noscript&gt;
+&lt;script src=&quot;https://gist.github.com/739dfe55fa710d8c1cffd5bc63bb99c5.js&quot;&gt; &lt;/script&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;% kubectl apply &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; nginx-dep.yml
+deployment.apps/nginx-dep configured
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now, opening the website with the public IP should show the rails portal. You can check the logs by running &lt;code class=&quot;highlighter-rouge&quot;&gt;kubectl logs PodName&lt;/code&gt; where PodName should be replaced with the name of the pod for rails
+portal that comes up when you run &lt;code class=&quot;highlighter-rouge&quot;&gt;kubectl get pods&lt;/code&gt;. If things are not working as expected, you may try logging into the container and poke around.&lt;/p&gt;
+
+&lt;h3 id=&quot;home-work&quot;&gt;Home work&lt;/h3&gt;
+
+&lt;p&gt;You can try deploying another application on the same cluster. A ExpressJS webapp, talking to a mongoDB database would be a good exercise. You may also go ahead and figure out how to enable auto
+scaling.&lt;/p&gt;
+
+&lt;p&gt;You may try doing this on Azure or AWS.&lt;/p&gt;
+
+&lt;h3 id=&quot;next-steps&quot;&gt;Next steps&lt;/h3&gt;
+
+&lt;p&gt;Now that we have successfully setup our rails application in Kubernetes, in the next article we will do the following:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Enable HTTPS access with Letsencrypt certs and setup auto renew&lt;/li&gt;
+  &lt;li&gt;Make nginx serve static assets, instead of Rails&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Prabhakar Kumar</name></author><category term="cloud" /><category term="kubernetes" /><category term="docker" /><summary type="html">TL;DR</summary></entry><entry><title type="html">Make your if statements concise</title><link href="http://prabhakar97.github.io/2018/03/17/make-your-if-statements-concise.html" rel="alternate" type="text/html" title="Make your if statements concise" /><published>2018-03-17T20:17:27+05:30</published><updated>2018-03-17T20:17:27+05:30</updated><id>http://prabhakar97.github.io/2018/03/17/make-your-if-statements-concise</id><content type="html" xml:base="http://prabhakar97.github.io/2018/03/17/make-your-if-statements-concise.html">&lt;p&gt;Sometimes you may encounter a situation where you need to do something if two conditions are satisfied or they both are not satisfied; and do something else
 if exactly one of them is satisfied. An example would be:&lt;/p&gt;
 
 &lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;resultFromServer1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;resultFromServer2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;resultFromServer1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;resultFromServer2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
@@ -712,40 +1133,4 @@ I use the previously defined startWith function to solve this.
 contains :: String -&amp;gt; String -&amp;gt; Bool
 contains (x:xs) [] = True
 contains (x:xs) y = startWith (x:xs) y || startWith xs y
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Prabhakar Kumar</name></author><category term="functional-programming" /><category term="haskell" /><category term="recursion" /><summary type="html">I have been intrigued by functional programming for past couple of years, but never quite prioritized it bigtime. Recently I came across this amazing talk which inspired me to go all-in to learn FP.</summary></entry><entry><title type="html">Start/restart unicorn safely without downtime</title><link href="http://prabhakar97.github.io/2015/11/22/start-slash-restart-unicorn-safely-without-downtime.html" rel="alternate" type="text/html" title="Start/restart unicorn safely without downtime" /><published>2015-11-22T00:42:00+05:30</published><updated>2015-11-22T00:42:00+05:30</updated><id>http://prabhakar97.github.io/2015/11/22/start-slash-restart-unicorn-safely-without-downtime</id><content type="html" xml:base="http://prabhakar97.github.io/2015/11/22/start-slash-restart-unicorn-safely-without-downtime.html">&lt;p&gt;&lt;a href=&quot;http://unicorn.bogomips.org/&quot;&gt;Unicorn&lt;/a&gt; is a cool application server for Rails. If you have a high traffic website, you would like to restart Unicorn without any downtime, upon a new
-code deployment or a Gem update which updates unicorn. I wrote an script, exactly for this purpose after learning signal handling basics of Unicorn. Here’s the script. The comments
-are self-explanatory and fairly give the idea of what is happening.&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;# Check if unicorn is already running&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;unicorn_pid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;ps &lt;span class=&quot;nt&quot;&gt;-ef&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;unicorn_rails master&quot;&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-v&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;awk&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'{print $2}'&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-z&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$unicorn_pid&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then
-  &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Unicorn is already running. Sending USR2 to it&quot;&lt;/span&gt;
-  &lt;span class=&quot;nb&quot;&gt;kill&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-USR2&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$unicorn_pid&lt;/span&gt;
-  &lt;span class=&quot;c&quot;&gt;# Wait till new master comes up so two instances of workers are there&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;ps &lt;span class=&quot;nt&quot;&gt;-ef&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'unicorn_rails worker\[0\]'&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-v&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;wc&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-ne&lt;/span&gt; 2 &lt;span class=&quot;o&quot;&gt;]]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do
-    &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Waiting till new master comes up and spawns new workers&quot;&lt;/span&gt;
-    &lt;span class=&quot;nb&quot;&gt;sleep &lt;/span&gt;1
-  &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;
-  &lt;span class=&quot;c&quot;&gt;# Send WINCH to old master&lt;/span&gt;
-  &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Winching ID &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$unicorn_pid&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
-  &lt;span class=&quot;nb&quot;&gt;kill&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-WINCH&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$unicorn_pid&lt;/span&gt;
-  &lt;span class=&quot;c&quot;&gt;# Wait till old workers die&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;ps &lt;span class=&quot;nt&quot;&gt;-ef&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'unicorn_rails worker\[0\]'&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-v&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;wc&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-ne&lt;/span&gt; 1 &lt;span class=&quot;o&quot;&gt;]]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do
-    &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Waiting till old workers die&quot;&lt;/span&gt;
-    &lt;span class=&quot;nb&quot;&gt;sleep &lt;/span&gt;1
-  &lt;span class=&quot;k&quot;&gt;done
-  &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Killing ID &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$unicorn_pid&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
-  &lt;span class=&quot;nb&quot;&gt;kill&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-QUIT&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$unicorn_pid&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;else
-  &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Start fresh copy of unicorn&quot;&lt;/span&gt;
-  unicorn_rails &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; config/unicorn.rb &lt;span class=&quot;nt&quot;&gt;-D&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Unicorn provides the facility to reload without losing connected clients. The process can be initiated by sending a &lt;code class=&quot;highlighter-rouge&quot;&gt;USR2&lt;/code&gt; signal to the unicorn master process. Upon recieving this, unicorn will
-spawn a new master process and name the old process as &lt;code class=&quot;highlighter-rouge&quot;&gt;unicorn master (old)&lt;/code&gt;. The new master process will also spawn it’s own new workers. Once you are sure that the new workers have been
-spawned, you can send a &lt;code class=&quot;highlighter-rouge&quot;&gt;WINCH&lt;/code&gt; signal to old unicorn master upon receipt of which, old unicorn will shutdown it’s workers gracefully. Gracefully here means that the workers will die once
-they are done serving their connected clients. Once the old master has shut down all it’s workers, we send a QUIT signal to the old master which then dies peacefully. And now we have the new 
-unicorn loaded with new code and/or new binary. The explanation of signal behavior can be found &lt;a href=&quot;http://unicorn.bogomips.org/SIGNALS.html&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;</content><author><name>Prabhakar Kumar</name></author><category term="ruby" /><category term="rails" /><summary type="html">Unicorn is a cool application server for Rails. If you have a high traffic website, you would like to restart Unicorn without any downtime, upon a new code deployment or a Gem update which updates unicorn. I wrote an script, exactly for this purpose after learning signal handling basics of Unicorn. Here’s the script. The comments are self-explanatory and fairly give the idea of what is happening.</summary></entry></feed>
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Prabhakar Kumar</name></author><category term="functional-programming" /><category term="haskell" /><category term="recursion" /><summary type="html">I have been intrigued by functional programming for past couple of years, but never quite prioritized it bigtime. Recently I came across this amazing talk which inspired me to go all-in to learn FP.</summary></entry></feed>

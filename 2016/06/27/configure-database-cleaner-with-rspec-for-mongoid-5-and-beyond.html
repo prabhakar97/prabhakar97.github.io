@@ -2,7 +2,7 @@
 <html lang="en"><head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.5.0 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.0 -->
 <title>Configure DatabaseCleaner with Rspec for Mongoid 5 and beyond | Prab’s Code Blog</title>
 <meta name="generator" content="Jekyll v3.8.5" />
 <meta property="og:title" content="Configure DatabaseCleaner with Rspec for Mongoid 5 and beyond" />
@@ -16,21 +16,9 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2016-06-27T06:35:22+05:30" />
 <script type="application/ld+json">
-{"description":"Database Cleaner is a nifty gem for streamlining tests. Configuring it is straightforward but it didn’t work for me out of the box for Mongoid 5.","@type":"BlogPosting","url":"http://prabhakar97.github.io/2016/06/27/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond.html","headline":"Configure DatabaseCleaner with Rspec for Mongoid 5 and beyond","dateModified":"2016-06-27T06:35:22+05:30","datePublished":"2016-06-27T06:35:22+05:30","mainEntityOfPage":{"@type":"WebPage","@id":"http://prabhakar97.github.io/2016/06/27/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond.html"},"author":{"@type":"Person","name":"Prabhakar Kumar"},"@context":"http://schema.org"}</script>
+{"headline":"Configure DatabaseCleaner with Rspec for Mongoid 5 and beyond","dateModified":"2016-06-27T06:35:22+05:30","datePublished":"2016-06-27T06:35:22+05:30","description":"Database Cleaner is a nifty gem for streamlining tests. Configuring it is straightforward but it didn’t work for me out of the box for Mongoid 5.","mainEntityOfPage":{"@type":"WebPage","@id":"http://prabhakar97.github.io/2016/06/27/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond.html"},"@type":"BlogPosting","url":"http://prabhakar97.github.io/2016/06/27/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond.html","author":{"@type":"Person","name":"Prabhakar Kumar"},"@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
-<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://prabhakar97.github.io/feed.xml" title="Prab's Code Blog" /><script>
-if(!(window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1")) {
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-20481925-1', 'auto');
-  ga('send', 'pageview');
-}
-</script>
-  
-</head>
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://prabhakar97.github.io/feed.xml" title="Prab's Code Blog" /></head>
 <body><header class="site-header" role="banner">
 
   <div class="wrapper"><a class="site-title" rel="author" href="/">Prab&#39;s Code Blog</a><nav class="site-nav">
@@ -124,24 +112,7 @@ to have:</p>
 			
 			<a href="/tag/mongodb"><code class="highligher-rouge"><nobr>mongodb</nobr></code></a>
 		
-	]</span><div id="disqus_thread"></div>
-  <script>
-    var disqus_config = function () {
-      this.page.url = 'http://prabhakar97.github.io/2016/06/27/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond.html';
-      this.page.identifier = 'http://prabhakar97.github.io/2016/06/27/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond.html';
-    };
-
-    (function() {
-      var d = document, s = d.createElement('script');
-
-      s.src = 'https://techbite.disqus.com/embed.js';
-
-      s.setAttribute('data-timestamp', +new Date());
-      (d.head || d.body).appendChild(s);
-    })();
-  </script>
-  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
-
+	]</span>
 <a class="u-url" href="/2016/06/27/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond.html" hidden></a>
 </article>
 
