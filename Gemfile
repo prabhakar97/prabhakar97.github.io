@@ -25,7 +25,9 @@ group :jekyll_plugins do
   gem "jekyll-seo-tag"
   gem 'jekyll-admin'
   gem 'jekyll-archives'
+  gem 'jekyll-gist'
 end
+
 gem 'classifier-reborn'
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

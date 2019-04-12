@@ -2,8 +2,8 @@
 layout: page
 title: "About Me"
 date: 2016-05-14 12:15
-comments: true
-sharing: true
+comments: false
+sharing: false
 category: page
 footer: true
 ---

@@ -19,7 +19,7 @@ email: prabhakar97@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
   My blog about programming and software development.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "http://prabhakar97.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+url: "http://techbeat.in" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: prab97
 github_username: prabhakar97
 facebook_username: prabhakar97
@@ -39,6 +39,7 @@ plugins:
   - jekyll-youtube
   - jekyll-seo-tag
   - jekyll-archives
+  - jekyll-gist
 
 jekyll-archives:
   enabled: ['tags']
