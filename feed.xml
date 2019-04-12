@@ -1,32 +1,37 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://prabhakar97.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://prabhakar97.github.io/" rel="alternate" type="text/html" /><updated>2019-04-11T23:41:12+05:30</updated><id>http://prabhakar97.github.io/feed.xml</id><title type="html">Prab’s Code Blog</title><subtitle>My blog about programming and software development.</subtitle><author><name>Prabhakar Kumar</name></author><entry><title type="html">Run your webapps on Kubernetes for cheap</title><link href="http://prabhakar97.github.io/2019/01/29/run-your-webapps-on-kubernetes-for-cheap.html" rel="alternate" type="text/html" title="Run your webapps on Kubernetes for cheap" /><published>2019-01-29T22:18:53+05:30</published><updated>2019-01-29T22:18:53+05:30</updated><id>http://prabhakar97.github.io/2019/01/29/run-your-webapps-on-kubernetes-for-cheap</id><content type="html" xml:base="http://prabhakar97.github.io/2019/01/29/run-your-webapps-on-kubernetes-for-cheap.html">&lt;h3 id=&quot;tldr&quot;&gt;TL;DR&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2019-04-12T07:49:06+05:30</updated><id>http://localhost:4000/feed.xml</id><title type="html">Prab’s Code Blog</title><subtitle>My blog about programming and software development.</subtitle><author><name>Prabhakar Kumar</name></author><entry><title type="html">Run your webapps on Kubernetes for cheap</title><link href="http://localhost:4000/2019/04/11/run-your-webapps-on-kubernetes-for-cheap.html" rel="alternate" type="text/html" title="Run your webapps on Kubernetes for cheap" /><published>2019-04-11T22:18:53+05:30</published><updated>2019-04-11T22:18:53+05:30</updated><id>http://localhost:4000/2019/04/11/run-your-webapps-on-kubernetes-for-cheap</id><content type="html" xml:base="http://localhost:4000/2019/04/11/run-your-webapps-on-kubernetes-for-cheap.html">&lt;h3 id=&quot;tldr&quot;&gt;TL;DR&lt;/h3&gt;
 
-&lt;p&gt;This post details how to spin off a 3 node Kubernetes cluster on Google Cloud, paying close to 7 dollars a month for it and host multiple database backed dynamic websites and APIs.&lt;/p&gt;
+&lt;p&gt;This post details how to spin off a 3 node Kubernetes cluster on Google Cloud, paying close to 7 dollars a month for it and host multiple database backed dynamic websites and API apps.&lt;/p&gt;
+
+&lt;h3 id=&quot;disclaimer&quot;&gt;Disclaimer&lt;/h3&gt;
+
+&lt;p&gt;This is a hands on article to get started with Kubernetes. Some of the terminology and descriptions in this article have been simplified to make it approachable to people unfamiliar with
+Kubernetes. For technical purity, Kubernetes’s official documentation can be consulted.&lt;/p&gt;
 
 &lt;h3 id=&quot;intro&quot;&gt;Intro&lt;/h3&gt;
 
-&lt;p&gt;Kubernetes is the new cool kid on the block (bye bye blockchain). Listing it as an skill in your LinkedIn profile will definitely get you some recruiter attention.
-It is &lt;em&gt;the&lt;/em&gt; solution for all your dev-ops woes.&lt;/p&gt;
+&lt;p&gt;Kubernetes is the new cool kid on the block (bye bye blockchain!). Listing it as an skill in your LinkedIn profile will definitely get you some recruiter attention.
+It is &lt;em&gt;the solution&lt;/em&gt; for all your dev-ops woes!&lt;/p&gt;
 
 &lt;p&gt;I used to run all of my hobby projects in docker containers with lifecycles managed by docker-compose files. I had a VM from &lt;a href=&quot;https://scaleway.com&quot;&gt;scaleway&lt;/a&gt; with 4 gigs of memory,
-100 gigs of SSD storage and dual core x86 CPU for which I used to pay less than 5 Euros a month. I was happy until I learnt about Kubernetes and then I figured &lt;em&gt;ignorance is bliss&lt;/em&gt;.
-After reading this post, you will be able to spin off a 3 node Kubernetes cluster on Google Cloud with 3.75GB memory each and 1 vCPU each and pay roughly ~40 dollars a month for it!
-If you do not want to pay as much, you can choose &lt;em&gt;f1-micro&lt;/em&gt; VM size and pay close to ~7 dollars a month. It might not be as beefy as the 40 dollar cluster, but it can do the job of
-hosting a few hobby webapps. With 11.25GB of memory at your disposal and three compute cores, you can do wonders - host several moderate traffic webapps backed by different databases!
-Adding to that, with Google Cloud’s free trial program you can have this cluster running for free for almost an year!&lt;/p&gt;
+100 gigs of SSD storage and dual core x86 CPU for which I used to pay around 5 Euros a month. I was happy until I learnt about Kubernetes and then I realized &lt;em&gt;ignorance is bliss&lt;/em&gt;.
+After reading this post, you will be able to spin off a 3 node Kubernetes cluster on Google Cloud with 0.6GB memory each and 1 vCPU each and pay roughly ~7 dollars a month for it!
+If you want a beefier cluster you can choose a different configuration for nodes and for 40 dollars a month you get 11.25GB of memory at your disposal, three compute cores with which you can do
+wonders - host several high traffic webapps backed by different databases! Adding to that, with Google Cloud’s free trial program you can have this cluster running for free for almost an year!&lt;/p&gt;
 
 &lt;p&gt;My three node cluster currently runs &lt;code class=&quot;highlighter-rouge&quot;&gt;mongodb&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;postgres&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;nginx&lt;/code&gt;, two rails web applications, a nodeJS web application, a dotnetcore web application, a spring boot based Java REST API application
-which powers an Android app, and still has a lot of resources remaining to do 3-4 times more of what it currently does. All the web apps are fronted by nginx and configured as virtual hosts,
-and have their own domain names with letsencrypt https certificates automatically renewed every three months. Two of the apps use mongodb and the other two postgres.&lt;/p&gt;
+which powers an Android app, and still has a lot of resources remaining to do 3-4 times more of what it currently does. All the web apps are fronted by nginx and configured with different server blocks
+for different domain names (a.k.a virtual hosts). All the domain names have their own letsencrypt https certificates that automatically renew every three months. Two of the apps use mongodb and
+the other two postgres.&lt;/p&gt;
 
 &lt;h4 id=&quot;single-vm-vs-cluster&quot;&gt;Single VM vs Cluster&lt;/h4&gt;
 
-&lt;p&gt;Running all my workloads in a single VM is like putting all the eggs in the same basket. If ever I need to restart the VM for updating the Kernel, or something else; all my apps incur downtime.
-Running on Kubernetes is better, because:&lt;/p&gt;
+&lt;p&gt;Running all your workloads in a single VM is like putting all the eggs in the same basket. If ever the VM is restarted for updating the Kernel, reclaim some leaked memory or something else;
+all the apps hosted on the box incur downtime. Running on Kubernetes is better, because:&lt;/p&gt;
 
 &lt;ol&gt;
-  &lt;li&gt;GCP manages updates and patches on your VMs, so you don’t need to explicitly restart nodes. In case of node restarts, Kubernetes ensures relocating workloads running on the unavailable VM.&lt;/li&gt;
+  &lt;li&gt;Cloud provider (GCP) manages updates and patches on your VMs, so you don’t need to explicitly restart nodes. In case of node restarts, Kubernetes ensures relocating workloads running on the unavailable VM.&lt;/li&gt;
   &lt;li&gt;Kubernetes restarts containers automatically when underlying process crashes due to some issue.&lt;/li&gt;
-  &lt;li&gt;Kubernetes handles load balancing of requests and scaling of resources. For example, you can tell Kubernetes declaratively to run more instance of your webapp when the load is higher.&lt;/li&gt;
+  &lt;li&gt;Kubernetes handles load balancing of requests and scaling of resources to fulfill the requests. For example, you can tell Kubernetes declaratively to run more instances of your webapp when the load is higher.&lt;/li&gt;
   &lt;li&gt;Kubernetes sets up internal networking in the cluster so that your apps can talk to each other. This enables you to build microservices based large scale services.&lt;/li&gt;
 &lt;/ol&gt;
 
@@ -34,13 +39,13 @@ Running on Kubernetes is better, because:&lt;/p&gt;
 
 &lt;h3 id=&quot;what-is-kubernetes&quot;&gt;What is Kubernetes?&lt;/h3&gt;
 
-&lt;p&gt;Kubernetes’s official website tells this:&lt;/p&gt;
+&lt;p&gt;Kubernetes’s official website writes:&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;Kubernetes is a portable, extensible open-source platform for managing containerized workloads and services, that facilitates both declarative configuration and automation.&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;p&gt;This might not be quite an approachable description for everybody. Let me take a shot at it:&lt;/p&gt;
+&lt;p&gt;This might not be quite an approachable description for everybody. Here is my attempt:&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;Kubernetes is like an operating system, for your distributed computing cluster that lets you run your scalable applications without being bothered about nodes in the cluster going down, request routing, load balancing, networking and other devops hassles.&lt;/p&gt;
@@ -51,8 +56,8 @@ Running on Kubernetes is better, because:&lt;/p&gt;
 &lt;h4 id=&quot;step-1-setup-a-3-node-cluster-on-google-cloud&quot;&gt;Step 1: Setup a 3-node cluster on Google Cloud&lt;/h4&gt;
 
 &lt;p&gt;Register on Google Cloud, if you already haven’t. Create a project, setup billing. Click the hamburger menu icon (&lt;img src=&quot;/images/hamburger.png&quot; alt=&quot;menu&quot; /&gt;) on the top left, and in &lt;em&gt;Compute&lt;/em&gt; section,
-click &lt;em&gt;Kubernetes Engine&lt;/em&gt;. Click the &lt;code class=&quot;highlighter-rouge&quot;&gt;Create Clusters&lt;/code&gt; button. Make sure that in the left pane, cluster template is set to &lt;code class=&quot;highlighter-rouge&quot;&gt;Standard cluster&lt;/code&gt;. In the right pane, name your cluster;
-for example &lt;em&gt;my-awesome-cluster&lt;/em&gt;. Fill in the settings as listed below:&lt;/p&gt;
+click &lt;em&gt;Kubernetes Engine&lt;/em&gt;. Click the &lt;code class=&quot;highlighter-rouge&quot;&gt;Create Clusters&lt;/code&gt; button. Make sure in the left pane, cluster template is set to &lt;code class=&quot;highlighter-rouge&quot;&gt;Standard cluster&lt;/code&gt;. In the right pane, name your cluster;
+for example &lt;em&gt;blog-cluster&lt;/em&gt;. Fill in the settings as listed below:&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;&lt;em&gt;Location type&lt;/em&gt;: Zonal&lt;/li&gt;
@@ -72,8 +77,8 @@ for example &lt;em&gt;my-awesome-cluster&lt;/em&gt;. Fill in the settings as lis
   &lt;li&gt;&lt;em&gt;Enable autoscaling&lt;/em&gt;: off&lt;/li&gt;
   &lt;li&gt;&lt;em&gt;Boot disk type&lt;/em&gt;: Standard persistent disk&lt;/li&gt;
   &lt;li&gt;&lt;em&gt;Boot disk size&lt;/em&gt;: 10 GB&lt;/li&gt;
-  &lt;li&gt;&lt;em&gt;Enable pre-emptible nodes&lt;/em&gt;: Yes - you must do this for cost cutting. These nodes get terminated within 24 hours and cost around one-fourth of regular nodes. Since Kubernetes can handle
-node downtimes, we need not worry about our app going down.&lt;/li&gt;
+  &lt;li&gt;&lt;em&gt;Enable pre-emptible nodes&lt;/em&gt;: Yes - you must do this for cost cutting. These nodes get terminated within 24 hours and get replaced with another one and cost around one-fourth of regular nodes.
+Since Kubernetes can handle node downtimes, we need not worry about our app going down when GCP replaces a VM.&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;Click &lt;em&gt;Availability, networking, security, and additional features&lt;/em&gt; and ensure the following:&lt;/p&gt;
@@ -82,6 +87,7 @@ node downtimes, we need not worry about our app going down.&lt;/li&gt;
   &lt;li&gt;&lt;em&gt;Enable HTTP load balancing&lt;/em&gt;: No - this is costly! We will use Kubernetes’s default balancer&lt;/li&gt;
   &lt;li&gt;&lt;em&gt;Enable Stackdriver Logging service&lt;/em&gt;: No&lt;/li&gt;
   &lt;li&gt;&lt;em&gt;Enable Stackdriver Monitoring service&lt;/em&gt;: No&lt;/li&gt;
+  &lt;li&gt;&lt;em&gt;Enable Kubernetes Dashboard&lt;/em&gt;: No&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;Leave all the other settings to their sane defaults. Changing some of them might cost you extra money. Click the &lt;code class=&quot;highlighter-rouge&quot;&gt;Create&lt;/code&gt; button and wait for the cluster to come up. The clusters page should
@@ -92,9 +98,7 @@ show your newly created cluster.&lt;/p&gt;
 &lt;h4 id=&quot;step-2-connect-to-your-newly-minted-cluster&quot;&gt;Step 2: Connect to your newly minted cluster&lt;/h4&gt;
 
 &lt;p&gt;Install &lt;code class=&quot;highlighter-rouge&quot;&gt;kubectl&lt;/code&gt; command line utility for your OS. In the &lt;em&gt;Clusters&lt;/em&gt; page, click &lt;em&gt;Connect&lt;/em&gt; and it will show you a &lt;code class=&quot;highlighter-rouge&quot;&gt;gcloud&lt;/code&gt; command which downloads the necessary authentication information
-for the &lt;code class=&quot;highlighter-rouge&quot;&gt;kubectl&lt;/code&gt; command.&lt;/p&gt;
-
-&lt;p&gt;Once you have done that, test your connection by running &lt;code class=&quot;highlighter-rouge&quot;&gt;kubectl get nodes&lt;/code&gt; which should return you a list of three nodes.&lt;/p&gt;
+for the &lt;code class=&quot;highlighter-rouge&quot;&gt;kubectl&lt;/code&gt; command. Run the command. Once you have done that, test your connection by running &lt;code class=&quot;highlighter-rouge&quot;&gt;kubectl get nodes&lt;/code&gt; which should return you a list of three nodes.&lt;/p&gt;
 
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;% kubectl get nodes
 NAME                                          STATUS   ROLES    AGE   VERSION
@@ -107,17 +111,17 @@ gke-blog-cluster-default-pool-edcca0b2-z6f1   Ready    &amp;lt;none&amp;gt;   1m
 
 &lt;p&gt;Let’s prepare a rails application that uses a &lt;code class=&quot;highlighter-rouge&quot;&gt;postgresql&lt;/code&gt; database to deploy on this cluster. We will name it &lt;code class=&quot;highlighter-rouge&quot;&gt;RailsPortal&lt;/code&gt;, you are free to name whatever you want.&lt;/p&gt;
 
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gem &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;bundler                                                                                                                                                                                              
-gem &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;rails                                                                                                                                                                                                
-rails new RailsPortal                                                                                                                                                                                            
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gem &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;bundler
+gem &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;rails
+rails new RailsPortal
 bundle &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;rails s
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Last command should start a local server at port 3000 and you should be able to access it at &lt;code class=&quot;highlighter-rouge&quot;&gt;localhost:3000&lt;/code&gt;. Stop the server by running &lt;code class=&quot;highlighter-rouge&quot;&gt;Ctrl-C&lt;/code&gt;. Open &lt;code class=&quot;highlighter-rouge&quot;&gt;config/database.yml&lt;/code&gt; and around the
 end change the production db connection settings so that they look like this:&lt;/p&gt;
 
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;production:                                                                                                                                                                                                      
-  &amp;lt;&amp;lt;: &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;default 
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;production:
+  &amp;lt;&amp;lt;: &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;default
   adapter: postgresql
   url: &amp;lt;%&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; ENV[&lt;span class=&quot;s1&quot;&gt;'DATABASE_URL'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; %&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -178,14 +182,14 @@ of processes running on a VM, these will be containers and will be run on differ
 &lt;ul&gt;
   &lt;li&gt;Deployment&lt;/li&gt;
   &lt;li&gt;Service&lt;/li&gt;
-  &lt;li&gt;PersistentVolume&lt;/li&gt;
-  &lt;li&gt;PersitentVolumeClaim&lt;/li&gt;
   &lt;li&gt;StorageClass&lt;/li&gt;
+  &lt;li&gt;PersitentVolumeClaim&lt;/li&gt;
+  &lt;li&gt;PersistentVolume&lt;/li&gt;
   &lt;li&gt;Secret&lt;/li&gt;
   &lt;li&gt;ConfigMap&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;A &lt;em&gt;deployment&lt;/em&gt; describes a container to run along with the volumes it needs, environment variables, ports it should listen to, number of replicas of it Kubernetes should run in the clister etc.
+&lt;p&gt;A &lt;em&gt;deployment&lt;/em&gt; describes a container to run along with the volumes it needs, environment variables, ports it should listen to, number of replicas of it Kubernetes should run in the cluster etc.
 There are many more things we can configure for a deployment, but these are the ones we are going to use in our little project. In this article, I might use the terms deployment and container
 interchangeably - because in practice a Kubernetes deployment is a container running in the cluster.&lt;/p&gt;
 
@@ -193,9 +197,9 @@ interchangeably - because in practice a Kubernetes deployment is a container run
 ClusterIP and public endpoints are exposed by service of type LoadBalancer. Private endpoints are accessible only inside the cluster, from other containers. For example, a postgres deployment
 should only be accessible from deployments running in the cluster, for example a web application.&lt;/p&gt;
 
-&lt;p&gt;A &lt;em&gt;storage class&lt;/em&gt; is to define a type of volume that can be created on demand. We create this once and create persistent volume claims that refer to it.&lt;/p&gt;
+&lt;p&gt;A &lt;em&gt;storage class&lt;/em&gt; is to define the characteristics of volumes that can be created on demand. We create this once and create persistent volume claims that refer to it.&lt;/p&gt;
 
-&lt;p&gt;A &lt;em&gt;persistent volume&lt;/em&gt; is a storage accessible from any of the running containers on the cluster which are configured to run it. As containers are stateless, we need a reliable persistent store
+&lt;p&gt;A &lt;em&gt;persistent volume&lt;/em&gt; is a storage accessible from any of the running containers on the cluster which are configured to access it. As containers are stateless, we need a reliable persistent store
 to store our stateful data, for example postgres’s data files.&lt;/p&gt;
 
 &lt;p&gt;A &lt;em&gt;persistent volume claim&lt;/em&gt; is an access mechanism for a container to access a persistent volume. We will talk about it ahead in the article when we need it.&lt;/p&gt;
@@ -223,9 +227,7 @@ to store our stateful data, for example postgres’s data files.&lt;/p&gt;
   &lt;li&gt;A persistent volume for postgres, so that we can have postgres store its data files there&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;Let’s get started by setting up nginx and trying to access it from outside world.&lt;/p&gt;
-
-&lt;h4 id=&quot;step-7-setting-up-nginx&quot;&gt;Step 7. Setting up nginx&lt;/h4&gt;
+&lt;h4 id=&quot;step-6-setting-up-nginx&quot;&gt;Step 6. Setting up nginx&lt;/h4&gt;
 
 &lt;p&gt;Let’s begin by creating a deployment for nginx. Create a directory named nginx. Below gist is for a yaml file that we will use to describe nginx deployment on Kubernetes. Copy
 its contents to a file named &lt;code class=&quot;highlighter-rouge&quot;&gt;nginx-dep.yml&lt;/code&gt; on your local computer.&lt;/p&gt;
@@ -253,7 +255,7 @@ for all practical purposes. You can find about it more in official Kubernetes do
 &lt;/pre&gt;&lt;/noscript&gt;
 &lt;script src=&quot;https://gist.github.com/d76f720c5b9d666965e959861e5e33b3.js&quot;&gt; &lt;/script&gt;
 
-&lt;p&gt;This file declares that we want a resource of kind service of type LoadBalancer which should accept connections on port 80 and direct to port 80 of a service. Which service? The service is selected
+&lt;p&gt;This file declares that we want a resource of kind &lt;code class=&quot;highlighter-rouge&quot;&gt;Service&lt;/code&gt; of type &lt;code class=&quot;highlighter-rouge&quot;&gt;LoadBalancer&lt;/code&gt; which should accept connections on port 80 and direct to port 80 of a service. Which service? The service is selected
 using the selector parameter which says to match it with the &lt;code class=&quot;highlighter-rouge&quot;&gt;app: nginx&lt;/code&gt; which we had specified in our &lt;code class=&quot;highlighter-rouge&quot;&gt;nginx-dep.yml&lt;/code&gt; file. Let’s deploy this file too.&lt;/p&gt;
 
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;% kubectl apply &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; nginx-svc.yml
@@ -275,13 +277,11 @@ nginx-lb     LoadBalancer   10.59.240.108   34.66.92.238   80:31463/TCP   1m
 &lt;p&gt;Now, if you try typing the shown external ip in a browser, you should be able to get the nginx’s welcome page! Awesome! You can change a domain’s A record to point to this IP address and this
 will be accessible from any browser through the domain name.&lt;/p&gt;
 
-&lt;p&gt;Now let’s move forward and deploy &lt;code class=&quot;highlighter-rouge&quot;&gt;postgres&lt;/code&gt;, so that rails can talk to it.&lt;/p&gt;
+&lt;h4 id=&quot;step-7-setting-up-postgres&quot;&gt;Step 7. Setting up postgres&lt;/h4&gt;
 
-&lt;h4 id=&quot;step-8-setting-up-postgres&quot;&gt;Step 8. Setting up postgres&lt;/h4&gt;
-
-&lt;p&gt;Since we need postgres’s data to be persistent across container and node restarts, we need to create a persistent volume. For that we first create a storage class with type SSD. Then we
-create a persistent volume claim that uses this newly created storage class. A persistent volume gets automatically created, when we try to create a persistent volume claim
-using the storage class of &lt;code class=&quot;highlighter-rouge&quot;&gt;kubernetes.io/gce-pd&lt;/code&gt;. We can also club two related storage related declarations into a single yaml file as shown below.&lt;/p&gt;
+&lt;p&gt;Our webapp will need Postgres to store its data. Since we need postgres’s data to be persistent across container and node restarts, we need to create a persistent volume. For that we first
+create a storage class with type SSD. Then we create a persistent volume claim that uses this newly created storage class. A persistent volume gets automatically created, when we try to create
+a persistent volume claim using the storage class of &lt;code class=&quot;highlighter-rouge&quot;&gt;kubernetes.io/gce-pd&lt;/code&gt;. We can also club two related storage related declarations into a single yaml file as shown below.&lt;/p&gt;
 
 &lt;noscript&gt;&lt;pre&gt;400: Invalid request
 &lt;/pre&gt;&lt;/noscript&gt;
@@ -308,8 +308,8 @@ club logically related resources in a single file.&lt;/p&gt;
 &lt;script src=&quot;https://gist.github.com/62e68cf0f42e24c09e9a91e6cf393b08.js&quot;&gt; &lt;/script&gt;
 
 &lt;p&gt;In the deployment, we specify that we will run the &lt;em&gt;postgres&lt;/em&gt; container with tag &lt;em&gt;10-alpine&lt;/em&gt; from docker hub. We also set environment variables for username, password and data directory. You
-should note that we specify a volume mount and configure it to use the persistent volume claim we created in pervious step and we mount that 1GB storage volume at &lt;em&gt;/data&lt;/em&gt; directory in the container.
-We also create a service (ClusterIP being the default) and configure its app selector to postgres and specify that port 5432 on the container be made available for other apps in the cluster.&lt;/p&gt;
+should note that we specify a volume mount and configure it to use the persistent volume claim we created earlier and we mount that 1GB storage volume at &lt;em&gt;/data&lt;/em&gt; directory in the container.
+We also create a service (with type &lt;code class=&quot;highlighter-rouge&quot;&gt;ClusterIP&lt;/code&gt; being the default) and configure its app selector to postgres and specify that port 5432 on the container be made available for other apps in the cluster.&lt;/p&gt;
 
 &lt;p&gt;Let’s create the service and deployment and check the status on the cluster.&lt;/p&gt;
 
@@ -342,14 +342,12 @@ CREATE DATABASE
 
 &lt;p&gt;Through the first command we copied the name of the pod. Then the next command connected to the running container, and mounted its shell (tty) in interactive mode with our terminal and then ran /bin/sh
 on the terminal. This directly dropped us into the container’s shell, wehere we switched to the user &lt;code class=&quot;highlighter-rouge&quot;&gt;postgres&lt;/code&gt;, then ran psql and created a database. Logging-in to a running container comes handy
-for debugging purposes.&lt;/p&gt;
+a lot during debugging sessions.&lt;/p&gt;
 
-&lt;p&gt;Now, let’s run the rails application and test the whole setup in conjunction.&lt;/p&gt;
+&lt;h4 id=&quot;step-8-deploy-the-rails-application&quot;&gt;Step 8. Deploy the rails application&lt;/h4&gt;
 
-&lt;h4 id=&quot;deploy-the-rails-application&quot;&gt;Deploy the rails application&lt;/h4&gt;
-
-&lt;p&gt;Since, we pushed our rails application to a private docker repository on docker hub and we do not want the world to be able to access it, Kubernetes won’t be able to pull the image directly. We need
-to provide the credentials to do it. Let’s create a secret that stores our docker hub username and password.&lt;/p&gt;
+&lt;p&gt;Since, we pushed our rails application to a private docker repository on docker hub and we do not want the world to be able to access it because it has our intellectual property (;p),
+Kubernetes won’t be able to pull the image without authentication information. Let’s create a secret that stores our docker hub username and password.&lt;/p&gt;
 
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl create secret docker-registry dockeraccess &lt;span class=&quot;nt&quot;&gt;--docker-server&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;https://index.docker.io/v1/ &lt;span class=&quot;nt&quot;&gt;--docker-username&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;YourDockerHubUsername &lt;span class=&quot;nt&quot;&gt;--docker-password&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;YourDockerHubPassword &lt;span class=&quot;nt&quot;&gt;--docker-email&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;YourDockerHubEmail
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -398,19 +396,19 @@ configmap/railsportalnginxconfig created
 &lt;/pre&gt;&lt;/noscript&gt;
 &lt;script src=&quot;https://gist.github.com/739dfe55fa710d8c1cffd5bc63bb99c5.js&quot;&gt; &lt;/script&gt;
 
+&lt;p&gt;Now apply the updated configuration for nginx to the cluster:&lt;/p&gt;
+
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;% kubectl apply &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; nginx-dep.yml
 deployment.apps/nginx-dep configured
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Now, opening the website with the public IP should show the rails portal. You can check the logs by running &lt;code class=&quot;highlighter-rouge&quot;&gt;kubectl logs PodName&lt;/code&gt; where PodName should be replaced with the name of the pod for rails
+&lt;p&gt;Opening the website with the public IP should show the rails portal. You can check the logs by running &lt;code class=&quot;highlighter-rouge&quot;&gt;kubectl logs PodName&lt;/code&gt; where PodName should be replaced with the name of the pod for rails
 portal that comes up when you run &lt;code class=&quot;highlighter-rouge&quot;&gt;kubectl get pods&lt;/code&gt;. If things are not working as expected, you may try logging into the container and poke around.&lt;/p&gt;
 
 &lt;h3 id=&quot;home-work&quot;&gt;Home work&lt;/h3&gt;
 
 &lt;p&gt;You can try deploying another application on the same cluster. A ExpressJS webapp, talking to a mongoDB database would be a good exercise. You may also go ahead and figure out how to enable auto
-scaling.&lt;/p&gt;
-
-&lt;p&gt;You may try doing this on Azure or AWS.&lt;/p&gt;
+scaling. And you may try doing this on Azure or AWS and figure which one comes up cheapest.&lt;/p&gt;
 
 &lt;h3 id=&quot;next-steps&quot;&gt;Next steps&lt;/h3&gt;
 
@@ -419,7 +417,8 @@ scaling.&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;Enable HTTPS access with Letsencrypt certs and setup auto renew&lt;/li&gt;
   &lt;li&gt;Make nginx serve static assets, instead of Rails&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Prabhakar Kumar</name></author><category term="cloud" /><category term="kubernetes" /><category term="docker" /><summary type="html">TL;DR</summary></entry><entry><title type="html">Make your if statements concise</title><link href="http://prabhakar97.github.io/2018/03/17/make-your-if-statements-concise.html" rel="alternate" type="text/html" title="Make your if statements concise" /><published>2018-03-17T20:17:27+05:30</published><updated>2018-03-17T20:17:27+05:30</updated><id>http://prabhakar97.github.io/2018/03/17/make-your-if-statements-concise</id><content type="html" xml:base="http://prabhakar97.github.io/2018/03/17/make-your-if-statements-concise.html">&lt;p&gt;Sometimes you may encounter a situation where you need to do something if two conditions are satisfied or they both are not satisfied; and do something else
+  &lt;li&gt;Setup auto scaling for times of high load&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Prabhakar Kumar</name></author><category term="cloud" /><category term="kubernetes" /><category term="docker" /><summary type="html">TL;DR</summary></entry><entry><title type="html">Make your if statements concise</title><link href="http://localhost:4000/2018/03/17/make-your-if-statements-concise.html" rel="alternate" type="text/html" title="Make your if statements concise" /><published>2018-03-17T20:17:27+05:30</published><updated>2018-03-17T20:17:27+05:30</updated><id>http://localhost:4000/2018/03/17/make-your-if-statements-concise</id><content type="html" xml:base="http://localhost:4000/2018/03/17/make-your-if-statements-concise.html">&lt;p&gt;Sometimes you may encounter a situation where you need to do something if two conditions are satisfied or they both are not satisfied; and do something else
 if exactly one of them is satisfied. An example would be:&lt;/p&gt;
 
 &lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;resultFromServer1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;resultFromServer2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;resultFromServer1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;resultFromServer2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
@@ -453,7 +452,7 @@ called as equality gate. Hence, we can write:&lt;/p&gt;
     &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Only one server is aware of the operation&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
     &lt;span class=&quot;n&quot;&gt;doSomethingElse&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
 &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Prabhakar Kumar</name></author><category term="programming" /><summary type="html">Sometimes you may encounter a situation where you need to do something if two conditions are satisfied or they both are not satisfied; and do something else if exactly one of them is satisfied. An example would be:</summary></entry><entry><title type="html">Here’s a fluent builder in C#</title><link href="http://prabhakar97.github.io/2018/03/17/heres-a-fluent-builder-in-c-number.html" rel="alternate" type="text/html" title="Here's a fluent builder in C#" /><published>2018-03-17T20:01:34+05:30</published><updated>2018-03-17T20:01:34+05:30</updated><id>http://prabhakar97.github.io/2018/03/17/heres-a-fluent-builder-in-c-number</id><content type="html" xml:base="http://prabhakar97.github.io/2018/03/17/heres-a-fluent-builder-in-c-number.html">&lt;p&gt;A fluent builder makes creating objects more readable than constructors and more concise than setting properties through setters
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Prabhakar Kumar</name></author><category term="programming" /><summary type="html">Sometimes you may encounter a situation where you need to do something if two conditions are satisfied or they both are not satisfied; and do something else if exactly one of them is satisfied. An example would be:</summary></entry><entry><title type="html">Here’s a fluent builder in C#</title><link href="http://localhost:4000/2018/03/17/heres-a-fluent-builder-in-c-number.html" rel="alternate" type="text/html" title="Here's a fluent builder in C#" /><published>2018-03-17T20:01:34+05:30</published><updated>2018-03-17T20:01:34+05:30</updated><id>http://localhost:4000/2018/03/17/heres-a-fluent-builder-in-c-number</id><content type="html" xml:base="http://localhost:4000/2018/03/17/heres-a-fluent-builder-in-c-number.html">&lt;p&gt;A fluent builder makes creating objects more readable than constructors and more concise than setting properties through setters
 on an uninitialized object.
 Java devs can use Lombok’s &lt;code class=&quot;highlighter-rouge&quot;&gt;@Builder&lt;/code&gt; annotation to get a fluent builder wired into their classes. Unfortunately, in C# world
 no such thing exists. So here’s how you can roll out your own.&lt;/p&gt;
@@ -506,7 +505,7 @@ of a fluent builder:&lt;/p&gt;
     &lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Tommy&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
     &lt;span class=&quot;n&quot;&gt;Type&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Dog&quot;&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Prabhakar Kumar</name></author><category term="c-sharp" /><category term="design-patterns" /><summary type="html">A fluent builder makes creating objects more readable than constructors and more concise than setting properties through setters on an uninitialized object. Java devs can use Lombok’s @Builder annotation to get a fluent builder wired into their classes. Unfortunately, in C# world no such thing exists. So here’s how you can roll out your own.</summary></entry><entry><title type="html">Boot linux from grub rescue prompt</title><link href="http://prabhakar97.github.io/2018/01/14/boot-linux-from-grub-rescue-prompt.html" rel="alternate" type="text/html" title="Boot linux from grub rescue prompt" /><published>2018-01-14T20:20:50+05:30</published><updated>2018-01-14T20:20:50+05:30</updated><id>http://prabhakar97.github.io/2018/01/14/boot-linux-from-grub-rescue-prompt</id><content type="html" xml:base="http://prabhakar97.github.io/2018/01/14/boot-linux-from-grub-rescue-prompt.html">&lt;p&gt;If you have a dual boot setup of a Linux based OS and Windows 10, and you have setup grub to choose which OS
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Prabhakar Kumar</name></author><category term="c-sharp" /><category term="design-patterns" /><summary type="html">A fluent builder makes creating objects more readable than constructors and more concise than setting properties through setters on an uninitialized object. Java devs can use Lombok’s @Builder annotation to get a fluent builder wired into their classes. Unfortunately, in C# world no such thing exists. So here’s how you can roll out your own.</summary></entry><entry><title type="html">Boot linux from grub rescue prompt</title><link href="http://localhost:4000/2018/01/14/boot-linux-from-grub-rescue-prompt.html" rel="alternate" type="text/html" title="Boot linux from grub rescue prompt" /><published>2018-01-14T20:20:50+05:30</published><updated>2018-01-14T20:20:50+05:30</updated><id>http://localhost:4000/2018/01/14/boot-linux-from-grub-rescue-prompt</id><content type="html" xml:base="http://localhost:4000/2018/01/14/boot-linux-from-grub-rescue-prompt.html">&lt;p&gt;If you have a dual boot setup of a Linux based OS and Windows 10, and you have setup grub to choose which OS
 to boot; you might have experienced the &lt;em&gt;grub rescue prompt&lt;/em&gt; which comes up after a Windows 10 update screws up
 with the boot files.&lt;/p&gt;
 
@@ -552,7 +551,7 @@ with the boot files.&lt;/p&gt;
       &lt;li&gt;Running &lt;code class=&quot;highlighter-rouge&quot;&gt;sudo grub-install /dev/sda&lt;/code&gt; or in some cases hda instead of sda, should reinstall grub correctly and fix your booting problems.&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Prabhakar Kumar</name></author><category term="linux" /><summary type="html">If you have a dual boot setup of a Linux based OS and Windows 10, and you have setup grub to choose which OS to boot; you might have experienced the grub rescue prompt which comes up after a Windows 10 update screws up with the boot files.</summary></entry><entry><title type="html">Ship a REST API with Node, ES6 and MongoDB - Part 1</title><link href="http://prabhakar97.github.io/2017/03/22/bootstrap-a-restful-api-app-with-node-es6-mongo-linux.html" rel="alternate" type="text/html" title="Ship a REST API with Node, ES6 and MongoDB - Part 1" /><published>2017-03-22T21:52:40+05:30</published><updated>2017-03-22T21:52:40+05:30</updated><id>http://prabhakar97.github.io/2017/03/22/bootstrap-a-restful-api-app-with-node-es6-mongo-linux</id><content type="html" xml:base="http://prabhakar97.github.io/2017/03/22/bootstrap-a-restful-api-app-with-node-es6-mongo-linux.html">&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+&lt;/ul&gt;</content><author><name>Prabhakar Kumar</name></author><category term="linux" /><summary type="html">If you have a dual boot setup of a Linux based OS and Windows 10, and you have setup grub to choose which OS to boot; you might have experienced the grub rescue prompt which comes up after a Windows 10 update screws up with the boot files.</summary></entry><entry><title type="html">Ship a REST API with Node, ES6 and MongoDB - Part 1</title><link href="http://localhost:4000/2017/03/22/bootstrap-a-restful-api-app-with-node-es6-mongo-linux.html" rel="alternate" type="text/html" title="Ship a REST API with Node, ES6 and MongoDB - Part 1" /><published>2017-03-22T21:52:40+05:30</published><updated>2017-03-22T21:52:40+05:30</updated><id>http://localhost:4000/2017/03/22/bootstrap-a-restful-api-app-with-node-es6-mongo-linux</id><content type="html" xml:base="http://localhost:4000/2017/03/22/bootstrap-a-restful-api-app-with-node-es6-mongo-linux.html">&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;NodeJS has been gaining a lot of traction recently, especially for web applications. Lots of new web applications
 are now being built with tools from  the Node ecosystem. A possible reason is the umpteen number of javascript
 developers out in the wild. Other one is  the blazing speed of
@@ -839,7 +838,7 @@ WHERE sex = ‘F’ in SQL.&lt;/p&gt;
 &lt;h2 id=&quot;next-part&quot;&gt;Next part&lt;/h2&gt;
 
 &lt;p&gt;In this part we got bootstrapped and got our hands dirty. In the next part we will start with data modeling and
-continue further. Stay tuned for it.&lt;/p&gt;</content><author><name>Prabhakar Kumar</name></author><category term="linux" /><category term="nodejs" /><category term="mongodb" /><category term="es6" /><summary type="html">Introduction NodeJS has been gaining a lot of traction recently, especially for web applications. Lots of new web applications are now being built with tools from the Node ecosystem. A possible reason is the umpteen number of javascript developers out in the wild. Other one is the blazing speed of V8 engine. Heck, even shiny desktop apps are now being built with Node viz. Popcorn Time.</summary></entry><entry><title type="html">Elegant solutions to common interview problems - Part 1 - Linked Lists</title><link href="http://prabhakar97.github.io/2017/03/11/elegant-solutions-to-common-interview-problems.html" rel="alternate" type="text/html" title="Elegant solutions to common interview problems - Part 1 - Linked Lists" /><published>2017-03-11T00:18:24+05:30</published><updated>2017-03-11T00:18:24+05:30</updated><id>http://prabhakar97.github.io/2017/03/11/elegant-solutions-to-common-interview-problems</id><content type="html" xml:base="http://prabhakar97.github.io/2017/03/11/elegant-solutions-to-common-interview-problems.html">&lt;blockquote&gt;
+continue further. Stay tuned for it.&lt;/p&gt;</content><author><name>Prabhakar Kumar</name></author><category term="linux" /><category term="nodejs" /><category term="mongodb" /><category term="es6" /><summary type="html">Introduction NodeJS has been gaining a lot of traction recently, especially for web applications. Lots of new web applications are now being built with tools from the Node ecosystem. A possible reason is the umpteen number of javascript developers out in the wild. Other one is the blazing speed of V8 engine. Heck, even shiny desktop apps are now being built with Node viz. Popcorn Time.</summary></entry><entry><title type="html">Elegant solutions to common interview problems - Part 1 - Linked Lists</title><link href="http://localhost:4000/2017/03/11/elegant-solutions-to-common-interview-problems.html" rel="alternate" type="text/html" title="Elegant solutions to common interview problems - Part 1 - Linked Lists" /><published>2017-03-11T00:18:24+05:30</published><updated>2017-03-11T00:18:24+05:30</updated><id>http://localhost:4000/2017/03/11/elegant-solutions-to-common-interview-problems</id><content type="html" xml:base="http://localhost:4000/2017/03/11/elegant-solutions-to-common-interview-problems.html">&lt;blockquote&gt;
   &lt;p&gt;Define a linked list node for integers&lt;/p&gt;
 &lt;/blockquote&gt;
 
@@ -938,7 +937,7 @@ continue further. Stay tuned for it.&lt;/p&gt;</content><author><name>Prabhakar 
         &lt;span class=&quot;n&quot;&gt;cout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
         &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
     &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;</content><author><name>Prabhakar Kumar</name></author><category term="computer-science" /><summary type="html">Define a linked list node for integers</summary></entry><entry><title type="html">Compile goaccess from source on CentOS 7</title><link href="http://prabhakar97.github.io/2016/07/08/compile-goaccess-from-source-on-centos-7.html" rel="alternate" type="text/html" title="Compile goaccess from source on CentOS 7" /><published>2016-07-08T07:30:32+05:30</published><updated>2016-07-08T07:30:32+05:30</updated><id>http://prabhakar97.github.io/2016/07/08/compile-goaccess-from-source-on-centos-7</id><content type="html" xml:base="http://prabhakar97.github.io/2016/07/08/compile-goaccess-from-source-on-centos-7.html">&lt;p&gt;&lt;a href=&quot;https://goaccess.io&quot;&gt;Goaccess&lt;/a&gt; is a neat little utility which scans through your web server (I use nginx) logs and generates a nice HTML report of 
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;</content><author><name>Prabhakar Kumar</name></author><category term="computer-science" /><summary type="html">Define a linked list node for integers</summary></entry><entry><title type="html">Compile goaccess from source on CentOS 7</title><link href="http://localhost:4000/2016/07/08/compile-goaccess-from-source-on-centos-7.html" rel="alternate" type="text/html" title="Compile goaccess from source on CentOS 7" /><published>2016-07-08T07:30:32+05:30</published><updated>2016-07-08T07:30:32+05:30</updated><id>http://localhost:4000/2016/07/08/compile-goaccess-from-source-on-centos-7</id><content type="html" xml:base="http://localhost:4000/2016/07/08/compile-goaccess-from-source-on-centos-7.html">&lt;p&gt;&lt;a href=&quot;https://goaccess.io&quot;&gt;Goaccess&lt;/a&gt; is a neat little utility which scans through your web server (I use nginx) logs and generates a nice HTML report of 
 your site’s access statistics. Here is a &lt;a href=&quot;http://rt.goaccess.io&quot;&gt;sample from their site&lt;/a&gt;. I run CentOS 7 on an EC2 Instance where I run a pet project. I wanted a light web analyzer that just works. I have
 &lt;a href=&quot;https://fedoraproject.org/wiki/EPEL&quot;&gt;epel&lt;/a&gt; enabled on my instance so I just installed goaccess by &lt;code class=&quot;highlighter-rouge&quot;&gt;sudo yum install goaccess&lt;/code&gt;. It worked and I was able
 to see some stats. But then I figured out that the version from repositories is quite an old one at 0.9.8. The latest one is 1.0.2 from the website.
@@ -967,7 +966,7 @@ statically from nginx. So I can just type http://mydomain.com/access.html and se
 
 &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sh crontab
 @daily /bin/zcat -f /var/log/nginx/access.log* | /usr/local/bin/goaccess -a -o /home/ec2-user/my_rails_dir/public/access.html
-&lt;/code&gt;&lt;/p&gt;</content><author><name>Prabhakar Kumar</name></author><category term="linux" /><category term="web-apps" /><summary type="html">Goaccess is a neat little utility which scans through your web server (I use nginx) logs and generates a nice HTML report of your site’s access statistics. Here is a sample from their site. I run CentOS 7 on an EC2 Instance where I run a pet project. I wanted a light web analyzer that just works. I have epel enabled on my instance so I just installed goaccess by sudo yum install goaccess. It worked and I was able to see some stats. But then I figured out that the version from repositories is quite an old one at 0.9.8. The latest one is 1.0.2 from the website. So, I just uninstalled it sudo yum remove goaccess.</summary></entry><entry><title type="html">Configure DatabaseCleaner with Rspec for Mongoid 5 and beyond</title><link href="http://prabhakar97.github.io/2016/06/27/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond.html" rel="alternate" type="text/html" title="Configure DatabaseCleaner with Rspec for Mongoid 5 and beyond" /><published>2016-06-27T06:35:22+05:30</published><updated>2016-06-27T06:35:22+05:30</updated><id>http://prabhakar97.github.io/2016/06/27/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond</id><content type="html" xml:base="http://prabhakar97.github.io/2016/06/27/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond.html">&lt;p&gt;&lt;a href=&quot;https://github.com/DatabaseCleaner/database_cleaner&quot;&gt;Database Cleaner&lt;/a&gt; is a nifty gem for streamlining tests. Configuring it is straightforward
+&lt;/code&gt;&lt;/p&gt;</content><author><name>Prabhakar Kumar</name></author><category term="linux" /><category term="web-apps" /><summary type="html">Goaccess is a neat little utility which scans through your web server (I use nginx) logs and generates a nice HTML report of your site’s access statistics. Here is a sample from their site. I run CentOS 7 on an EC2 Instance where I run a pet project. I wanted a light web analyzer that just works. I have epel enabled on my instance so I just installed goaccess by sudo yum install goaccess. It worked and I was able to see some stats. But then I figured out that the version from repositories is quite an old one at 0.9.8. The latest one is 1.0.2 from the website. So, I just uninstalled it sudo yum remove goaccess.</summary></entry><entry><title type="html">Configure DatabaseCleaner with Rspec for Mongoid 5 and beyond</title><link href="http://localhost:4000/2016/06/27/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond.html" rel="alternate" type="text/html" title="Configure DatabaseCleaner with Rspec for Mongoid 5 and beyond" /><published>2016-06-27T06:35:22+05:30</published><updated>2016-06-27T06:35:22+05:30</updated><id>http://localhost:4000/2016/06/27/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond</id><content type="html" xml:base="http://localhost:4000/2016/06/27/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond.html">&lt;p&gt;&lt;a href=&quot;https://github.com/DatabaseCleaner/database_cleaner&quot;&gt;Database Cleaner&lt;/a&gt; is a nifty gem for streamlining tests. Configuring it is straightforward
 but it didn’t work for me out of the box for Mongoid 5.&lt;/p&gt;
 
 &lt;p&gt;Here’s my Gemfile segment for testing.&lt;/p&gt;
@@ -1018,7 +1017,7 @@ the maintainer. Looking at my commit and the relevant files &lt;a href=&quot;htt
 to have:&lt;/p&gt;
 
 &lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'database_cleaner'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;git: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'git://github.com/prabhakar97/database_cleaner.git'&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Prabhakar Kumar</name></author><category term="rails" /><category term="ruby" /><category term="mongodb" /><summary type="html">Database Cleaner is a nifty gem for streamlining tests. Configuring it is straightforward but it didn’t work for me out of the box for Mongoid 5.</summary></entry><entry><title type="html">Starting with Yesod on Arch Linux</title><link href="http://prabhakar97.github.io/2016/06/24/starting-with-yesod-on-arch-linux.html" rel="alternate" type="text/html" title="Starting with Yesod on Arch Linux" /><published>2016-06-24T05:29:39+05:30</published><updated>2016-06-24T05:29:39+05:30</updated><id>http://prabhakar97.github.io/2016/06/24/starting-with-yesod-on-arch-linux</id><content type="html" xml:base="http://prabhakar97.github.io/2016/06/24/starting-with-yesod-on-arch-linux.html">&lt;p&gt;As part of my eagerness to learn Haskell, I thought it might be a good idea to start building real world applications in Haskell. I chose
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Prabhakar Kumar</name></author><category term="rails" /><category term="ruby" /><category term="mongodb" /><summary type="html">Database Cleaner is a nifty gem for streamlining tests. Configuring it is straightforward but it didn’t work for me out of the box for Mongoid 5.</summary></entry><entry><title type="html">Starting with Yesod on Arch Linux</title><link href="http://localhost:4000/2016/06/24/starting-with-yesod-on-arch-linux.html" rel="alternate" type="text/html" title="Starting with Yesod on Arch Linux" /><published>2016-06-24T05:29:39+05:30</published><updated>2016-06-24T05:29:39+05:30</updated><id>http://localhost:4000/2016/06/24/starting-with-yesod-on-arch-linux</id><content type="html" xml:base="http://localhost:4000/2016/06/24/starting-with-yesod-on-arch-linux.html">&lt;p&gt;As part of my eagerness to learn Haskell, I thought it might be a good idea to start building real world applications in Haskell. I chose
 &lt;a href=&quot;http://www.yesodweb.com/&quot;&gt;Yesod&lt;/a&gt; to start building a dynamic web application backed by as database. However, the getting started page on
 Yesod website didn’t exactly work as advertised, probably because the &lt;a href=&quot;http://docs.haskellstack.org/en/stable/README/&quot;&gt;Haskell Stack&lt;/a&gt;
 had some API change. These steps worked for me.&lt;/p&gt;
@@ -1062,7 +1061,7 @@ the next step doesn’t work.&lt;/p&gt;
 
 &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;stack exec -- yesod devel&lt;/code&gt;&lt;/p&gt;
 
-&lt;p&gt;To access your server visit &lt;a href=&quot;http://localhost:3000&quot;&gt;http://localhost:3000&lt;/a&gt;&lt;/p&gt;</content><author><name>Prabhakar Kumar</name></author><category term="haskell" /><category term="web-apps" /><summary type="html">As part of my eagerness to learn Haskell, I thought it might be a good idea to start building real world applications in Haskell. I chose Yesod to start building a dynamic web application backed by as database. However, the getting started page on Yesod website didn’t exactly work as advertised, probably because the Haskell Stack had some API change. These steps worked for me.</summary></entry><entry><title type="html">Functional Programming Series - Part 1</title><link href="http://prabhakar97.github.io/2016/05/13/getting-started-with-haskell.html" rel="alternate" type="text/html" title="Functional Programming Series - Part 1" /><published>2016-05-13T20:02:00+05:30</published><updated>2016-05-13T20:02:00+05:30</updated><id>http://prabhakar97.github.io/2016/05/13/getting-started-with-haskell</id><content type="html" xml:base="http://prabhakar97.github.io/2016/05/13/getting-started-with-haskell.html">&lt;p&gt;I have been intrigued by functional programming for past couple of years, but never quite prioritized it bigtime. Recently I came across this amazing talk which inspired me
+&lt;p&gt;To access your server visit &lt;a href=&quot;http://localhost:3000&quot;&gt;http://localhost:3000&lt;/a&gt;&lt;/p&gt;</content><author><name>Prabhakar Kumar</name></author><category term="haskell" /><category term="web-apps" /><summary type="html">As part of my eagerness to learn Haskell, I thought it might be a good idea to start building real world applications in Haskell. I chose Yesod to start building a dynamic web application backed by as database. However, the getting started page on Yesod website didn’t exactly work as advertised, probably because the Haskell Stack had some API change. These steps worked for me.</summary></entry><entry><title type="html">Functional Programming Series - Part 1</title><link href="http://localhost:4000/2016/05/13/getting-started-with-haskell.html" rel="alternate" type="text/html" title="Functional Programming Series - Part 1" /><published>2016-05-13T20:02:00+05:30</published><updated>2016-05-13T20:02:00+05:30</updated><id>http://localhost:4000/2016/05/13/getting-started-with-haskell</id><content type="html" xml:base="http://localhost:4000/2016/05/13/getting-started-with-haskell.html">&lt;p&gt;I have been intrigued by functional programming for past couple of years, but never quite prioritized it bigtime. Recently I came across this amazing talk which inspired me
 to go all-in to learn FP.&lt;/p&gt;
 
 &lt;style&gt;.embed-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; } .embed-container iframe, .embed-container object, .embed-container embed { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }&lt;/style&gt;
