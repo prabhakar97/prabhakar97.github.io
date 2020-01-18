@@ -330,7 +330,7 @@ Here's an obligatory screenshot (compressed JPEG) of my final setup.
 
 ### Known Issues
 
-I have found the following issues on my Dell XPS while using Arch Linux:
+I have found the following issues on my Dell XPS 13 (with factory installed Windows) while using Arch Linux:
 
 - Looses connection to 5G WiFi network intermittently (however 2.4GHz networks work perfectly)
 - Cannot use NetworkManager to connect to WiFi networks. Netctl works flawlessly, but to make your life easier install wifi-menu from AUR.
