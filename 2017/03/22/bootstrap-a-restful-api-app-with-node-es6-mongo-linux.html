@@ -2,9 +2,9 @@
 <html lang="en"><head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.0 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
 <title>Ship a REST API with Node, ES6 and MongoDB - Part 1 | Prab’s Code Blog</title>
-<meta name="generator" content="Jekyll v3.8.5" />
+<meta name="generator" content="Jekyll v3.8.6" />
 <meta property="og:title" content="Ship a REST API with Node, ES6 and MongoDB - Part 1" />
 <meta name="author" content="Prabhakar Kumar" />
 <meta property="og:locale" content="en_US" />
@@ -14,23 +14,11 @@
 <meta property="og:url" content="http://techbeat.in/2017/03/22/bootstrap-a-restful-api-app-with-node-es6-mongo-linux.html" />
 <meta property="og:site_name" content="Prab’s Code Blog" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2017-03-22T21:52:40+05:30" />
+<meta property="article:published_time" content="2017-03-22T09:22:40-07:00" />
 <script type="application/ld+json">
-{"description":"Introduction NodeJS has been gaining a lot of traction recently, especially for web applications. Lots of new web applications are now being built with tools from the Node ecosystem. A possible reason is the umpteen number of javascript developers out in the wild. Other one is the blazing speed of V8 engine. Heck, even shiny desktop apps are now being built with Node viz. Popcorn Time.","@type":"BlogPosting","headline":"Ship a REST API with Node, ES6 and MongoDB - Part 1","dateModified":"2017-03-22T21:52:40+05:30","datePublished":"2017-03-22T21:52:40+05:30","url":"http://techbeat.in/2017/03/22/bootstrap-a-restful-api-app-with-node-es6-mongo-linux.html","mainEntityOfPage":{"@type":"WebPage","@id":"http://techbeat.in/2017/03/22/bootstrap-a-restful-api-app-with-node-es6-mongo-linux.html"},"author":{"@type":"Person","name":"Prabhakar Kumar"},"@context":"https://schema.org"}</script>
+{"dateModified":"2017-03-22T09:22:40-07:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://techbeat.in/2017/03/22/bootstrap-a-restful-api-app-with-node-es6-mongo-linux.html"},"datePublished":"2017-03-22T09:22:40-07:00","url":"http://techbeat.in/2017/03/22/bootstrap-a-restful-api-app-with-node-es6-mongo-linux.html","author":{"@type":"Person","name":"Prabhakar Kumar"},"headline":"Ship a REST API with Node, ES6 and MongoDB - Part 1","description":"Introduction NodeJS has been gaining a lot of traction recently, especially for web applications. Lots of new web applications are now being built with tools from the Node ecosystem. A possible reason is the umpteen number of javascript developers out in the wild. Other one is the blazing speed of V8 engine. Heck, even shiny desktop apps are now being built with Node viz. Popcorn Time.","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
-<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://techbeat.in/feed.xml" title="Prab's Code Blog" /><script>
-if(!(window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1")) {
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-20481925-1', 'auto');
-  ga('send', 'pageview');
-}
-</script>
-  
-</head>
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://techbeat.in/feed.xml" title="Prab's Code Blog" /></head>
 <body><header class="site-header" role="banner">
 
   <div class="wrapper"><a class="site-title" rel="author" href="/">Prab&#39;s Code Blog</a><nav class="site-nav">
@@ -54,7 +42,7 @@ if(!(window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNo
   <header class="post-header">
     <h1 class="post-title p-name" itemprop="name headline">Ship a REST API with Node, ES6 and MongoDB - Part 1</h1>
     <p class="post-meta">
-      <time class="dt-published" datetime="2017-03-22T21:52:40+05:30" itemprop="datePublished">Mar 22, 2017
+      <time class="dt-published" datetime="2017-03-22T09:22:40-07:00" itemprop="datePublished">Mar 22, 2017
       </time></p>
   </header>
 
@@ -248,23 +236,23 @@ tell babel to transpile everything in <code class="highlighter-rouge">src</code>
 <code class="highlighter-rouge">node dist/index.js</code>. Also, don’t forget <code class="highlighter-rouge">mkdir src; mv index.js src</code>. Here’s the updated <code class="highlighter-rouge">package.json</code>.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"js-snipcode"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0.0"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"API in NodeJS for the Snipcode project."</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"main"</span><span class="p">:</span><span class="w"> </span><span class="s2">"index.js"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"scripts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"test"</span><span class="p">:</span><span class="w"> </span><span class="s2">"echo </span><span class="se">\"</span><span class="s2">Error: no test specified</span><span class="se">\"</span><span class="s2"> &amp;&amp; exit 1"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"build"</span><span class="p">:</span><span class="w"> </span><span class="s2">"babel src -d dist --presets latest"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"node dist/index.js"</span><span class="w">
+  </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"js-snipcode"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0.0"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"API in NodeJS for the Snipcode project."</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"main"</span><span class="p">:</span><span class="w"> </span><span class="s2">"index.js"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"scripts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"test"</span><span class="p">:</span><span class="w"> </span><span class="s2">"echo </span><span class="se">\"</span><span class="s2">Error: no test specified</span><span class="se">\"</span><span class="s2"> &amp;&amp; exit 1"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"build"</span><span class="p">:</span><span class="w"> </span><span class="s2">"babel src -d dist --presets latest"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"node dist/index.js"</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"author"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Prabhakar Kumar"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"license"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ISC"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"dependencies"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"express"</span><span class="p">:</span><span class="w"> </span><span class="s2">"^4.14.0"</span><span class="w">
+  </span><span class="nl">"author"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Prabhakar Kumar"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"license"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ISC"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"dependencies"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"express"</span><span class="p">:</span><span class="w"> </span><span class="s2">"^4.14.0"</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"devDependencies"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"babel-cli"</span><span class="p">:</span><span class="w"> </span><span class="s2">"^6.18.0"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"babel-preset-latest"</span><span class="p">:</span><span class="w"> </span><span class="s2">"^6.18.0"</span><span class="w">
+  </span><span class="nl">"devDependencies"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"babel-cli"</span><span class="p">:</span><span class="w"> </span><span class="s2">"^6.18.0"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"babel-preset-latest"</span><span class="p">:</span><span class="w"> </span><span class="s2">"^6.18.0"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
@@ -272,16 +260,16 @@ tell babel to transpile everything in <code class="highlighter-rouge">src</code>
 <h3 id="zero-to-hello-world">Zero to Hello World!</h3>
 <p>Let’s edit our <code class="highlighter-rouge">src/index.js</code> and write relevant code to make a Hello World app.</p>
 
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">express</span> <span class="k">from</span> <span class="s1">'express'</span><span class="p">;</span>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">express</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">express</span><span class="dl">'</span><span class="p">;</span>
 
 <span class="kd">const</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">express</span><span class="p">();</span>
 
-<span class="nx">app</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'/'</span><span class="p">,</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span>
-  <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="s1">'Hello World!'</span><span class="p">)</span>
+<span class="nx">app</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span>
+  <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="dl">'</span><span class="s1">Hello World!</span><span class="dl">'</span><span class="p">)</span>
 <span class="p">);</span>
 
 <span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">3000</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> 
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Server is up on port 3000!'</span><span class="p">)</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Server is up on port 3000!</span><span class="dl">'</span><span class="p">)</span>
 <span class="p">);</span>
 </code></pre></div></div>
 
@@ -364,24 +352,7 @@ continue further. Stay tuned for it.</p>
 			
 			<a href="/tag/es6"><code class="highligher-rouge"><nobr>es6</nobr></code></a>
 		
-	]</span><div id="disqus_thread"></div>
-  <script>
-    var disqus_config = function () {
-      this.page.url = 'http://techbeat.in/2017/03/22/bootstrap-a-restful-api-app-with-node-es6-mongo-linux.html';
-      this.page.identifier = 'http://techbeat.in/2017/03/22/bootstrap-a-restful-api-app-with-node-es6-mongo-linux.html';
-    };
-
-    (function() {
-      var d = document, s = d.createElement('script');
-
-      s.src = 'https://techbite.disqus.com/embed.js';
-
-      s.setAttribute('data-timestamp', +new Date());
-      (d.head || d.body).appendChild(s);
-    })();
-  </script>
-  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
-
+	]</span>
 <a class="u-url" href="/2017/03/22/bootstrap-a-restful-api-app-with-node-es6-mongo-linux.html" hidden></a>
 </article>
 

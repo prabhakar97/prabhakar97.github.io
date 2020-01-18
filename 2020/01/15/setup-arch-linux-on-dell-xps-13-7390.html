@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Setup Arch Linux on a Dell XPS 13 with Windows 10 dual boot | Prab’s Code Blog</title>
+<meta name="generator" content="Jekyll v3.8.6" />
+<meta property="og:title" content="Setup Arch Linux on a Dell XPS 13 with Windows 10 dual boot" />
+<meta name="author" content="Prabhakar Kumar" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Intro" />
+<meta property="og:description" content="Intro" />
+<link rel="canonical" href="http://techbeat.in/2020/01/15/setup-arch-linux-on-dell-xps-13-7390.html" />
+<meta property="og:url" content="http://techbeat.in/2020/01/15/setup-arch-linux-on-dell-xps-13-7390.html" />
+<meta property="og:site_name" content="Prab’s Code Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-01-15T17:48:53-08:00" />
+<script type="application/ld+json">
+{"dateModified":"2020-01-15T17:48:53-08:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://techbeat.in/2020/01/15/setup-arch-linux-on-dell-xps-13-7390.html"},"datePublished":"2020-01-15T17:48:53-08:00","url":"http://techbeat.in/2020/01/15/setup-arch-linux-on-dell-xps-13-7390.html","author":{"@type":"Person","name":"Prabhakar Kumar"},"headline":"Setup Arch Linux on a Dell XPS 13 with Windows 10 dual boot","description":"Intro","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://techbeat.in/feed.xml" title="Prab's Code Blog" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Prab&#39;s Code Blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger">
+            <a class="page-link" href="/">All Posts</a><a class="page-link" href="/about.html">About Me</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Setup Arch Linux on a Dell XPS 13 with Windows 10 dual boot</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2020-01-15T17:48:53-08:00" itemprop="datePublished">Jan 15, 2020
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h3 id="intro">Intro</h3>
+
+<p>This post details steps for setting up a functional Arch Linux installation (with a beautiful GUI as well) on a Dell XPS 13. As a developer, I needed a ultrabook class laptop
+which wasn’t underpowered. Dell XPS 13 fits fantastically in this segment. It is extremely light, has a unibody design with no flimsy hinges and is very powerful specwise.
+After being spoilt with a Macbook Pro for a few years during my previous employment at Amazon, I never liked the touchpads of any non-mac laptops. Dell XPS 13’s was the first one I did.
+I bought the 2019 version Dell XPS 13 7390 with a Core i7 10th Gen processor, 16GB RAM, 1TB NVME M2 SSD and a 4K touchscreen for $1700 USD. Too bad, Dell released the 2020 version a
+few days after I purchased it.</p>
+
+<p>Before you ponder over why didn’t I buy the Developer Edition as it should have no driver issues on Linux, I would like to clarify that I did consider it but for the similar configuration
+it was only 10 dollars cheaper and didn’t have a fingerprint sensor and backlit keyboard; the Dell Website didn’t list these in the spec page of developer edition. I made up my mind 
+to fight driver issues head-on on the Windows edition, had they came; but I didn’t get any!</p>
+
+<p>Alright, let’s get started.</p>
+
+<h3 id="step-1-download-the-arch-installation-image-and-prepare-the-arch-linux-boot-disk">Step 1: Download the arch installation image and prepare the Arch Linux boot disk</h3>
+
+<p>Download the Arch Linux latest installation image from this page: <a href="https://www.archlinux.org/download/">Arch Linux - Downloads</a>. I chose to download the image over BitTorrent protocol. I find it
+usually faster than HTTP, and it also frees up bandwidth for other users to download from HTTP server.</p>
+
+<p>Once you have the installation image downloaded, you can create a boot disk with this. I use the DD for windows tool for this which can be downloaded from this
+<a href="http://www.chrysocome.net/download">download page</a>. The pgae is confusing as it has lots of files. You can download the file named <code class="highlighter-rouge">dd-0.6beta3.zip</code> and extract it, then open up
+a command window or powershell window, and navigate to the extracted folder.</p>
+
+<p>The following command will create a Arch boot image in a pendrive that has been inserted and has been assigned the drive letter D. Adjust the command to reflect the correct path
+of the downloaded Arch image and the drive letter assigned to the thumbdrive.</p>
+
+<div class="language-bat highlighter-rouge"><div class="highlight"><pre class="highlight"><code>.\dd <span class="k">if</span><span class="o">=</span><span class="kd">C</span>:\Users\your<span class="na">-windows-username</span>\Downloads\archlinux<span class="o">-</span><span class="m">2020</span>.01.01<span class="na">-x</span><span class="m">86</span>_64.iso <span class="kd">of</span><span class="o">=</span>\\.\d: <span class="kd">bs</span><span class="o">=</span><span class="m">16</span><span class="kd">M</span>
+</code></pre></div></div>
+<h3 id="step-2-disable-bitlocker-and-prepare-partitions-for-archlinux">Step 2: Disable Bitlocker and prepare partitions for ArchLinux</h3>
+
+<p>Microsoft’s Bitlocker disk encryption can annoy you by forcing you to enter a long encryption key when you attempt to boot Windows after Arch installation. So it is best to disbale Bitlocker beforehand.
+Type <code class="highlighter-rouge">Manage BitLocker</code> in start menu and disable it for C drive. Or you can go to Control Panel &gt; System and Security &gt; Bitlocker drive encryption and disable it.</p>
+
+<p>Dell XPS 13 7390 comes pre-installed with Windows 10 and you need to free some space up for your Linux installation. You can do this by using the Disk Management tool that comes
+built-in with Windows 10. Microsoft has nice online documentation for it here: <a href="https://docs.microsoft.com/en-us/windows-server/storage/disk-management/overview-of-disk-management">Disk Management</a></p>
+
+<p>Press the start button, or the Window key on the keyboard and start typing <code class="highlighter-rouge">Create and Format Disk Partitions</code>. Launch the program. It will show you the layout of the hard disk partition
+structure. By default, it comes with a 500MB EFI partition, a very large C drive partition, a WINRETOOLS parition, a factory image partition and a DELLSUPPORT parition. You can shrink the
+existing C drive parition to make space for Linux.</p>
+
+<p>Right click on the C drive partition and choose <code class="highlighter-rouge">Shrink Volume ...</code>. Enter the size for the new partition. The row under this, should autocalculate and show you the final size of C drive.
+Make sure to keep it reasonable for your Windows needs. I entered 500000 and it resulted in a 488GB of raw unallocated free space.</p>
+
+<p>I chose to create a 8GB volume for swap space and remaining space for the <code class="highlighter-rouge">/</code> partition. Right click the newly created unallocated space and click <code class="highlighter-rouge">New Simple Volume</code> and enter 8192 MB as the size.
+Choose to not assign a drive letter when asked. Then right click the remaining space, click <code class="highlighter-rouge">New Simple Volume</code> and allocate all the remaining space for  the volume for <code class="highlighter-rouge">/</code> partition.</p>
+
+<p>Some people create separate partition for <code class="highlighter-rouge">/home</code> as well which is actually a good thing, because if for some reason your Linux installation gets borked, you can nuke the <code class="highlighter-rouge">/</code> partition,
+install a fresh copy of OS on it (even different distro altogether) and retain everything in the <code class="highlighter-rouge">/home</code> due to which everything looks like it used to earlier (assuming certain conditions hold),
+because of all the user level customizations in your desktop environments being retained in users’ home directory. I find separate partitions for /usr and /var on personal computers an overkill.</p>
+
+<p>Ultimate result should be something like this image. If you have created more partitions, they will appear too.</p>
+
+<p><img src="/images/disk_layout.jpg" alt="Disk Layout" /></p>
+
+<h3 id="step-3-change-sata-mode-to-ahci-and-disable-secureboot">Step 3: Change SATA mode to AHCI and disable SecureBoot</h3>
+
+<p>Windows 10 comes with Bitlocker disk encryption enabled and it can give you pain when you want to boot into Windows after installing Arch. You can turn it off beforehand.</p>
+
+<p>Before we start installation, we need to change the SATA operation mode in BIOS to AHCI so that the Arch boot disk can recognize the hard disk volumes. Get into the BIOS settings by rebooting
+the computer and pressing F12 repeatedly until you see the text <code class="highlighter-rouge">Preparing one time boot menu</code> in the top right corner of the screen. Then click <code class="highlighter-rouge">BIOS Setup1 and change the SATA operation to AHCI
+under </code>System Configuration` section of the left sidebar.
+Here’s a screenshot that may come handy identifying where to do this.</p>
+
+<p><img src="/images/sata_mode.png" alt="SATA Mode AHCI" /></p>
+
+<p>Also, disable SecureBoot in BIOS since it won’t allow booting Grub which is the de-facto bootloader for Linux distributions. Below screenshot shows how to disable SecureBoot.</p>
+
+<p><img src="/images/secure_boot.jpg" alt="Disable secure boot" /></p>
+
+<p>Save the change which will result in a system restart.</p>
+
+<h3 id="step-4-boot-the-arch-installation-media">Step 4: Boot the arch installation media</h3>
+
+<p>Press the F12 key repeatedly while restarting and get into the One Time Boot Menu and choose the Arch boot disk, as shown in the screenshot below.</p>
+
+<p><img src="/images/boot_device.png" alt="Boot device" /></p>
+
+<p>If the disk image was created correctly you should see the Arch Boot Menu as shown below. Choose the first option and press enter.</p>
+
+<p><img src="/images/arch_boot.png" alt="Arch boot menu" /></p>
+
+<p>You should see the <code class="highlighter-rouge">root@archiso</code> prompt in a few moments. Please note that, on the 4K Dell XPS 13, the letters in the terminal during installation are extremely small. However, you have to
+face this problem only during installation and after the installation of a GUI, everything should start looking good.</p>
+
+<h3 id="step-5-connect-to-the-network-and-enable-ntp-time-sync">Step 5: Connect to the network and enable NTP time sync</h3>
+
+<p>I assume you have a WiFi network in range. You can use the <code class="highlighter-rouge">wifi-menu</code> command that comes built-in in the installation disk. It has a nice curses based UI where you can choose the WiFi network
+from a menu option and enter its password to connect to it. Test the connection by running <code class="highlighter-rouge">ping archlinux.org</code>.</p>
+
+<p>Now set the time with NTP by running</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>timedatectl set-ntp <span class="nb">true</span>
+</code></pre></div></div>
+
+<h3 id="step-6-setup-filesystems">Step 6: Setup filesystems</h3>
+
+<p>Run <code class="highlighter-rouge">ls /dev/nvme\*</code> to check for the disks. It is highly likely that you should be able to identify <code class="highlighter-rouge">/dev/nvme0n1</code> as the block device representing your disk, which is because all XPS 13s come
+with NVME based SSDs. You can verify this by running <code class="highlighter-rouge">fdisk -l /dev/nvme0n1</code> which should output the list of Windows partition that already exist and the raw partitions.</p>
+
+<p>Carefully check the output of the fdisk command above, and figure out the partition number for the swap and / partitions that we created in Step 1. For me, the output looks like this.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fdisk -l /dev/nvme0n1
+
+Disk /dev/nvme0n1: 953.89 GiB, 1024209543168 bytes, 2000409264 sectors
+Disk model: PC601 NVMe SK hynix 1TB                 
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: gpt
+Disk identifier: 7EED0FB4-482A-45A9-A7CE-55E525352534
+
+Device              Start        End    Sectors   Size Type
+/dev/nvme0n1p1       2048    1394687    1392640   680M EFI System
+/dev/nvme0n1p2    1394688    1656831     262144   128M Microsoft reserved
+/dev/nvme0n1p3    1656832  944373759  942716928 449.5G Microsoft basic data
+/dev/nvme0n1p4  944373760  961150975   16777216     8G Microsoft basic data
+/dev/nvme0n1p5  961150976 1968371711 1007220736 480.3G Microsoft basic data
+/dev/nvme0n1p6 1968373760 1970401279    2027520   990M Windows recovery environment
+/dev/nvme0n1p7 1970401280 1997346815   26945536  12.9G Windows recovery environment
+/dev/nvme0n1p8 1997348864 2000408575    3059712   1.5G Windows recovery environment
+</code></pre></div></div>
+
+<p>I was able to figure out that <code class="highlighter-rouge">/dev/nvme0n1p4</code> was the 8GB partition I created for swap and the <code class="highlighter-rouge">/dev/nvme0n1p5</code> was the partition I created for root filesystem. Enable swap on the swap parititon
+and format the partition for root filesystem into ext4.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkfs.ext4 /dev/nvme0n1p5
+mkswap /dev/nvme0n1p4
+swapon /dev/nvme0n1p4
+</code></pre></div></div>
+
+<p>Now that we are ready with filesystems, we can go ahead mounting them and starting installation.</p>
+
+<h3 id="step-7-mount-partitions-and-install-needed-packages">Step 7: Mount partitions and install needed packages</h3>
+
+<p>Create a directory <code class="highlighter-rouge">/mnt/root</code> to mount the root filesystem and EFI system partition on <code class="highlighter-rouge">/mnt/root/boot</code>.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir</span> <span class="nt">-p</span> /mnt/root /mnt/root/boot
+</code></pre></div></div>
+
+<p>Open the file <code class="highlighter-rouge">/etc/pacman.d/mirrorlist</code> in a text editor like <code class="highlighter-rouge">vim</code> or <code class="highlighter-rouge">nano</code>. Bring a few mirror URLs closest to you geographically, to the top. Since, I live on the west coast of USA,
+ I brought a few US west coast pacman mirrors onto the top.</p>
+
+<p>Now install the necessary packages using pacstrap.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pacstrap /mnt/root base linux linux-firmware base-devel grub os-prober intel-ucode alsa deepin deepin-extra <span class="nb">sudo </span>lightdm lightdm-deepin-greeter
+</code></pre></div></div>
+
+<p>I like deepin as my desktop environment as it looks beautiful and has a perfect traditional desktop look and feel. 
+If you want Gnome, or KDE, or LXDE, or LXQT, or XFCE or any other desktop environment instead, feel free to modify the above command and install corresponding packages.</p>
+
+<h3 id="step-8-configure-the-system">Step 8: Configure the system</h3>
+
+<p>Generate an fstab file by running <code class="highlighter-rouge">genfstab -U /mnt/root &gt;&gt; /mnt/root/etc/fstab</code>.</p>
+
+<p>Now chroot into the system and configure some important stuff. Arch installation image has a handy chroot wrapper script named <code class="highlighter-rouge">arch-chroot</code>, which chroots into the installed root filesystem
+and also binds necessary mounts <code class="highlighter-rouge">proc</code>, <code class="highlighter-rouge">sys</code>, <code class="highlighter-rouge">dev</code> correctly from the currently running installation OS.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arch-chroot /mnt/root
+</code></pre></div></div>
+
+<h4 id="set-timezone">Set timezone</h4>
+
+<p>Set the time zone by creating a symlink to the zoneinfo file for your region at <code class="highlighter-rouge">/etc/localtime</code>. Command below is for US West Coast. You can change it according to your region.
+Also, set the clock to use UTC.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">ln</span> <span class="nt">-sf</span> /usr/share/zoneinfo/Americas/Los_Angeles
+hwclock <span class="nt">--systohc</span>
+</code></pre></div></div>
+
+<h4 id="set-locale">Set locale</h4>
+
+<p>Open <code class="highlighter-rouge">/etc/locale.gen</code> in vi or nano and uncomment the <code class="highlighter-rouge">en\_US.UTF-8 UTF-8</code> line. Then run <code class="highlighter-rouge">locale-gen</code>. After this, open <code class="highlighter-rouge">/etc/locale.conf</code> and add a line <code class="highlighter-rouge">LANG=en\_US.UTF-8</code>.</p>
+
+<h4 id="network-configurations">Network configurations</h4>
+
+<p>Create the hostname file <code class="highlighter-rouge">/etc/hostname</code> and add a name for your laptop, for example <code class="highlighter-rouge">my-xps</code>. Also update the hostname in <code class="highlighter-rouge">/etc/hosts</code> so it looks like below:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>127.0.0.1   localhost
+::1         localhost
+127.0.1.1   my-xps.localdomain my-xps
+</code></pre></div></div>
+
+<p>Deepin comes with NetworkManager but it didn’t work as expected for me for connecting to WiFi. So you might want to disable NetworkManager and install netctl.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>systemctl disable NetworkManager
+pacman <span class="nt">-S</span> netctl wpa_supplicant dhcpcd
+</code></pre></div></div>
+
+<p>You can also create a <code class="highlighter-rouge">netctl</code> profile right away so that you do not need to struggle connecting to the internet when you reboot after the installation.</p>
+
+<p>Create a file named <code class="highlighter-rouge">/etc/netctl/MyWiFi</code> and put the following content. This assumes that your home WiFi network name is <code class="highlighter-rouge">MyWiFi</code>. I also faced lag and disconnection issues with
+5GHz wifi networks so for now I am using a 2.4GHz network only. I haven’t spent time figuring out the cause and fixing it, I may update this post when I do.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Description='My home WiFi connection'
+Interface=wlp2s0
+Connection=wireless
+
+Security=wpa
+IP=dhcp
+
+ESSID='MyWiFi'  # &lt;=== Put your WiFi network's name here
+Key='12345678' # &lt;== Put your WiFi password here
+</code></pre></div></div>
+
+<h4 id="build-initramfs">Build initramfs</h4>
+
+<p>Run <code class="highlighter-rouge">mkinitcpio -P</code> to build the initramfs. Set a root password by running the <code class="highlighter-rouge">passwd</code> command.</p>
+
+<h3 id="step-9-configure-grub">Step 9: Configure Grub</h3>
+
+<p>During pacstrap we installed grub and os-prober so, now we just need to install grub and create a config for it.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>grub-install <span class="nt">--target</span><span class="o">=</span>x86_64-efi <span class="nt">--efi-directory</span><span class="o">=</span>/mnt/root/boot <span class="nt">--bootloader-id</span><span class="o">=</span>GRUB
+grub-mkconfig <span class="nt">-o</span> /boot/grub/grub.cfg
+</code></pre></div></div>
+
+<h3 id="step-10-create-a-user-and-enable-sudo-without-password">Step 10: Create a user and enable sudo without password</h3>
+
+<p>Create a user and add it to necessary group (at least <code class="highlighter-rouge">wheel</code>). Replace the username <code class="highlighter-rouge">master</code> in below command with your desired username.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>useradd <span class="nt">-m</span> <span class="nt">-G</span> wheel <span class="nt">-s</span> /bin/bash master
+</code></pre></div></div>
+
+<p>Also set a password for this account by running <code class="highlighter-rouge">passwd master</code>.</p>
+
+<p>Run <code class="highlighter-rouge">visudo</code> to open sudoers file. Find the line that allows members of group wheen to run sudo commands without password and uncomment it. It should look something like below:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>%wheel <span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">)</span> NOPASSWD: ALL
+</code></pre></div></div>
+
+<h3 id="step-11-prepare-for-reboot">Step 11: Prepare for reboot</h3>
+
+<p>Now your arch installation is ready to be booted into. But before that, we need to perform one final config, which is to configure <code class="highlighter-rouge">lightdm</code> the display manager to use <code class="highlighter-rouge">deepin</code>’s greeter.</p>
+
+<p>Open the file <code class="highlighter-rouge">/etc/lightdm/lightdm.conf</code>. Find the line that says <code class="highlighter-rouge">#greeter-session</code>, uncomment it and update it to use deepin’s greeter as shown below.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>greeter-session=lightdm-deepin-greeter
+</code></pre></div></div>
+<p>Also, enable lightdm by running <code class="highlighter-rouge">systemctl enable lightm</code>. Now reboot by typing <code class="highlighter-rouge">reboot</code>. You should be greeter by a beautiful login screen. When you login, you will see a desktop resembling the below
+screenshot.</p>
+
+<p><img src="/images/deepin_desktop.png" alt="Deepin desktop" /></p>
+
+<p>Deepin desktop comes with a dock by default but I prefer a task bar instead. You can right click the dock and change the mode to <code class="highlighter-rouge">Efficient Mode</code>.</p>
+
+<p><img src="/images/dock_mode.png" alt="Deepin taskbar" /></p>
+
+<p>You might also want to change the size of icons to small instead of large.</p>
+
+<p><img src="/images/dock_size.png" alt="Deepin taskbar size" /></p>
+
+<h3 id="step-13-fix-windows">Step 13: Fix windows</h3>
+
+<p>Since we overwrote Windows’s EFI partition, it will refuse to boot. But there is a simple trick to fix that. You just need to boot Windows in safe mode once and it figures out stuff automatically.
+Kudos to microsoft! If you try booting Windows from the Grub menu it will get into the dreaded blue screen of death. But from there you will get an option to attempt to diagnose and fix boot problems.
+There you can choose to boot into safe mode. Once you have successfully made it into safe mode, you should also make a change in Windows registry so that it treats hardware clock to be in UTC. This way
+the time shown in Linux as well as Windows will be similar. For that, just open a command prompt with administrator privileges and run the following command:</p>
+
+<div class="language-bat highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">reg</span> <span class="kd">add</span> <span class="s2">"HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\TimeZoneInformation"</span> <span class="na">/v </span><span class="kd">RealTimeIsUniversal</span> <span class="na">/d </span><span class="m">1</span> <span class="na">/t </span><span class="kd">REG_QWORD</span> <span class="na">/f
+</span></code></pre></div></div>
+
+<p>Or you may open <code class="highlighter-rouge">regedit</code> and manually navigate to the above key and add a new QWORD value of 1 for <code class="highlighter-rouge">RealTimeIsUniversal</code>.</p>
+
+<h3 id="step-14-all-set">Step 14: All set</h3>
+
+<p>Assuming that you sailed through the process smoothly, congratulations! You now have your Dell XPS 13 with a dual boot setup of Windows 10 and Arch Linux. If you are a developer like me, you might want
+to change your shell to zsh, install Git, Vim, htop, Ruby, NodeJS, JDK, Postman, Docker, Visual Studio Code, IntelliJ Idea Community Edition and other development tools and platforms to facilitate your
+development workflow. As general utilities, you might want to install Gimp for photo editing, imagemagick, VLC media player, xarchiver, p7zip-full, unrar, Evince for PDF viewing, Chromium and Firefox
+for web browsing and Audacious for listening to your music collection.</p>
+
+<p>Here’s an obligatory screenshot (compressed JPEG) of my final setup.</p>
+
+<p><img src="/images/arch_desktop.jpg" alt="Arch Desktop" /></p>
+
+  </div>
+
+	<span>Tags: [
+		
+			
+			<a href="/tag/archlinux"><code class="highligher-rouge"><nobr>archlinux</nobr></code></a>
+		
+			
+			<a href="/tag/dell-xps-13"><code class="highligher-rouge"><nobr>dell-xps-13</nobr></code></a>
+		
+	]</span>
+<a class="u-url" href="/2020/01/15/setup-arch-linux-on-dell-xps-13-7390.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Prabhakar Kumar</li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://www.facebook.com/prabhakar97"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#facebook"></use></svg> <span class="username">prabhakar97</span></a></li><li><a href="https://github.com/prabhakar97"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">prabhakar97</span></a></li><li><a href="https://instagram.com/prab97"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#instagram"></use></svg> <span class="username">prab97</span></a></li><li><a href="https://www.linkedin.com/in/prabhakar97"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">prabhakar97</span></a></li><li><a href="https://www.twitter.com/prab97"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">prab97</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>My blog about programming and software development.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
