@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.6">Jekyll</generator><link href="http://techbeat.in/feed.xml" rel="self" type="application/atom+xml" /><link href="http://techbeat.in/" rel="alternate" type="text/html" /><updated>2020-01-18T12:47:03-08:00</updated><id>http://techbeat.in/feed.xml</id><title type="html">Prab’s Code Blog</title><subtitle>My blog about programming and software development.</subtitle><author><name>Prabhakar Kumar</name></author><entry><title type="html">Setup Arch Linux on a Dell XPS 13 with Windows 10 dual boot</title><link href="http://techbeat.in/2020/01/15/setup-arch-linux-on-dell-xps-13-7390.html" rel="alternate" type="text/html" title="Setup Arch Linux on a Dell XPS 13 with Windows 10 dual boot" /><published>2020-01-15T17:48:53-08:00</published><updated>2020-01-15T17:48:53-08:00</updated><id>http://techbeat.in/2020/01/15/setup-arch-linux-on-dell-xps-13-7390</id><content type="html" xml:base="http://techbeat.in/2020/01/15/setup-arch-linux-on-dell-xps-13-7390.html">&lt;h3 id=&quot;intro&quot;&gt;Intro&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.6">Jekyll</generator><link href="http://techbeat.in/feed.xml" rel="self" type="application/atom+xml" /><link href="http://techbeat.in/" rel="alternate" type="text/html" /><updated>2020-01-18T13:29:25-08:00</updated><id>http://techbeat.in/feed.xml</id><title type="html">Prab’s Code Blog</title><subtitle>My blog about programming and software development.</subtitle><author><name>Prabhakar Kumar</name></author><entry><title type="html">Setup Arch Linux on a Dell XPS 13 with Windows 10 dual boot</title><link href="http://techbeat.in/2020/01/15/setup-arch-linux-on-dell-xps-13-7390.html" rel="alternate" type="text/html" title="Setup Arch Linux on a Dell XPS 13 with Windows 10 dual boot" /><published>2020-01-15T17:48:53-08:00</published><updated>2020-01-15T17:48:53-08:00</updated><id>http://techbeat.in/2020/01/15/setup-arch-linux-on-dell-xps-13-7390</id><content type="html" xml:base="http://techbeat.in/2020/01/15/setup-arch-linux-on-dell-xps-13-7390.html">&lt;h3 id=&quot;intro&quot;&gt;Intro&lt;/h3&gt;
 
 &lt;p&gt;This article details steps for setting up a functional Arch Linux installation (with a beautiful Deepin Desktop Environment GUI) on a Dell XPS 13, along with the pre-installed Windows 10
 in a dual boot configuration. As a developer, I needed an ultrabook class laptop which wasn’t underpowered. Dell XPS 13 fits perfectly in this segment. It is extremely light, has a
@@ -565,38 +565,6 @@ for all practical purposes. You can find about it more in official Kubernetes do
 
 &lt;p&gt;Let’s create an LB now so that we can access the running container from outside. Copy the below contents to a file named &lt;code class=&quot;highlighter-rouge&quot;&gt;nginx-svc.yml&lt;/code&gt;.&lt;/p&gt;
 
-&lt;noscript&gt;&lt;pre&gt;400: Invalid request
-&lt;/pre&gt;&lt;/noscript&gt;
-&lt;script src=&quot;https://gist.github.com/d76f720c5b9d666965e959861e5e33b3.js&quot;&gt; &lt;/script&gt;
-
-&lt;p&gt;This file declares that we want a resource of kind &lt;code class=&quot;highlighter-rouge&quot;&gt;Service&lt;/code&gt; of type &lt;code class=&quot;highlighter-rouge&quot;&gt;LoadBalancer&lt;/code&gt; which should accept connections on port 80 and direct to port 80 of a service. Which service? The service is selected
-using the selector parameter which says to match it with the &lt;code class=&quot;highlighter-rouge&quot;&gt;app: nginx&lt;/code&gt; which we had specified in our &lt;code class=&quot;highlighter-rouge&quot;&gt;nginx-dep.yml&lt;/code&gt; file. Let’s deploy this file too.&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;% kubectl apply &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; nginx-svc.yml
-service/nginx-lb created
-% kubectl get svc
-NAME         TYPE           CLUSTER-IP      EXTERNAL-IP   PORT&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;S&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;        AGE
-kubernetes   ClusterIP      10.59.240.1     &amp;lt;none&amp;gt;        443/TCP        4m
-nginx-lb     LoadBalancer   10.59.240.108   &amp;lt;pending&amp;gt;     80:31463/TCP   24s
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;This shows that the resource with name nginx-lb and type LoadBalancer has been created. But it is pending an external ip. Wait for some time and run the command again to get the external ip.&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;% kubectl get svc
-NAME         TYPE           CLUSTER-IP      EXTERNAL-IP    PORT&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;S&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;        AGE
-kubernetes   ClusterIP      10.59.240.1     &amp;lt;none&amp;gt;         443/TCP        5m
-nginx-lb     LoadBalancer   10.59.240.108   34.66.92.238   80:31463/TCP   1m
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Now, if you try typing the shown external ip in a browser, you should be able to get the nginx’s welcome page! Awesome! You can change a domain’s A record to point to this IP address and this
-will be accessible from any browser through the domain name.&lt;/p&gt;
-
-&lt;h4 id=&quot;step-7-setting-up-postgres&quot;&gt;Step 7. Setting up postgres&lt;/h4&gt;
-
-&lt;p&gt;Our webapp will need Postgres to store its data. Since we need postgres’s data to be persistent across container and node restarts, we need to create a persistent volume. For that we first
-create a storage class with type SSD. Then we create a persistent volume claim that uses this newly created storage class. A persistent volume gets automatically created, when we try to create
-a persistent volume claim using the storage class of &lt;code class=&quot;highlighter-rouge&quot;&gt;kubernetes.io/gce-pd&lt;/code&gt;. We can also club two related storage related declarations into a single yaml file as shown below.&lt;/p&gt;
-
 &lt;noscript&gt;&lt;pre&gt;&amp;lt;!DOCTYPE html&amp;gt;
 &amp;lt;html&amp;gt;
   &amp;lt;head&amp;gt;
@@ -676,6 +644,38 @@ a persistent volume claim using the storage class of &lt;code class=&quot;highli
     &amp;lt;/div&amp;gt;
   &amp;lt;/body&amp;gt;
 &amp;lt;/html&amp;gt;
+&lt;/pre&gt;&lt;/noscript&gt;
+&lt;script src=&quot;https://gist.github.com/d76f720c5b9d666965e959861e5e33b3.js&quot;&gt; &lt;/script&gt;
+
+&lt;p&gt;This file declares that we want a resource of kind &lt;code class=&quot;highlighter-rouge&quot;&gt;Service&lt;/code&gt; of type &lt;code class=&quot;highlighter-rouge&quot;&gt;LoadBalancer&lt;/code&gt; which should accept connections on port 80 and direct to port 80 of a service. Which service? The service is selected
+using the selector parameter which says to match it with the &lt;code class=&quot;highlighter-rouge&quot;&gt;app: nginx&lt;/code&gt; which we had specified in our &lt;code class=&quot;highlighter-rouge&quot;&gt;nginx-dep.yml&lt;/code&gt; file. Let’s deploy this file too.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;% kubectl apply &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; nginx-svc.yml
+service/nginx-lb created
+% kubectl get svc
+NAME         TYPE           CLUSTER-IP      EXTERNAL-IP   PORT&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;S&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;        AGE
+kubernetes   ClusterIP      10.59.240.1     &amp;lt;none&amp;gt;        443/TCP        4m
+nginx-lb     LoadBalancer   10.59.240.108   &amp;lt;pending&amp;gt;     80:31463/TCP   24s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This shows that the resource with name nginx-lb and type LoadBalancer has been created. But it is pending an external ip. Wait for some time and run the command again to get the external ip.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;% kubectl get svc
+NAME         TYPE           CLUSTER-IP      EXTERNAL-IP    PORT&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;S&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;        AGE
+kubernetes   ClusterIP      10.59.240.1     &amp;lt;none&amp;gt;         443/TCP        5m
+nginx-lb     LoadBalancer   10.59.240.108   34.66.92.238   80:31463/TCP   1m
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now, if you try typing the shown external ip in a browser, you should be able to get the nginx’s welcome page! Awesome! You can change a domain’s A record to point to this IP address and this
+will be accessible from any browser through the domain name.&lt;/p&gt;
+
+&lt;h4 id=&quot;step-7-setting-up-postgres&quot;&gt;Step 7. Setting up postgres&lt;/h4&gt;
+
+&lt;p&gt;Our webapp will need Postgres to store its data. Since we need postgres’s data to be persistent across container and node restarts, we need to create a persistent volume. For that we first
+create a storage class with type SSD. Then we create a persistent volume claim that uses this newly created storage class. A persistent volume gets automatically created, when we try to create
+a persistent volume claim using the storage class of &lt;code class=&quot;highlighter-rouge&quot;&gt;kubernetes.io/gce-pd&lt;/code&gt;. We can also club two related storage related declarations into a single yaml file as shown below.&lt;/p&gt;
+
+&lt;noscript&gt;&lt;pre&gt;400: Invalid request
 &lt;/pre&gt;&lt;/noscript&gt;
 &lt;script src=&quot;https://gist.github.com/45ddec715c5e9840e715db5d1b0282ab.js&quot;&gt; &lt;/script&gt;
 

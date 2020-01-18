@@ -18,7 +18,19 @@
 <script type="application/ld+json">
 {"dateModified":"2016-07-07T19:00:32-07:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://techbeat.in/2016/07/07/compile-goaccess-from-source-on-centos-7.html"},"datePublished":"2016-07-07T19:00:32-07:00","url":"http://techbeat.in/2016/07/07/compile-goaccess-from-source-on-centos-7.html","author":{"@type":"Person","name":"Prabhakar Kumar"},"headline":"Compile goaccess from source on CentOS 7","description":"Goaccess is a neat little utility which scans through your web server (I use nginx) logs and generates a nice HTML report of your site’s access statistics. Here is a sample from their site. I run CentOS 7 on an EC2 Instance where I run a pet project. I wanted a light web analyzer that just works. I have epel enabled on my instance so I just installed goaccess by sudo yum install goaccess. It worked and I was able to see some stats. But then I figured out that the version from repositories is quite an old one at 0.9.8. The latest one is 1.0.2 from the website. So, I just uninstalled it sudo yum remove goaccess.","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
-<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://techbeat.in/feed.xml" title="Prab's Code Blog" /></head>
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://techbeat.in/feed.xml" title="Prab's Code Blog" /><script>
+if(!(window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1")) {
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-20481925-1', 'auto');
+  ga('send', 'pageview');
+}
+</script>
+  
+</head>
 <body><header class="site-header" role="banner">
 
   <div class="wrapper"><a class="site-title" rel="author" href="/">Prab&#39;s Code Blog</a><nav class="site-nav">
@@ -88,7 +100,24 @@ statically from nginx. So I can just type http://mydomain.com/access.html and se
 			
 			<a href="/tag/web-apps"><code class="highligher-rouge"><nobr>web-apps</nobr></code></a>
 		
-	]</span>
+	]</span><div id="disqus_thread"></div>
+  <script>
+    var disqus_config = function () {
+      this.page.url = 'http://techbeat.in/2016/07/07/compile-goaccess-from-source-on-centos-7.html';
+      this.page.identifier = 'http://techbeat.in/2016/07/07/compile-goaccess-from-source-on-centos-7.html';
+    };
+
+    (function() {
+      var d = document, s = d.createElement('script');
+
+      s.src = 'https://techbite.disqus.com/embed.js';
+
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
 <a class="u-url" href="/2016/07/07/compile-goaccess-from-source-on-centos-7.html" hidden></a>
 </article>
 

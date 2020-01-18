@@ -18,7 +18,19 @@
 <script type="application/ld+json">
 {"dateModified":"2015-04-27T01:01:00-07:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://techbeat.in/2015/04/27/earthquake-alert-system-in-nodejs.html"},"datePublished":"2015-04-27T01:01:00-07:00","url":"http://techbeat.in/2015/04/27/earthquake-alert-system-in-nodejs.html","author":{"@type":"Person","name":"Prabhakar Kumar"},"headline":"Earthquake alert system in nodejs","description":"Afflicted by the recent earthquake in Nepal which took so many lives in India as well, my mind under the shower spawned up an idea of an earthquake alert system that attempts to notify people a few tens of seconds before the quake strikes. The premise of the idea is that Electromagnetic waves travel way faster than seismic waves. 300,000 KM/s vs 10 KM/s. Our communication systems (internet, sms) transmit on electronic waves and even after considering some added overhead (like buffers, processing etc) they can win the race with seismic waves easily. For instance, Kathmandu to New Delhi is around 800 kilometers. A quake epicentred in Kathmandu would be felt in Delhi after around 80 seconds. If we find some way to detect the quake in Kathmandu immediately after it strikes and transmit this information over the public communication infrastructure (web, SMS etc.), we could give the people more than a minute to move to safety. I made following assumptions:","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
-<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://techbeat.in/feed.xml" title="Prab's Code Blog" /></head>
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://techbeat.in/feed.xml" title="Prab's Code Blog" /><script>
+if(!(window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1")) {
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-20481925-1', 'auto');
+  ga('send', 'pageview');
+}
+</script>
+  
+</head>
 <body><header class="site-header" role="banner">
 
   <div class="wrapper"><a class="site-title" rel="author" href="/">Prab&#39;s Code Blog</a><nav class="site-nav">
@@ -141,7 +153,24 @@ I recalled reading about an app called Instapush which provides a REST API to se
 			
 			<a href="/tag/nodejs"><code class="highligher-rouge"><nobr>nodejs</nobr></code></a>
 		
-	]</span>
+	]</span><div id="disqus_thread"></div>
+  <script>
+    var disqus_config = function () {
+      this.page.url = 'http://techbeat.in/2015/04/27/earthquake-alert-system-in-nodejs.html';
+      this.page.identifier = 'http://techbeat.in/2015/04/27/earthquake-alert-system-in-nodejs.html';
+    };
+
+    (function() {
+      var d = document, s = d.createElement('script');
+
+      s.src = 'https://techbite.disqus.com/embed.js';
+
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
 <a class="u-url" href="/2015/04/27/earthquake-alert-system-in-nodejs.html" hidden></a>
 </article>
 
