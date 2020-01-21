@@ -36,6 +36,15 @@ This article doesn't require you to have another laptop with you during the inst
 that comes free with the XPS 13 that may look something like below image.
 ![Thumb drive](/images/thumb_drive.png)
 
+#### Why Arch
+
+I have been an Arch user since 2011 and never had any issues with it. [ArchWiki](https://wiki.archlinux.org/) has probably the best documentation among all distros, and
+[AUR](https://aur.archlinux.org/) has a comprehensive collection of packages that can be installed if not found in official repositories. With a rolling release model so you DO NOT have to
+update your distro every 6 months the new version comes, and serves the latest versions of almost all packages from its repositories. Despite of being rolling release,
+it is very stable. It is very lean; on top of a basic Linux system it's the user who makes all choices for installing only the packages required. And because of rolling release nature, you have
+the goodies rolling in everyday. The package manager `pacman` is very fast and processes installation of packages in a jiffy.
+Using Arch gives you a feeling of being in control of everything.
+
 ### Step 1: Download the arch installation image and prepare the Arch Linux boot disk
 
 Boot into the pre-installed Windows 10 of your Dell XPS 13 and download the Arch Linux latest installation image from this page: [Arch Linux - Downloads](https://www.archlinux.org/download/).
@@ -262,7 +271,7 @@ grub-install --target=x86_64-efi --efi-directory=/mnt/root/boot --bootloader-id=
 grub-mkconfig -o /boot/grub/grub.cfg
 ```
 
-### Step 10: Create a user and enable sudo without password
+### Step 10: Create a user and enable sudo
 
 Create a non-root user and add it to necessary groups (at least `wheel`). Replace the username `master` in below command with your desired username.
 
@@ -276,6 +285,12 @@ Run `visudo` to open sudoers file. Find the line that allows members of group wh
 
 ```text
 %wheel ALL=(ALL) NOPASSWD: ALL
+```
+
+However, it is not recommended for everybody to configure sudo without password. You might want to configure it to be used with password instead by uncommenting the following line instead.
+
+```text
+%wheel ALL=(ALL) ALL
 ```
 
 ### Step 11: Prepare for reboot

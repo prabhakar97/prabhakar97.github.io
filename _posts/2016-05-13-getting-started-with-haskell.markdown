@@ -18,7 +18,7 @@ or efficient because I am just beginning to learn Haskell.
 
 > Define a method removeFst which removes the first instance of an element from a list
 
-```hs removeFst.hs
+```hs
 removeFst :: (Eq a) => [a] -> a -> [a]
 removeFst (x:xs) y = if x == y
 						then xs
@@ -28,7 +28,7 @@ removeFst (x:xs) y = if x == y
 
 > Define a function which counts number of instances of an element in a list
 
-```hs countChars.hs
+```hs
 countChars :: Char -> String -> Int
 countChars y [] = 0
 countChars y (x:xs) | y == x = 1 + countChars y xs
@@ -37,7 +37,7 @@ countChars y (x:xs) | y == x = 1 + countChars y xs
 
 > Define a function named blowUp that takes an string and creates a new string from it by repeating ith character in i times. For example: abcdef should return abbcccddddeeeeeffffff
 
-```hs blowUp.hs
+```hs
 blowUp :: Int -> String -> String
 blowUp n [x] = take n [x,x..]
 blowUp n (x:xs) = (blowUp n [x]) ++ (blowUp (n+1) xs)
@@ -47,7 +47,7 @@ blowUp n (x:xs) = (blowUp n [x]) ++ (blowUp (n+1) xs)
 
 This is a translation of the famous quick sort algorithm to Haskell.
 
-```hs sort.hs
+```hs
 sort :: (Ord a) => [a] -> [a]
 sort [] = []
 sort [x] = [x]
@@ -58,7 +58,7 @@ sort (x:xs) = sort greater ++ [x] ++ sort lesser
 
 > Write a function that takes a big string and a small string and tells whether the big string starts with the small string
 
-```hs startWith.hs
+```hs
 startWith :: String -> String -> Bool
 startWith (x:xs) [y] = y == x
 startWith (x:xs) (y:ys) = y == x && startWith xs ys
@@ -68,7 +68,7 @@ startWith (x:xs) (y:ys) = y == x && startWith xs ys
 
 I use the previously defined startWith function to solve this.
 
-```hs substring.hs
+```hs
 contains :: String -> String -> Bool
 contains (x:xs) [] = True
 contains (x:xs) y = startWith (x:xs) y || startWith xs y
