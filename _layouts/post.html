@@ -25,6 +25,7 @@ layout: default
 			<a href="/tag/{{ tag_name }}"><code class="highligher-rouge"><nobr>{{ tag_name }}</nobr></code></a>
 		{% endfor %}
 	]</span>
+  {% include adsense.html %}
 
   {%- if site.disqus_shortname -%}
     {%- include disqus_comments.html -%}
