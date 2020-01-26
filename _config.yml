@@ -14,14 +14,14 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 title: Show me the code!
-author: prab97
+author: Prabhakar Kumar
 email: prab@techbeat.in
 description: >- # this means to ignore newlines until "baseurl:"
   Talk is cheap, show me the code!
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "http://techbeat.in" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: prab97
-github_username:
+github_username: prabhakar97
 facebook_username:
 linkedin_username:
 instagram_username:
