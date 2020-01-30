@@ -8,8 +8,7 @@ category: page
 footer: true
 ---
 I am a software engineer who loves building and scaling big systems from scratch using modern technologies. I am good at architecting, designing and implementing
-backend infrastructure (workflows, services, asynchrony) with Java, Ruby, Javascript and C#. I have a solid background in Computer
-Science, in part due to my masters degree from IIT Madras and rest of it due to my passion in computers since childhood.
+backend infrastructure (workflows, services, asynchrony) with Java, Ruby, Javascript and C#.
 
 I am a fan of Arch Linux as my OS, vim as my editor and prefer it for Ruby, Perl and Javascript. For Java, I use IntelliJ Idea which is an amazing IDE.
 
