@@ -2,9 +2,9 @@
 <html lang="en"><head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
 <title>Include filename and line number in Rails logger | Show me the code!</title>
-<meta name="generator" content="Jekyll v4.0.0" />
+<meta name="generator" content="Jekyll v4.3.3" />
 <meta property="og:title" content="Include filename and line number in Rails logger" />
 <meta name="author" content="Prabhakar Kumar" />
 <meta property="og:locale" content="en_US" />
@@ -15,22 +15,12 @@
 <meta property="og:site_name" content="Show me the code!" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2015-11-21T23:50:00-08:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Include filename and line number in Rails logger" />
 <script type="application/ld+json">
-{"mainEntityOfPage":{"@type":"WebPage","@id":"https://techbeat.in/2015/11/21/include-filename-and-line-number-in-rails-logger.html"},"@type":"BlogPosting","headline":"Include filename and line number in Rails logger","dateModified":"2015-11-21T23:50:00-08:00","datePublished":"2015-11-21T23:50:00-08:00","author":{"@type":"Person","name":"Prabhakar Kumar"},"description":"Rails logging is straightforward and works out of the box. But, sometimes I feel it would be really awesome if the log lines would contain the line number and file name which emit the log. If you have experience with log4j in Java, you should be able to recall that we initialize the logger and pass it a class instance. All our log lines are tagged with the classname. That’s cool for debugging purposes.","url":"https://techbeat.in/2015/11/21/include-filename-and-line-number-in-rails-logger.html","@context":"https://schema.org"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Prabhakar Kumar"},"dateModified":"2015-11-21T23:50:00-08:00","datePublished":"2015-11-21T23:50:00-08:00","description":"Rails logging is straightforward and works out of the box. But, sometimes I feel it would be really awesome if the log lines would contain the line number and file name which emit the log. If you have experience with log4j in Java, you should be able to recall that we initialize the logger and pass it a class instance. All our log lines are tagged with the classname. That’s cool for debugging purposes.","headline":"Include filename and line number in Rails logger","mainEntityOfPage":{"@type":"WebPage","@id":"https://techbeat.in/2015/11/21/include-filename-and-line-number-in-rails-logger.html"},"url":"https://techbeat.in/2015/11/21/include-filename-and-line-number-in-rails-logger.html"}</script>
 <!-- End Jekyll SEO tag -->
-<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://techbeat.in/feed.xml" title="Show me the code!" /><script>
-if(!(window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1")) {
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-20481925-1', 'auto');
-  ga('send', 'pageview');
-}
-</script>
-  
-</head>
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://techbeat.in/feed.xml" title="Show me the code!" /></head>
 <body><header class="site-header" role="banner">
 
   <div class="wrapper"><a class="site-title" rel="author" href="/">Show me the code!</a><nav class="site-nav">
@@ -66,7 +56,7 @@ initialize the logger and pass it a class instance. All our log lines are tagged
 classname. That’s cool for debugging purposes.</p>
 
 <p>How to get that behavior in Rails? There is 
-one quick and dirty way. Just prepend to the log message <code class="highlighter-rouge">__LINE__</code> and <code class="highlighter-rouge">__FILE__</code> which 
+one quick and dirty way. Just prepend to the log message <code class="language-plaintext highlighter-rouge">__LINE__</code> and <code class="language-plaintext highlighter-rouge">__FILE__</code> which 
 contain the line the code is executing and the file it is in, respectively.</p>
 
 <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="s2">"[</span><span class="si">#{</span><span class="kp">__FILE__</span><span class="si">}</span><span class="s2">:</span><span class="si">#{</span><span class="kp">__LINE__</span><span class="si">}</span><span class="s2">] The log message"</span><span class="p">)</span>
@@ -141,25 +131,6 @@ Use it and change it to your liking.</p>
 			<a href="/tag/rails"><code class="highligher-rouge"><nobr>rails</nobr></code></a>
 		
 	]</span>
-  <script data-ad-client="ca-pub-4893769676014512" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<div id="disqus_thread"></div>
-  <script>
-    var disqus_config = function () {
-      this.page.url = 'https://techbeat.in/2015/11/21/include-filename-and-line-number-in-rails-logger.html';
-      this.page.identifier = 'https://techbeat.in/2015/11/21/include-filename-and-line-number-in-rails-logger.html';
-    };
-
-    (function() {
-      var d = document, s = d.createElement('script');
-
-      s.src = 'https://techbite.disqus.com/embed.js';
-
-      s.setAttribute('data-timestamp', +new Date());
-      (d.head || d.body).appendChild(s);
-    })();
-  </script>
-  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
-
 <a class="u-url" href="/2015/11/21/include-filename-and-line-number-in-rails-logger.html" hidden></a>
 </article>
 

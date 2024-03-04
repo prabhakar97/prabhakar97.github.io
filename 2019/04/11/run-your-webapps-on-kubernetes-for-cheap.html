@@ -2,9 +2,9 @@
 <html lang="en"><head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
 <title>Run your webapps on Kubernetes for cheap | Show me the code!</title>
-<meta name="generator" content="Jekyll v4.0.0" />
+<meta name="generator" content="Jekyll v4.3.3" />
 <meta property="og:title" content="Run your webapps on Kubernetes for cheap" />
 <meta name="author" content="Prabhakar Kumar" />
 <meta property="og:locale" content="en_US" />
@@ -15,22 +15,12 @@
 <meta property="og:site_name" content="Show me the code!" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2019-04-11T09:48:53-07:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Run your webapps on Kubernetes for cheap" />
 <script type="application/ld+json">
-{"mainEntityOfPage":{"@type":"WebPage","@id":"https://techbeat.in/2019/04/11/run-your-webapps-on-kubernetes-for-cheap.html"},"@type":"BlogPosting","headline":"Run your webapps on Kubernetes for cheap","dateModified":"2019-04-11T09:48:53-07:00","datePublished":"2019-04-11T09:48:53-07:00","author":{"@type":"Person","name":"Prabhakar Kumar"},"description":"TL;DR","url":"https://techbeat.in/2019/04/11/run-your-webapps-on-kubernetes-for-cheap.html","@context":"https://schema.org"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Prabhakar Kumar"},"dateModified":"2019-04-11T09:48:53-07:00","datePublished":"2019-04-11T09:48:53-07:00","description":"TL;DR","headline":"Run your webapps on Kubernetes for cheap","mainEntityOfPage":{"@type":"WebPage","@id":"https://techbeat.in/2019/04/11/run-your-webapps-on-kubernetes-for-cheap.html"},"url":"https://techbeat.in/2019/04/11/run-your-webapps-on-kubernetes-for-cheap.html"}</script>
 <!-- End Jekyll SEO tag -->
-<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://techbeat.in/feed.xml" title="Show me the code!" /><script>
-if(!(window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1")) {
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-20481925-1', 'auto');
-  ga('send', 'pageview');
-}
-</script>
-  
-</head>
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://techbeat.in/feed.xml" title="Show me the code!" /></head>
 <body><header class="site-header" role="banner">
 
   <div class="wrapper"><a class="site-title" rel="author" href="/">Show me the code!</a><nav class="site-nav">
@@ -79,7 +69,7 @@ After reading this post, you will be able to spin off a 3 node Kubernetes cluste
 If you want a beefier cluster you can choose a different configuration for nodes and for 40 dollars a month you get 11.25GB of memory at your disposal, three compute cores with which you can do
 wonders - host several high traffic webapps backed by different databases! Adding to that, with Google Cloud’s free trial program you can have this cluster running for free for almost an year!</p>
 
-<p>My three node cluster currently runs <code class="highlighter-rouge">mongodb</code>, <code class="highlighter-rouge">postgres</code>, <code class="highlighter-rouge">nginx</code>, two rails web applications, a nodeJS web application, a dotnetcore web application, a spring boot based Java REST API application
+<p>My three node cluster currently runs <code class="language-plaintext highlighter-rouge">mongodb</code>, <code class="language-plaintext highlighter-rouge">postgres</code>, <code class="language-plaintext highlighter-rouge">nginx</code>, two rails web applications, a nodeJS web application, a dotnetcore web application, a spring boot based Java REST API application
 which powers an Android app, and still has a lot of resources remaining to do 3-4 times more of what it currently does. All the web apps are fronted by nginx and configured with different server blocks
 for different domain names (a.k.a virtual hosts). All the domain names have their own letsencrypt https certificates that automatically renew every three months. Two of the apps use mongodb and
 the other two postgres.</p>
@@ -117,7 +107,7 @@ all the apps hosted on the box incur downtime. Running on Kubernetes is better, 
 <h4 id="step-1-setup-a-3-node-cluster-on-google-cloud">Step 1: Setup a 3-node cluster on Google Cloud</h4>
 
 <p>Register on Google Cloud, if you already haven’t. Create a project, setup billing. Click the hamburger menu icon (<img src="/images/hamburger.png" alt="menu" />) on the top left, and in <em>Compute</em> section,
-click <em>Kubernetes Engine</em>. Click the <code class="highlighter-rouge">Create Clusters</code> button. Make sure in the left pane, cluster template is set to <code class="highlighter-rouge">Standard cluster</code>. In the right pane, name your cluster;
+click <em>Kubernetes Engine</em>. Click the <code class="language-plaintext highlighter-rouge">Create Clusters</code> button. Make sure in the left pane, cluster template is set to <code class="language-plaintext highlighter-rouge">Standard cluster</code>. In the right pane, name your cluster;
 for example <em>blog-cluster</em>. Fill in the settings as listed below:</p>
 
 <ul>
@@ -129,7 +119,7 @@ for example <em>blog-cluster</em>. Fill in the settings as listed below:</p>
 
 <ul>
   <li><em>Number of nodes</em>: 3</li>
-  <li><em>Machine type</em>: <code class="highlighter-rouge">n1-standard-1</code> (this will cost roughly $40/month for 3 nodes). Choose <code class="highlighter-rouge">f1-micro</code> for $7/month instead.</li>
+  <li><em>Machine type</em>: <code class="language-plaintext highlighter-rouge">n1-standard-1</code> (this will cost roughly $40/month for 3 nodes). Choose <code class="language-plaintext highlighter-rouge">f1-micro</code> for $7/month instead.</li>
 </ul>
 
 <p>Click <em>More node pool options</em> and ensure that the following are set:</p>
@@ -151,15 +141,15 @@ Since Kubernetes can handle node downtimes, we need not worry about our app goin
   <li><em>Enable Kubernetes Dashboard</em>: No</li>
 </ul>
 
-<p>Leave all the other settings to their sane defaults. Changing some of them might cost you extra money. Click the <code class="highlighter-rouge">Create</code> button and wait for the cluster to come up. The clusters page should
+<p>Leave all the other settings to their sane defaults. Changing some of them might cost you extra money. Click the <code class="language-plaintext highlighter-rouge">Create</code> button and wait for the cluster to come up. The clusters page should
 show your newly created cluster.</p>
 
 <p><img src="/images/kubernetesclusters.png" alt="Clusters" /></p>
 
 <h4 id="step-2-connect-to-your-newly-minted-cluster">Step 2: Connect to your newly minted cluster</h4>
 
-<p>Install <code class="highlighter-rouge">kubectl</code> command line utility for your OS. In the <em>Clusters</em> page, click <em>Connect</em> and it will show you a <code class="highlighter-rouge">gcloud</code> command which downloads the necessary authentication information
-for the <code class="highlighter-rouge">kubectl</code> command. Run the command. Once you have done that, test your connection by running <code class="highlighter-rouge">kubectl get nodes</code> which should return you a list of three nodes.</p>
+<p>Install <code class="language-plaintext highlighter-rouge">kubectl</code> command line utility for your OS. In the <em>Clusters</em> page, click <em>Connect</em> and it will show you a <code class="language-plaintext highlighter-rouge">gcloud</code> command which downloads the necessary authentication information
+for the <code class="language-plaintext highlighter-rouge">kubectl</code> command. Run the command. Once you have done that, test your connection by running <code class="language-plaintext highlighter-rouge">kubectl get nodes</code> which should return you a list of three nodes.</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>% kubectl get nodes
 NAME                                          STATUS   ROLES    AGE   VERSION
@@ -170,7 +160,7 @@ gke-blog-cluster-default-pool-edcca0b2-z6f1   Ready    &lt;none&gt;   1m    v1.1
 
 <h4 id="step-3-prepare-your-first-application">Step 3: Prepare your first application</h4>
 
-<p>Let’s prepare a rails application that uses a <code class="highlighter-rouge">postgresql</code> database to deploy on this cluster. We will name it <code class="highlighter-rouge">RailsPortal</code>, you are free to name whatever you want.</p>
+<p>Let’s prepare a rails application that uses a <code class="language-plaintext highlighter-rouge">postgresql</code> database to deploy on this cluster. We will name it <code class="language-plaintext highlighter-rouge">RailsPortal</code>, you are free to name whatever you want.</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem <span class="nb">install </span>bundler
 gem <span class="nb">install </span>rails
@@ -178,7 +168,7 @@ rails new RailsPortal
 bundle <span class="nb">exec </span>rails s
 </code></pre></div></div>
 
-<p>Last command should start a local server at port 3000 and you should be able to access it at <code class="highlighter-rouge">localhost:3000</code>. Stop the server by running <code class="highlighter-rouge">Ctrl-C</code>. Open <code class="highlighter-rouge">config/database.yml</code> and around the
+<p>Last command should start a local server at port 3000 and you should be able to access it at <code class="language-plaintext highlighter-rouge">localhost:3000</code>. Stop the server by running <code class="language-plaintext highlighter-rouge">Ctrl-C</code>. Open <code class="language-plaintext highlighter-rouge">config/database.yml</code> and around the
 end change the production db connection settings so that they look like this:</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>production:
@@ -187,8 +177,8 @@ end change the production db connection settings so that they look like this:</p
   url: &lt;%<span class="o">=</span> ENV[<span class="s1">'DATABASE_URL'</span><span class="o">]</span> %&gt;
 </code></pre></div></div>
 
-<p>Also, edit the <code class="highlighter-rouge">Gemfile</code> and add a line <code class="highlighter-rouge">gem 'pg'</code> then run <code class="highlighter-rouge">bundle update</code>. The above changes will configure the production instance of app to use postgresql instead of default sqlite and 
-will let us pass the <code class="highlighter-rouge">postgresql</code> connection string through an environment variable that Kubernetes will setup for us later.</p>
+<p>Also, edit the <code class="language-plaintext highlighter-rouge">Gemfile</code> and add a line <code class="language-plaintext highlighter-rouge">gem 'pg'</code> then run <code class="language-plaintext highlighter-rouge">bundle update</code>. The above changes will configure the production instance of app to use postgresql instead of default sqlite and 
+will let us pass the <code class="language-plaintext highlighter-rouge">postgresql</code> connection string through an environment variable that Kubernetes will setup for us later.</p>
 
 <p>Let’s create a scaffold with two fields and see whether things are working fine.</p>
 
@@ -197,16 +187,16 @@ bin/rails db:migrate <span class="nv">RAILS_ENV</span><span class="o">=</span>de
 </code></pre></div></div>
 
 <p>This will generate necessary views and controllers which we can use to insert some data and ensure that things are working fine. Second command will commit pending database migrations.
-Start the server again  by running <code class="highlighter-rouge">bundle exec rails s</code> and access the url <code class="highlighter-rouge">http://localhost:3000/users</code> and click <code class="highlighter-rouge">New User</code> and try adding a new record.</p>
+Start the server again  by running <code class="language-plaintext highlighter-rouge">bundle exec rails s</code> and access the url <code class="language-plaintext highlighter-rouge">http://localhost:3000/users</code> and click <code class="language-plaintext highlighter-rouge">New User</code> and try adding a new record.</p>
 
 <p>Now that our test application is ready, let’s containerize it. If you do not have docker installed, now is the time to install it and start the docker service.
 Once we build the container, we want to push it to a private docker repository. <a href="https://hub.docker.com">Docker Hub</a> lets you store container images for free. Register on their website then connect
-your local <code class="highlighter-rouge">docker</code> command to your docker hub account by running the following command:</p>
+your local <code class="language-plaintext highlighter-rouge">docker</code> command to your docker hub account by running the following command:</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker login <span class="nt">--username</span><span class="o">=</span>DockerHubUsername <span class="nt">--email</span><span class="o">=</span>DockerHubEmail
 </code></pre></div></div>
 
-<p>For building the container image, we need to create a file named <code class="highlighter-rouge">Dockerfile</code> which tells docker how to build the container. Create this <em>Dockerfile</em> in rails portal’s root directory.</p>
+<p>For building the container image, we need to create a file named <code class="language-plaintext highlighter-rouge">Dockerfile</code> which tells docker how to build the container. Create this <em>Dockerfile</em> in rails portal’s root directory.</p>
 
 <div class="language-docker highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">FROM</span><span class="s"> ruby:2.5-alpine</span>
 
@@ -291,14 +281,13 @@ to store our stateful data, for example postgres’s data files.</p>
 <h4 id="step-6-setting-up-nginx">Step 6. Setting up nginx</h4>
 
 <p>Let’s begin by creating a deployment for nginx. Create a directory named nginx. Below gist is for a yaml file that we will use to describe nginx deployment on Kubernetes. Copy
-its contents to a file named <code class="highlighter-rouge">nginx-dep.yml</code> on your local computer.</p>
+its contents to a file named <code class="language-plaintext highlighter-rouge">nginx-dep.yml</code> on your local computer.</p>
 
-<noscript><pre>400: Invalid request
-</pre></noscript>
+<noscript><pre>400: Invalid request</pre></noscript>
 <script src="https://gist.github.com/6e870acd7e91273a747996961a2a04c2.js"> </script>
 
-<p>It declares that we want to create a resource of type <code class="highlighter-rouge">Deployment</code>, label it with name <code class="highlighter-rouge">nginx</code>, use the container <code class="highlighter-rouge">nginx</code> with tag <code class="highlighter-rouge">mainline-alpine</code>, and expose the container’s port 80.
-By default the container image is pulled from docker hub. Now run <code class="highlighter-rouge">kubectl apply -f nginx-dep.yml</code> to let Kubernetes do its magic.</p>
+<p>It declares that we want to create a resource of type <code class="language-plaintext highlighter-rouge">Deployment</code>, label it with name <code class="language-plaintext highlighter-rouge">nginx</code>, use the container <code class="language-plaintext highlighter-rouge">nginx</code> with tag <code class="language-plaintext highlighter-rouge">mainline-alpine</code>, and expose the container’s port 80.
+By default the container image is pulled from docker hub. Now run <code class="language-plaintext highlighter-rouge">kubectl apply -f nginx-dep.yml</code> to let Kubernetes do its magic.</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>% kubectl apply <span class="nt">-f</span> nginx-dep.yml
 deployment.apps/nginx-dep created
@@ -307,17 +296,16 @@ NAME                         READY   STATUS    RESTARTS   AGE
 nginx-dep-776c646dc6-g4w9x   1/1     Running   0          25s
 </code></pre></div></div>
 
-<p>The output of last command tells us that an nginx deployment is running since 25 seconds. Yes, you just noticed that we used a new term <code class="highlighter-rouge">pods</code> in the command. A pod can be considered as an application
+<p>The output of last command tells us that an nginx deployment is running since 25 seconds. Yes, you just noticed that we used a new term <code class="language-plaintext highlighter-rouge">pods</code> in the command. A pod can be considered as an application
 for all practical purposes. You can find about it more in official Kubernetes documentation.</p>
 
-<p>Let’s create an LB now so that we can access the running container from outside. Copy the below contents to a file named <code class="highlighter-rouge">nginx-svc.yml</code>.</p>
+<p>Let’s create an LB now so that we can access the running container from outside. Copy the below contents to a file named <code class="language-plaintext highlighter-rouge">nginx-svc.yml</code>.</p>
 
-<noscript><pre>400: Invalid request
-</pre></noscript>
+<noscript><pre>400: Invalid request</pre></noscript>
 <script src="https://gist.github.com/d76f720c5b9d666965e959861e5e33b3.js"> </script>
 
-<p>This file declares that we want a resource of kind <code class="highlighter-rouge">Service</code> of type <code class="highlighter-rouge">LoadBalancer</code> which should accept connections on port 80 and direct to port 80 of a service. Which service? The service is selected
-using the selector parameter which says to match it with the <code class="highlighter-rouge">app: nginx</code> which we had specified in our <code class="highlighter-rouge">nginx-dep.yml</code> file. Let’s deploy this file too.</p>
+<p>This file declares that we want a resource of kind <code class="language-plaintext highlighter-rouge">Service</code> of type <code class="language-plaintext highlighter-rouge">LoadBalancer</code> which should accept connections on port 80 and direct to port 80 of a service. Which service? The service is selected
+using the selector parameter which says to match it with the <code class="language-plaintext highlighter-rouge">app: nginx</code> which we had specified in our <code class="language-plaintext highlighter-rouge">nginx-dep.yml</code> file. Let’s deploy this file too.</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>% kubectl apply <span class="nt">-f</span> nginx-svc.yml
 service/nginx-lb created
@@ -342,10 +330,9 @@ will be accessible from any browser through the domain name.</p>
 
 <p>Our webapp will need Postgres to store its data. Since we need postgres’s data to be persistent across container and node restarts, we need to create a persistent volume. For that we first
 create a storage class with type SSD. Then we create a persistent volume claim that uses this newly created storage class. A persistent volume gets automatically created, when we try to create
-a persistent volume claim using the storage class of <code class="highlighter-rouge">kubernetes.io/gce-pd</code>. We can also club two related storage related declarations into a single yaml file as shown below.</p>
+a persistent volume claim using the storage class of <code class="language-plaintext highlighter-rouge">kubernetes.io/gce-pd</code>. We can also club two related storage related declarations into a single yaml file as shown below.</p>
 
-<noscript><pre>400: Invalid request
-</pre></noscript>
+<noscript><pre>400: Invalid request</pre></noscript>
 <script src="https://gist.github.com/45ddec715c5e9840e715db5d1b0282ab.js"> </script>
 
 <p>Let’s create the resources from this yml file and check their statuses.</p>
@@ -364,13 +351,12 @@ pvc-79f8200b-5c64-11e9-978f-42010a800070   1Gi        RWO            Delete     
 <p>Now that our storage for postgres is all set, we can create the deployment and service. Let’s club both the declarations in the same yaml file as we did with the storage. Its a good practice to 
 club logically related resources in a single file.</p>
 
-<noscript><pre>400: Invalid request
-</pre></noscript>
+<noscript><pre>400: Invalid request</pre></noscript>
 <script src="https://gist.github.com/62e68cf0f42e24c09e9a91e6cf393b08.js"> </script>
 
 <p>In the deployment, we specify that we will run the <em>postgres</em> container with tag <em>10-alpine</em> from docker hub. We also set environment variables for username, password and data directory. You
 should note that we specify a volume mount and configure it to use the persistent volume claim we created earlier and we mount that 1GB storage volume at <em>/data</em> directory in the container.
-We also create a service (with type <code class="highlighter-rouge">ClusterIP</code> being the default) and configure its app selector to postgres and specify that port 5432 on the container be made available for other apps in the cluster.</p>
+We also create a service (with type <code class="language-plaintext highlighter-rouge">ClusterIP</code> being the default) and configure its app selector to postgres and specify that port 5432 on the container be made available for other apps in the cluster.</p>
 
 <p>Let’s create the service and deployment and check the status on the cluster.</p>
 
@@ -402,7 +388,7 @@ CREATE DATABASE
 </code></pre></div></div>
 
 <p>Through the first command we copied the name of the pod. Then the next command connected to the running container, and mounted its shell (tty) in interactive mode with our terminal and then ran /bin/sh
-on the terminal. This directly dropped us into the container’s shell, wehere we switched to the user <code class="highlighter-rouge">postgres</code>, then ran psql and created a database. Logging-in to a running container comes handy
+on the terminal. This directly dropped us into the container’s shell, wehere we switched to the user <code class="language-plaintext highlighter-rouge">postgres</code>, then ran psql and created a database. Logging-in to a running container comes handy
 a lot during debugging sessions.</p>
 
 <h4 id="step-8-deploy-the-rails-application">Step 8. Deploy the rails application</h4>
@@ -415,8 +401,7 @@ Kubernetes won’t be able to pull the image without authentication information.
 
 <p>The deployment yml file looks as follows:</p>
 
-<noscript><pre>400: Invalid request
-</pre></noscript>
+<noscript><pre>400: Invalid request</pre></noscript>
 <script src="https://gist.github.com/0da2905368a607196a02108e47628bee.js"> </script>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>% kubectl apply <span class="nt">-f</span> rails-portal-dep.yml
@@ -428,19 +413,17 @@ nginx-dep-776c646dc6-g4w9x     1/1     Running   0          1h
 postgres-6969669b9f-4f42h      1/1     Running   0          1h
 railsportal-7d6d74f865-n6x56   1/1     Running   0          31s
 </code></pre></div></div>
-<p>If your container status is CrashLoopBackoff because of some changes you made, you may debug by using the command <code class="highlighter-rouge">kubectl describe pod PodName</code>.</p>
+<p>If your container status is CrashLoopBackoff because of some changes you made, you may debug by using the command <code class="language-plaintext highlighter-rouge">kubectl describe pod PodName</code>.</p>
 
 <p>We need to make changes to nginx config so that nginx forwards all the requests to RailsPortal. For that, let’s go back and change the config so that we pass a nginx config file
-while starting the container. Create a file named <code class="highlighter-rouge">nginx.conf</code> with the following content:</p>
+while starting the container. Create a file named <code class="language-plaintext highlighter-rouge">nginx.conf</code> with the following content:</p>
 
-<noscript><pre>400: Invalid request
-</pre></noscript>
+<noscript><pre>400: Invalid request</pre></noscript>
 <script src="https://gist.github.com/5a1c295e457121234407136c80a23bd2.js"> </script>
 
-<p>Create another file named <code class="highlighter-rouge">railsportal.nginx.conf</code> with the following content:</p>
+<p>Create another file named <code class="language-plaintext highlighter-rouge">railsportal.nginx.conf</code> with the following content:</p>
 
-<noscript><pre>400: Invalid request
-</pre></noscript>
+<noscript><pre>400: Invalid request</pre></noscript>
 <script src="https://gist.github.com/58a6630d678e0ffabfb88c4eece4caaa.js"> </script>
 
 <p>Now create two config maps for these files in the cluster:</p>
@@ -451,10 +434,9 @@ configmap/nginxconfig created
 configmap/railsportalnginxconfig created
 </code></pre></div></div>
 
-<p>Update the <code class="highlighter-rouge">nginx-dep.yml</code> and append the config map settings at the end of the file so that it becomes like below:</p>
+<p>Update the <code class="language-plaintext highlighter-rouge">nginx-dep.yml</code> and append the config map settings at the end of the file so that it becomes like below:</p>
 
-<noscript><pre>400: Invalid request
-</pre></noscript>
+<noscript><pre>400: Invalid request</pre></noscript>
 <script src="https://gist.github.com/739dfe55fa710d8c1cffd5bc63bb99c5.js"> </script>
 
 <p>Now apply the updated configuration for nginx to the cluster:</p>
@@ -463,8 +445,8 @@ configmap/railsportalnginxconfig created
 deployment.apps/nginx-dep configured
 </code></pre></div></div>
 
-<p>Opening the website with the public IP should show the rails portal. You can check the logs by running <code class="highlighter-rouge">kubectl logs PodName</code> where PodName should be replaced with the name of the pod for rails
-portal that comes up when you run <code class="highlighter-rouge">kubectl get pods</code>. If things are not working as expected, you may try logging into the container and poke around.</p>
+<p>Opening the website with the public IP should show the rails portal. You can check the logs by running <code class="language-plaintext highlighter-rouge">kubectl logs PodName</code> where PodName should be replaced with the name of the pod for rails
+portal that comes up when you run <code class="language-plaintext highlighter-rouge">kubectl get pods</code>. If things are not working as expected, you may try logging into the container and poke around.</p>
 
 <h3 id="home-work">Home work</h3>
 
@@ -496,25 +478,6 @@ scaling. And you may try doing this on Azure or AWS and figure which one comes u
 			<a href="/tag/docker"><code class="highligher-rouge"><nobr>docker</nobr></code></a>
 		
 	]</span>
-  <script data-ad-client="ca-pub-4893769676014512" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<div id="disqus_thread"></div>
-  <script>
-    var disqus_config = function () {
-      this.page.url = 'https://techbeat.in/2019/04/11/run-your-webapps-on-kubernetes-for-cheap.html';
-      this.page.identifier = 'https://techbeat.in/2019/04/11/run-your-webapps-on-kubernetes-for-cheap.html';
-    };
-
-    (function() {
-      var d = document, s = d.createElement('script');
-
-      s.src = 'https://techbite.disqus.com/embed.js';
-
-      s.setAttribute('data-timestamp', +new Date());
-      (d.head || d.body).appendChild(s);
-    })();
-  </script>
-  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
-
 <a class="u-url" href="/2019/04/11/run-your-webapps-on-kubernetes-for-cheap.html" hidden></a>
 </article>
 
