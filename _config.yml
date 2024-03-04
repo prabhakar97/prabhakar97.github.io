@@ -32,7 +32,7 @@ google_analytics: UA-20481925-1
 disqus_shortname: techbite
 
 # Build settings
-markdown: kramdown
+#markdown: kramdown
 theme: minima
 plugins:
   - jekyll-feed
@@ -47,21 +47,24 @@ jekyll-archives:
   permalinks:
     tag: '/tag/:name/'
 
-defaults:
-  -
-    scope:
-      path: "" # an empty string here means all files in the project
-      type: "posts" # previously `post` in Jekyll 2.2.
-    values:
-      comments: true
+      #defaults:
+      #  -
+      #    scope:
+      #      path: "" # an empty string here means all files in the project
+      #      type: "posts" # previously `post` in Jekyll 2.2.
+      #    values:
+      #      comments: true
 
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list
 # to override the default setting.
 # exclude:
+#   - .sass-cache/
+#   - .jekyll-cache/
+#   - gemfiles/
 #   - Gemfile
 #   - Gemfile.lock
-#   - node_modules
+#   - node_modules/
 #   - vendor/bundle/
 #   - vendor/cache/
 #   - vendor/gems/
