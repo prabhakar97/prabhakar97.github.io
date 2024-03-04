@@ -2,9 +2,9 @@
 <html lang="en"><head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
 <title>Octopress syntax highlighting issue on Arch Linux | Show me the code!</title>
-<meta name="generator" content="Jekyll v4.0.0" />
+<meta name="generator" content="Jekyll v4.3.3" />
 <meta property="og:title" content="Octopress syntax highlighting issue on Arch Linux" />
 <meta name="author" content="Prabhakar Kumar" />
 <meta property="og:locale" content="en_US" />
@@ -15,22 +15,12 @@
 <meta property="og:site_name" content="Show me the code!" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2014-01-27T00:39:00-08:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Octopress syntax highlighting issue on Arch Linux" />
 <script type="application/ld+json">
-{"mainEntityOfPage":{"@type":"WebPage","@id":"https://techbeat.in/2014/01/27/octopress-syntax-highlighting-issue-on-arch-linux.html"},"@type":"BlogPosting","headline":"Octopress syntax highlighting issue on Arch Linux","dateModified":"2014-01-27T00:39:00-08:00","datePublished":"2014-01-27T00:39:00-08:00","author":{"@type":"Person","name":"Prabhakar Kumar"},"description":"If you run Arch Linux and are trying to run rake generate on a Octopress blog, with a post that uses some code and syntax highlighting markdown over it; you will probably see this error:","url":"https://techbeat.in/2014/01/27/octopress-syntax-highlighting-issue-on-arch-linux.html","@context":"https://schema.org"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Prabhakar Kumar"},"dateModified":"2014-01-27T00:39:00-08:00","datePublished":"2014-01-27T00:39:00-08:00","description":"If you run Arch Linux and are trying to run rake generate on a Octopress blog, with a post that uses some code and syntax highlighting markdown over it; you will probably see this error:","headline":"Octopress syntax highlighting issue on Arch Linux","mainEntityOfPage":{"@type":"WebPage","@id":"https://techbeat.in/2014/01/27/octopress-syntax-highlighting-issue-on-arch-linux.html"},"url":"https://techbeat.in/2014/01/27/octopress-syntax-highlighting-issue-on-arch-linux.html"}</script>
 <!-- End Jekyll SEO tag -->
-<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://techbeat.in/feed.xml" title="Show me the code!" /><script>
-if(!(window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1")) {
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-20481925-1', 'auto');
-  ga('send', 'pageview');
-}
-</script>
-  
-</head>
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://techbeat.in/feed.xml" title="Show me the code!" /></head>
 <body><header class="site-header" role="banner">
 
   <div class="wrapper"><a class="site-title" rel="author" href="/">Show me the code!</a><nav class="site-nav">
@@ -59,16 +49,16 @@ if(!(window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNo
   </header>
 
   <div class="post-content e-content" itemprop="articleBody">
-    <p>If you run Arch Linux and are trying to run <code class="highlighter-rouge">rake generate</code> on a Octopress blog, with a post that uses some code and syntax highlighting markdown over it; you will probably see this error:</p>
+    <p>If you run Arch Linux and are trying to run <code class="language-plaintext highlighter-rouge">rake generate</code> on a Octopress blog, with a post that uses some code and syntax highlighting markdown over it; you will probably see this error:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/plugins/pygments_code.rb:27:in `rescue in pygments': Pygments can't parse unknown language: ruby. (RuntimeError)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/plugins/pygments_code.rb:27:in `rescue in pygments': Pygments can't parse unknown language: ruby. (RuntimeError)
 </code></pre></div></div>
 
-<p>This happens because Arch uses <code class="highlighter-rouge">python3</code> as default python, while the world hasn’t yet made up their mind to switch. The <em>Pygments</em> gem that Octopress uses, uses <code class="highlighter-rouge">python2</code> syntax which Arch’s <code class="highlighter-rouge">python3</code> doesn’t undertand fully and hence raises an error. To fix this, just open this file:</p>
+<p>This happens because Arch uses <code class="language-plaintext highlighter-rouge">python3</code> as default python, while the world hasn’t yet made up their mind to switch. The <em>Pygments</em> gem that Octopress uses, uses <code class="language-plaintext highlighter-rouge">python2</code> syntax which Arch’s <code class="language-plaintext highlighter-rouge">python3</code> doesn’t undertand fully and hence raises an error. To fix this, just open this file:</p>
 
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash">~/.rbenv/versions/2.1.0/lib/ruby/gems/2.1.0/gems/pygments.rb-0.3.4/lib/pygments/mentos.py  </code></pre></figure>
 
-<p>Use your own version, instead of <code class="highlighter-rouge">2.1.0</code> that I am using. Change the first line:</p>
+<p>Use your own version, instead of <code class="language-plaintext highlighter-rouge">2.1.0</code> that I am using. Change the first line:</p>
 
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c">#!/usr/bin/env python </span></code></pre></figure>
 
@@ -76,7 +66,7 @@ if(!(window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNo
 
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c">#!/usr/bin/env python2 </span></code></pre></figure>
 
-<p>After this, your <code class="highlighter-rouge">rake generate</code> should succeed. Oh, and yes, this file path is for <code class="highlighter-rouge">rbenv</code>. If you use <code class="highlighter-rouge">rvm</code> figure out your own path using the command <code class="highlighter-rouge">find ~/ -name mentos.py</code>.</p>
+<p>After this, your <code class="language-plaintext highlighter-rouge">rake generate</code> should succeed. Oh, and yes, this file path is for <code class="language-plaintext highlighter-rouge">rbenv</code>. If you use <code class="language-plaintext highlighter-rouge">rvm</code> figure out your own path using the command <code class="language-plaintext highlighter-rouge">find ~/ -name mentos.py</code>.</p>
 
   </div>
 
@@ -89,25 +79,6 @@ if(!(window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNo
 			<a href="/tag/octopress"><code class="highligher-rouge"><nobr>octopress</nobr></code></a>
 		
 	]</span>
-  <script data-ad-client="ca-pub-4893769676014512" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<div id="disqus_thread"></div>
-  <script>
-    var disqus_config = function () {
-      this.page.url = 'https://techbeat.in/2014/01/27/octopress-syntax-highlighting-issue-on-arch-linux.html';
-      this.page.identifier = 'https://techbeat.in/2014/01/27/octopress-syntax-highlighting-issue-on-arch-linux.html';
-    };
-
-    (function() {
-      var d = document, s = d.createElement('script');
-
-      s.src = 'https://techbite.disqus.com/embed.js';
-
-      s.setAttribute('data-timestamp', +new Date());
-      (d.head || d.body).appendChild(s);
-    })();
-  </script>
-  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
-
 <a class="u-url" href="/2014/01/27/octopress-syntax-highlighting-issue-on-arch-linux.html" hidden></a>
 </article>
 
