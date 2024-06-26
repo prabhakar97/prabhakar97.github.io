@@ -40,6 +40,7 @@ plugins:
   - jekyll-seo-tag
   - jekyll-archives
   - jekyll-gist
+  - jekyll-sitemap
 
 jekyll-archives:
   enabled: ['tags']
@@ -53,6 +54,7 @@ defaults:
       path: "" # an empty string here means all files in the project
       type: "posts" # previously `post` in Jekyll 2.2.
     values:
+      sitemap: true
       comments: true
 
 # Exclude from processing.

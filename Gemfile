@@ -20,6 +20,7 @@ group :jekyll_plugins do
   gem "jekyll-seo-tag"
   gem 'jekyll-archives'
   gem 'jekyll-gist'
+  gem 'jekyll-sitemap'
 end
 
 gem 'classifier-reborn'
