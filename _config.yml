@@ -30,6 +30,7 @@ google_analytics: UA-20481925-1
 
 # Disqus Comments
 disqus_shortname: techbite
+adsense_enabled: false
 
 # Build settings
 #markdown: kramdown
