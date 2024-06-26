@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Ship a REST API with Node, ES6 and MongoDB - Part 1 | Show me the code!</title>
+<meta name="generator" content="Jekyll v4.3.3" />
+<meta property="og:title" content="Ship a REST API with Node, ES6 and MongoDB - Part 1" />
+<meta name="author" content="Prabhakar Kumar" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Introduction NodeJS has been gaining a lot of traction recently, especially for web applications. Lots of new web applications are now being built with tools from the Node ecosystem. A possible reason is the umpteen number of javascript developers out in the wild. Other one is the blazing speed of V8 engine. Heck, even shiny desktop apps are now being built with Node viz. Popcorn Time." />
+<meta property="og:description" content="Introduction NodeJS has been gaining a lot of traction recently, especially for web applications. Lots of new web applications are now being built with tools from the Node ecosystem. A possible reason is the umpteen number of javascript developers out in the wild. Other one is the blazing speed of V8 engine. Heck, even shiny desktop apps are now being built with Node viz. Popcorn Time." />
+<link rel="canonical" href="http://localhost:4000/2017/03/22/bootstrap-a-restful-api-app-with-node-es6-mongo-linux.html" />
+<meta property="og:url" content="http://localhost:4000/2017/03/22/bootstrap-a-restful-api-app-with-node-es6-mongo-linux.html" />
+<meta property="og:site_name" content="Show me the code!" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2017-03-22T09:22:40-07:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Ship a REST API with Node, ES6 and MongoDB - Part 1" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Prabhakar Kumar"},"dateModified":"2017-03-22T09:22:40-07:00","datePublished":"2017-03-22T09:22:40-07:00","description":"Introduction NodeJS has been gaining a lot of traction recently, especially for web applications. Lots of new web applications are now being built with tools from the Node ecosystem. A possible reason is the umpteen number of javascript developers out in the wild. Other one is the blazing speed of V8 engine. Heck, even shiny desktop apps are now being built with Node viz. Popcorn Time.","headline":"Ship a REST API with Node, ES6 and MongoDB - Part 1","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2017/03/22/bootstrap-a-restful-api-app-with-node-es6-mongo-linux.html"},"url":"http://localhost:4000/2017/03/22/bootstrap-a-restful-api-app-with-node-es6-mongo-linux.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Show me the code!" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Show me the code!</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger">
+            <a class="page-link" href="/">All Posts</a><a class="page-link" href="/about.html">About Me</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Ship a REST API with Node, ES6 and MongoDB - Part 1</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2017-03-22T09:22:40-07:00" itemprop="datePublished">Mar 22, 2017
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="introduction">Introduction</h2>
+<p>NodeJS has been gaining a lot of traction recently, especially for web applications. Lots of new web applications
+are now being built with tools from  the Node ecosystem. A possible reason is the umpteen number of javascript
+developers out in the wild. Other one is  the blazing speed of
+<a href="https://en.wikipedia.org/wiki/V8_(JavaScript_engine)">V8 engine</a>. Heck, even shiny desktop apps are now being built
+with Node viz. Popcorn Time.</p>
+
+<p>In this post I will walk through everything I did to ship an API app. Ship as in - ready to serve production traffic.</p>
+
+<h3 id="about-the-stack">About the stack</h3>
+<p>We will be using <a href="https://expressjs.com/">Express</a> as our web app framework. Express is minimalistic, fast and quietly
+gets out of our way when you want to detour through the dirt road. It is unlike convention over configuration style in
+<a href="http://rubyonrails.org/">Rails</a> and <a href="https://playframework.com/">Play framework</a> where you are good as long as you
+follow the conventions recommended by the framework. Going gets tough, if you start deviating. There are frameworks
+built specifically for facilitating API building. An example would be <a href="http://restify.com/">Restify</a>. The reason of
+not choosing such a framework for this exercise is to understand the intricacies of building an API. Restify would
+shield us from understanding lots of stuff.</p>
+
+<p>Also, we wil be writing our javascript in <a href="http://es6-features.org/">ES6</a> which is cleaner and hands down a better
+language than the javascript specced in ES5. Latest version of node still doesn’t fully support ES6, so we will use a
+transpiler named <a href="http://babeljs.io/">Babel</a> which transpiles code written by us into code conforming to ES5 for which
+node has full support. In the future when node catches up, we can turn off transpilation and run our ES6 code directly
+with node.</p>
+
+<p><a href="https://www.mongodb.com/">MongoDB</a> will be our database. It is a document oriented NoSQL database. What that means
+is - it is unlike the RDBMSes like MySQL or Oracle which let you model the world by defining a schema in form
+of tables recording their properties and then linking them with primary and foreign keys. With MongoDB we model our
+worldly entities in form of documents which are similar to JSON objects . The biggest advantage of NoSQL databases like
+MongoDB is that they are designed to be horizontally scalable - whenever we need to increase performance, we just
+add few more machines to the DB cluster and the database engine takes care of redistributing data and query traffic
+across all available machines. RDBMSes are limited by theory, in terms of horizontal scalability. A discussion of this
+is beyond the scope of this article, but if you are interested in knowing more about it you can browse the interwebs
+for this nuisance called CAP theorem.</p>
+
+<h3 id="about-the-project">About the project</h3>
+<p>We are going to build an API which can power a web application and/or a mobile app. The app is a social code snippet
+sharing system where the users can share frequently encountered code snippets that are used in a developer’s day to
+day life for solving mundane problems which they are too lazy to code themselves. Usually, as developers we google for
+our problem, find link to a stackoverflow question and copy the snippet from there and use from. In our case we let
+the users share the snippet, enter a description, select the language, optionally add some tags and publish it. A user
+can also thumb up a snippet or mark it as junk. We also allow some experienced users to edit the snippets and/or
+descriptions for clarity. We define experience with a formula derived from number of upvotes to their questions by
+other users, their age on the site and their time spent on the site. Also, we do away with logins through passwords. 
+We provide OAuth based logins through Google, Facebook, Twitter etc. Apart from these functional features, we will
+also do some non-functional stuff like generate an SEO friendly URL for each snippet so that Googlebot can find our
+snippets and list in search results. Let’s wear the product manager hat for a moment and write down the high level
+product requirements for our application.</p>
+
+<h4 id="as-a-guest-user-i-should-be-able-to">As a guest user I should be able to</h4>
+
+<ul>
+  <li>search for snipppets through description and/or code matches</li>
+  <li>list snippets by language, and sort them by
+    <ul>
+      <li>most voted</li>
+      <li>most viewed</li>
+    </ul>
+  </li>
+  <li>login using Google, Facebook or Twitter auth</li>
+</ul>
+
+<h4 id="as-a-logged-in-user-i-should-be-able-to">As a logged-in user I should be able to</h4>
+
+<ul>
+  <li>perform snippet operations
+    <ul>
+      <li>post a snippet</li>
+      <li>edit my posted snippets</li>
+      <li>view a snippet and see all previous versions of a snippet, if they have been edited</li>
+    </ul>
+  </li>
+  <li>perform profile operations
+    <ul>
+      <li>view my profile</li>
+      <li>refresh upstream information in the profile</li>
+      <li>view others’ profiles</li>
+      <li>view activity of a user, like snippets posted, snippets upvoted, snippets edited etc.</li>
+    </ul>
+  </li>
+  <li>perform friendship operations
+    <ul>
+      <li>send friend requests to people</li>
+      <li>accept/reject others’ friend requests</li>
+      <li>ignore/block a user</li>
+    </ul>
+  </li>
+  <li>perform feed operations
+    <ul>
+      <li>view a feed which shows my friends’ activity on the website</li>
+      <li>like and comment on activities in the feed</li>
+    </ul>
+  </li>
+  <li>perform leaderboard operations
+    <ul>
+      <li>view leaderboard of snippets</li>
+      <li>view leaderboard of users</li>
+      <li>filter leaderboard by language, user location etc.</li>
+    </ul>
+  </li>
+  <li>perform messaging operations
+    <ul>
+      <li>send private messages to my friends</li>
+      <li>send private messages to non-friends</li>
+      <li>view my inbox, categorized with messages from friends/non-friends</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="why-api">Why API?</h3>
+<p>Let’s take a step back and understand why should we write an API? Why not a simple MVC web application? APIs are great
+for scaling, technically as well as logistically. With an API, we define a set of operations, which cover all the
+interactions of users and other systems with our application. Then we write client apps, which talk to the API and get
+the job done. So, next time you swipe left in gmail to archive an email, you should know that an API call has been
+made by the GMail app residing on your phone, to the GMail servers along with some parameters which did the actual
+archiving of the email.</p>
+
+<p>What is logistic stability? Ok, I just made up this term! With an API as contract in place, the client app can
+independently scale with the actual functional implementation. We can have different people (or teams) working on the
+different client apps. As long as they have the API spec they can work independently. Also, the same API can power a
+native iOS app, an Android app, a mobile website and a web application. These client apps make API calls to fetch and
+display relevant data and perform operations upon user interactions.</p>
+
+<p>In terms of technical scalability, the people working on the backend can independently scale the most used operations
+in the API. For instance, if we are getting millions of calls for our compute intensive <code class="language-plaintext highlighter-rouge">findBugs</code> operation in a
+day, we can intelligently increase the resources it needs. One way would be to have a dedicated independent machine of
+high configuration just for this operation in the API. And we leverage the power of distributed systems and horizontal
+scalability! We will get into the details of this when we talk about shipping once we are code complete.</p>
+
+<h2 id="dev-env-setup">Dev Env setup</h2>
+<p>Before we design our data model, let’s get our hands dirty a bit, write a hello world app with Express and get MongoDB
+setup on our workstation.</p>
+
+<p>I am an <a href="https://www.archlinux.org/">Arch Linux</a> devotee. The instructions here should work perfectly on Arch. The
+onus of changing the commands to suit your package manager(apt, yum, emerge, brew) is upto you.</p>
+
+<h3 id="install-node-npm-and-mongodb">Install node, npm and mongodb</h3>
+<p>The following commands will install <code class="language-plaintext highlighter-rouge">node</code>, <code class="language-plaintext highlighter-rouge">npm</code> and <code class="language-plaintext highlighter-rouge">mongodb</code> for us. <code class="language-plaintext highlighter-rouge">node</code> is the javascript runtime executable
+which is actually going to run our code. <code class="language-plaintext highlighter-rouge">npm</code> is the package manager which takes care of resolving dependencies on 
+third party libraries, downloading them and setting up their paths correctly so that we have a lot of pre-written
+code in form of modules available at our disposal.</p>
+
+<p>Mongodb will also be started and enabled for autostart. If you don’t want it to be auto started everytime you boot,
+don’t execute the last command.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>pacman <span class="nt">-Syu</span> node npm mongodb
+
+<span class="nb">sudo </span>systemctl start mongodb
+
+<span class="nb">sudo </span>systemctl <span class="nb">enable </span>mongodb
+</code></pre></div></div>
+
+<p>As of this writing, I got node 7.2, npm 4.0 and mongodb 3.2. The javascript ecosystem is a very fast moving one. Some
+of the code mentioned hereon might get obsolete in a couple of years but the general idea remains the same.</p>
+
+<h3 id="setup-the-initial-packagejson">Setup the initial package.json</h3>
+<p>In the node world <code class="language-plaintext highlighter-rouge">package.json</code> is the file which contains the details of our dependencies and run configurations.
+In Rails world, it is analogous to <code class="language-plaintext highlighter-rouge">Gemfile</code> but on steroids. In java world it is kind of analogous to <code class="language-plaintext highlighter-rouge">build.gradle</code>
+or a <code class="language-plaintext highlighter-rouge">pom.xml</code>.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir</span> <span class="nt">-p</span> ~/Documents/Projects/js-snipcode
+<span class="nb">cd</span> <span class="o">!</span><span class="err">$</span>
+npm init
+</code></pre></div></div>
+<p>The second command might seem unfamiliar. !$ represents the last paramter of previous command in bash and zsh. So it
+will just take you to the newly created directory from the previous step.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">npm init</code> is interactive and it will first ask you for a project name. Then configure the version and description.
+Next it asks for the entry point for the app. You can leave it as <code class="language-plaintext highlighter-rouge">index.js</code>. Keep pressing enter to accept the
+defaults for other fields or change if you like. For now we ignore the test command. A <code class="language-plaintext highlighter-rouge">package.json</code> file will be
+created in the end.</p>
+
+<h3 id="install-express">Install Express</h3>
+<p>Express is the web framework library that we are going to use. Now let’s add a dependency on Express, add babel
+transpilation of ES6 and get from zero to “Hello World!”.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm <span class="nb">install </span>express <span class="nt">--save</span>
+npm <span class="nb">install</span> <span class="nt">--save-dev</span> babel-cli babel-preset-latest
+</code></pre></div></div>
+
+<p>Running the above commands will download Express, babel-cli and babel’s latest preset. <code class="language-plaintext highlighter-rouge">--save</code> flag makes an entry in
+the <code class="language-plaintext highlighter-rouge">dependencies</code> section of package.json. Guess what does the <code class="language-plaintext highlighter-rouge">--save-dev</code> flag do? You got it right! It makes an
+entry in <code class="language-plaintext highlighter-rouge">devDependencies</code> in <code class="language-plaintext highlighter-rouge">package.json</code>. Dev dependencies are different from dependencies in that they
+are not required for running the app. They are only used during development, for instance for transpilation during
+build. Let’s also add two target scripts named <code class="language-plaintext highlighter-rouge">build</code> and <code class="language-plaintext highlighter-rouge">start</code> in the <code class="language-plaintext highlighter-rouge">package.json</code>. Running <code class="language-plaintext highlighter-rouge">npm run build</code> will
+tell babel to transpile everything in <code class="language-plaintext highlighter-rouge">src</code> directory recursively and output the transpiled files in <code class="language-plaintext highlighter-rouge">dist</code> directory.
+<code class="language-plaintext highlighter-rouge">npm run start</code> in the root directory of our project will start our web server by running the command
+<code class="language-plaintext highlighter-rouge">node dist/index.js</code>. Also, don’t forget <code class="language-plaintext highlighter-rouge">mkdir src; mv index.js src</code>. Here’s the updated <code class="language-plaintext highlighter-rouge">package.json</code>.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"js-snipcode"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0.0"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"API in NodeJS for the Snipcode project."</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"main"</span><span class="p">:</span><span class="w"> </span><span class="s2">"index.js"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"scripts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"test"</span><span class="p">:</span><span class="w"> </span><span class="s2">"echo </span><span class="se">\"</span><span class="s2">Error: no test specified</span><span class="se">\"</span><span class="s2"> &amp;&amp; exit 1"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"build"</span><span class="p">:</span><span class="w"> </span><span class="s2">"babel src -d dist --presets latest"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"node dist/index.js"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"author"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Prabhakar Kumar"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"license"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ISC"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"dependencies"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"express"</span><span class="p">:</span><span class="w"> </span><span class="s2">"^4.14.0"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"devDependencies"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"babel-cli"</span><span class="p">:</span><span class="w"> </span><span class="s2">"^6.18.0"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"babel-preset-latest"</span><span class="p">:</span><span class="w"> </span><span class="s2">"^6.18.0"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="zero-to-hello-world">Zero to Hello World!</h3>
+<p>Let’s edit our <code class="language-plaintext highlighter-rouge">src/index.js</code> and write relevant code to make a Hello World app.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">express</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">express</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">app</span> <span class="o">=</span> <span class="nf">express</span><span class="p">();</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span>
+  <span class="nx">res</span><span class="p">.</span><span class="nf">send</span><span class="p">(</span><span class="dl">'</span><span class="s1">Hello World!</span><span class="dl">'</span><span class="p">)</span>
+<span class="p">);</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nf">listen</span><span class="p">(</span><span class="mi">3000</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> 
+  <span class="nx">console</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Server is up on port 3000!</span><span class="dl">'</span><span class="p">)</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<p>Now let’s build and run.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm run build
+npm run start
+</code></pre></div></div>
+
+<p>If everything went well as we discussed, you will see a message on the console that says server is up on port 3000.
+Now if you fire up firefox or chromium and go to <a href="http://localhost:3000">localhost:3000</a>, you will see the evergreen
+‘Hello world!’ message staring at you on a white screen.</p>
+
+<p>Before we start writing more code, I’ll explain the meaning of the lines in our Hello World web app. But, before that
+let’s pivot and focus on learning our database and design a basic data model.</p>
+
+<h3 id="play-with-mongo-console">Play with mongo console</h3>
+<p>Let’s play with mongo console a bit to gain some familiarity with it.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ mongo
+MongoDB shell version: 3.2.10
+connecting to: test
+Welcome to the MongoDB shell.
+For interactive help, type "help".
+For more comprehensive documentation, see
+        http://docs.mongodb.org/
+Questions? Try the support group
+        http://groups.google.com/group/mongodb-user
+Server has startup warnings:
+2016-12-04T07:40:24.545-0500 I CONTROL  [initandlisten]
+2016-12-04T07:40:24.545-0500 I CONTROL  [initandlisten] ** WARNING: /sys/kernel/mm/transparent_hugepage/enabled is 'always'.
+2016-12-04T07:40:24.545-0500 I CONTROL  [initandlisten] **        We suggest setting it to 'never'
+2016-12-04T07:40:24.545-0500 I CONTROL  [initandlisten]
+&gt; show databases
+local  0.000GB
+&gt; use snipcode
+switched to db snipcode
+&gt; db.users.insert({name: "John Doe", country: "United States", "sex": 'M', dob: ISODate('1970-01-01')})
+WriteResult({ "nInserted" : 1 })
+&gt; db.users.find()
+{ "_id" : ObjectId("58441a27d01af6e5b1ae6f74"), "name" : "John Doe", "country" : "United States", "sex" : "M", "dob" : ISODate("1970-01-01T00:00:00Z") ers.insert({name: "Jane Doe", country: "United States", "sex": 'F', dob: ISODate('1970-01-01')})
+WriteResult({ "nInserted" : 1 })
+&gt; db.users.find()
+{ "_id" : ObjectId("58441a27d01af6e5b1ae6f74"), "name" : "John Doe", "country" : "United States", "sex" : "M", "dob" : ISODate("1970-01-01T00:00:00Z") }
+{ "_id" : ObjectId("58441a5bd01af6e5b1ae6f75"), "name" : "Jane Doe", "country" : "United States", "sex" : "F", "dob" : ISODate("1970-01-01T00:00:00Z") }
+&gt; db.users.find({sex: 'F'})
+{ "_id" : ObjectId("58441a5bd01af6e5b1ae6f75"), "name" : "Jane Doe", "country" : "United States", "sex" : "F", "dob" : ISODate("1970-01-01T00:00:00Z") }
+</code></pre></div></div>
+
+<p>Similar to MySQL and friends (MariaDB, Aurora), Mongodb organizes it’s data in databases. We don’t need to explicitly
+create a database unlike MySQL. It gets created as soon as we try to write something to it. Inside a Mongodb database,
+the database is organized in collections. A collection is analogous to tables in RDBMS, and more flexible. A
+collection doesn’t have a fixed schema. So, one document (record/row in RDBMS) can have fields different from others
+in the same collection. In the above example, we switched to database named <code class="language-plaintext highlighter-rouge">snipcode</code>. Then we inserted a document
+describing a user named ‘John Doe’. Upon doing a <code class="language-plaintext highlighter-rouge">find()</code> (which is analogous to SQL’s SELECT) on that collection we
+got the record, along with a unique record ID called ObjectID. Then we inserted another record for <code class="language-plaintext highlighter-rouge">Jane Doe</code>. Then we
+ran a query which returns all female users. For this, we provided the query condition <code class="language-plaintext highlighter-rouge">sex: 'F'</code> which is similar to
+WHERE sex = ‘F’ in SQL.</p>
+
+<p>As of now, this much familiarity is enough for us to get started. We will dive deeper as and when we need.</p>
+
+<h2 id="next-part">Next part</h2>
+
+<p>In this part we got bootstrapped and got our hands dirty. In the next part we will start with data modeling and
+continue further. Stay tuned for it.</p>
+
+  </div>
+
+	<span>Tags: [
+		
+			
+			<a href="/tag/linux"><code class="highligher-rouge"><nobr>linux</nobr></code></a>
+		
+			
+			<a href="/tag/nodejs"><code class="highligher-rouge"><nobr>nodejs</nobr></code></a>
+		
+			
+			<a href="/tag/mongodb"><code class="highligher-rouge"><nobr>mongodb</nobr></code></a>
+		
+			
+			<a href="/tag/es6"><code class="highligher-rouge"><nobr>es6</nobr></code></a>
+		
+	]</span>
+
+  Ads by Google:<br/>
+<script data-ad-client="ca-pub-4893769676014512" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+<a class="u-url" href="/2017/03/22/bootstrap-a-restful-api-app-with-node-es6-mongo-linux.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Prabhakar Kumar</li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/prabhakar97"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">prabhakar97</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Talk is cheap, show me the code!</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

@@ -1,0 +1,1384 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2024-06-26T10:09:35-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Show me the code!</title><subtitle>Talk is cheap, show me the code!</subtitle><author><name>Prabhakar Kumar</name></author><entry><title type="html">Setup Arch Linux on a Dell XPS 13 with Windows 10 dual boot</title><link href="http://localhost:4000/2020/01/15/setup-arch-linux-on-dell-xps-13-7390.html" rel="alternate" type="text/html" title="Setup Arch Linux on a Dell XPS 13 with Windows 10 dual boot" /><published>2020-01-15T17:48:53-08:00</published><updated>2020-01-15T17:48:53-08:00</updated><id>http://localhost:4000/2020/01/15/setup-arch-linux-on-dell-xps-13-7390</id><content type="html" xml:base="http://localhost:4000/2020/01/15/setup-arch-linux-on-dell-xps-13-7390.html"><![CDATA[<h3 id="intro">Intro</h3>
+
+<p>This article details steps for setting up a functional Arch Linux installation (with a beautiful Deepin Desktop Environment GUI) on a Dell XPS 13, along with the pre-installed Windows 10
+in a dual boot configuration. As a developer, I needed an ultrabook class laptop which wasn’t underpowered. Dell XPS 13 fits perfectly in this segment. It is extremely light, has a
+unibody design with sturdy hinge and is specwise pretty juicy. After being spoilt with a Macbook Pro for a few years during my previous employment, I never liked the touchpads of
+non-mac laptops. Dell XPS 13’s was the first one I did. I believe new HP Spectre and Lenovo carbon laptops might have good touchpads but I haven’t played with them yet.</p>
+
+<p>I bought the 2019 version of Dell XPS 13 7390 with the following specs</p>
+
+<ul>
+  <li>Core i7 10th Gen 10710U processor (<a href="https://www.cpubenchmark.net/cpu.php?cpu=Intel+Core+i7-10710U+%40+1.10GHz&amp;id=3567">CPU Benchmark</a>)</li>
+  <li>16GB LPDDR3 2133 MHz RAM,</li>
+  <li>1TB M.2 PCIe NVMe SSD</li>
+  <li>13.3 inch 4K touchscreen display</li>
+  <li>Backlit chiclet keyboard with Fingerprint Reader on the power button</li>
+</ul>
+
+<p>It cost me $1705.01 USD inclusive of the 10% Washington state sales tax. Too bad, Dell released the 2020 version a few days after I purchased it but I console myself by thinking that
+similar configuration is 500 dollars costlier for the 2020 version as of this writing.</p>
+
+<p>Before you start judging me for why didn’t I buy the Developer Edition as it should have flawless driver support for Linux, I would like to clarify that I did
+consider it but for the similar configuration it was only 10 dollars cheaper and didn’t have a fingerprint sensor; the Dell Website didn’t list these in the spec page of
+developer edition. I made up my mind to fight driver issues head-on on the Windows edition, should they come up; but touchwood, I didn’t get any that hinder my ability to use the laptop effectively!</p>
+
+<h4 id="requirements">Requirements</h4>
+
+<p>These set of steps should take less than an hour of your time, assuming you have a fairly performant internet connection as per 2019-2020 standards accessible via a WPA2 encrypted WiFi network.
+This article also assumes that you have some basic understanding and familiarity with setting up and running any Linux distro for a while.
+This article doesn’t require you to have another laptop with you during the installation process. You should have a USB thumbdrive (a.k.a. pendrive) and the USB-C to USB-A adapter
+that comes free with the XPS 13 that may look something like below image.
+<img src="/images/thumb_drive.png" alt="Thumb drive" /></p>
+
+<h4 id="why-arch">Why Arch</h4>
+
+<p>I have been an Arch user since 2011 and never had any issues with it. <a href="https://wiki.archlinux.org/">ArchWiki</a> has probably the best documentation among all distros, and
+<a href="https://aur.archlinux.org/">AUR</a> has a comprehensive collection of packages that can be installed if not found in official repositories. With a rolling release model so you DO NOT have to
+update your distro every 6 months the new version comes, and serves the latest versions of almost all packages from its repositories. Despite of being rolling release,
+it is very stable. It is very lean; on top of a basic Linux system it’s the user who makes all choices for installing only the packages required. And because of rolling release nature, you have
+the goodies rolling in everyday. The package manager <code class="language-plaintext highlighter-rouge">pacman</code> is very fast and processes installation of packages in a jiffy.
+Using Arch gives you a feeling of being in control of everything.</p>
+
+<h3 id="step-1-download-the-arch-installation-image-and-prepare-the-arch-linux-boot-disk">Step 1: Download the arch installation image and prepare the Arch Linux boot disk</h3>
+
+<p>Boot into the pre-installed Windows 10 of your Dell XPS 13 and download the Arch Linux latest installation image from this page: <a href="https://www.archlinux.org/download/">Arch Linux - Downloads</a>.
+I chose to download the image over BitTorrent protocol. I find it usually faster than HTTP, and it also frees up bandwidth for other needy users to download from HTTP server.</p>
+
+<p>Once you have the installation image downloaded, you can create a boot disk with it. I use the <code class="language-plaintext highlighter-rouge">DD for windows</code> tool for this which can be downloaded from this
+<a href="http://www.chrysocome.net/download">download page</a>. The page appears confusing on first looks as it has lots of files listed for download. You can download the file named
+<code class="language-plaintext highlighter-rouge">dd-0.6beta3.zip</code> and extract it, then open up a command window or powershell window, and navigate to the extracted folder.</p>
+
+<p>The following command will create a Arch boot image in a pendrive that has been inserted and has been assigned the drive letter D. Adjust the command to reflect the correct path
+of the downloaded Arch image and the drive letter assigned to the thumbdrive. Ensure that you put the backslashes exactly as shown in the <code class="language-plaintext highlighter-rouge">of</code> parameter.</p>
+
+<div class="language-bat highlighter-rouge"><div class="highlight"><pre class="highlight"><code>.\dd <span class="k">if</span><span class="o">=</span><span class="kd">C</span>:\Users\your<span class="na">-windows-username</span>\Downloads\archlinux<span class="o">-</span><span class="m">2020</span>.01.01<span class="na">-x</span><span class="m">86</span>_64.iso <span class="kd">of</span><span class="o">=</span>\\.\d: <span class="kd">bs</span><span class="o">=</span><span class="m">16</span><span class="kd">M</span>
+</code></pre></div></div>
+<h3 id="step-2-disable-bitlocker-and-partition-the-disk-for-arch">Step 2: Disable Bitlocker and partition the disk for Arch</h3>
+
+<p>Microsoft’s Bitlocker disk encryption can annoy you by forcing you to enter a long encryption key when you attempt to boot Windows after Arch installation. So it is a good idea to disable Bitlocker
+beforehand. Type <code class="language-plaintext highlighter-rouge">Manage BitLocker</code> in start menu and disable it for C drive. Or you can go to <code class="language-plaintext highlighter-rouge">Control Panel</code> &gt; <code class="language-plaintext highlighter-rouge">System and Security</code> &gt; <code class="language-plaintext highlighter-rouge">Bitlocker drive encryption</code> and disable it from there.</p>
+
+<p>Now you need to free some space up for your Linux installation. You can do this by using the Disk Management tool that comes built-in with Windows 10 or the partitioning tools for linux during
+installation process. In this article we are doing it from Windows. Microsoft has nice online documentation for it here:
+<a href="https://docs.microsoft.com/en-us/windows-server/storage/disk-management/overview-of-disk-management">Disk Management</a></p>
+
+<p>Press the start button, or the Window key on the keyboard and start typing <code class="language-plaintext highlighter-rouge">Create and Format Disk Partitions</code>. Launch the program. It will show you the layout of the hard disk partition
+structure. By default, it comes with a 500MB EFI partition, a very large C drive partition, a WINRETOOLS parition, a factory image partition and a DELLSUPPORT parition. You can shrink the
+existing C drive parition to make space for Linux.</p>
+
+<p>Right click on the C drive partition and choose <code class="language-plaintext highlighter-rouge">Shrink Volume ...</code>. Enter the size for the new partition. The row under it should autocalculate and show you the final size of C drive.
+Make sure to keep it reasonable for your Windows needs. I entered 500000 and it resulted in a 488GB of raw unallocated free space.</p>
+
+<p>I chose to create a 8GB volume for swap space and remaining space for the <code class="language-plaintext highlighter-rouge">/</code> partition. For this, just right click the newly created unallocated space and click <code class="language-plaintext highlighter-rouge">New Simple Volume</code>
+and enter 8192 MB as the size. Choose to not assign a drive letter when asked. Then right click the remaining space, click <code class="language-plaintext highlighter-rouge">New Simple Volume</code> and allocate all the remaining space for  the volume
+for <code class="language-plaintext highlighter-rouge">/</code> partition.</p>
+
+<p>Some people create separate partition for <code class="language-plaintext highlighter-rouge">/home</code> as well which in my opinion is actually a good idea, because if for some reason your Linux installation gets borked, you can nuke the <code class="language-plaintext highlighter-rouge">/</code> partition,
+install a fresh copy of your OS on it (even different distro altogether) and retain everything in the <code class="language-plaintext highlighter-rouge">/home</code> by setting the mount point in <code class="language-plaintext highlighter-rouge">fstab</code>. This makes everything look like it used to
+earlier (assuming certain conditions hold), because of all the user level customizations in the desktop environment being retained in users’ home directory. I find separate partitions for /usr and
+/var on personal computers an overkill. For the sake of simplicity we are not creating a separate <code class="language-plaintext highlighter-rouge">/home</code> partition in this article.</p>
+
+<p>Ultimate result should look something like the below image. If you have created more partitions, they will appear too.</p>
+
+<p><img src="/images/disk_layout.jpg" alt="Disk Layout" /></p>
+
+<h3 id="step-3-change-sata-mode-to-ahci-and-disable-secureboot">Step 3: Change SATA mode to AHCI and disable SecureBoot</h3>
+
+<p>Time to fiddle with some BIOS settings. Before we start installation, we need to change the SATA operation mode in BIOS to AHCI so that the Arch boot disk can recognize the hard disk volumes. If you do not
+change the SATA mode to AHCI, Arch installation disk won’t recognize your NVMe M.2 hard disk in XPS 13.</p>
+
+<p>Get into the BIOS settings by rebooting the computer and pressing F12 repeatedly until you see the text <code class="language-plaintext highlighter-rouge">Preparing one time boot menu</code> in the top right corner of the screen.
+Then click <code class="language-plaintext highlighter-rouge">BIOS Setup1 and change the SATA operation to AHCI under </code>System Configuration` section of the left sidebar. Here’s a screenshot that may come handy identifying where to do this.</p>
+
+<p><img src="/images/sata_mode.png" alt="SATA Mode AHCI" /></p>
+
+<p>Also, disable SecureBoot in BIOS because it won’t allow setting up Grub which is the de-facto bootloader for Linux distributions. Below screenshot shows how to disable SecureBoot.</p>
+
+<p><img src="/images/secure_boot.jpg" alt="Disable secure boot" /></p>
+
+<p>Save the change which will result in a system restart.</p>
+
+<h3 id="step-4-boot-the-arch-installation-media">Step 4: Boot the arch installation media</h3>
+
+<p>Press the F12 key repeatedly while the ssytem is starting and get into the One Time Boot Menu again and choose the pendrive as the boot device, as shown in the screenshot below.
+<img src="/images/boot_device.png" alt="Boot device" /></p>
+
+<p>If the disk image was created correctly you should see the Arch Boot Menu as shown below. Choose the first option and press enter.
+<img src="/images/arch_boot.png" alt="Arch boot menu" /></p>
+
+<p>You should see the <code class="language-plaintext highlighter-rouge">root@archiso</code> prompt in a few moments. Please note that, on the 4K display XPS 13, the letters in the terminal during installation look extremely small. However, you have to
+face this problem only during installation and after the installation of a GUI everything should start looking good.</p>
+
+<h3 id="step-5-connect-to-the-network-and-enable-ntp-time-sync">Step 5: Connect to the network and enable NTP time sync</h3>
+
+<p>I assume you have a WiFi network in range. You can use the <code class="language-plaintext highlighter-rouge">wifi-menu</code> command that comes pre-installed in the installation disk. It has a nice curses based UI where you can choose the WiFi network
+from a menu of options and enter its password to connect to it. Test the connection by running <code class="language-plaintext highlighter-rouge">ping archlinux.org</code>.</p>
+
+<p>Now set the time with NTP by running</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>timedatectl set-ntp <span class="nb">true</span>
+</code></pre></div></div>
+
+<h3 id="step-6-setup-filesystems">Step 6: Setup filesystems</h3>
+
+<p>Run the below command</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">ls</span> /dev/nvme<span class="k">*</span>
+</code></pre></div></div>
+<p>to check for the block devices. It is highly likely that you should be able to identify <code class="language-plaintext highlighter-rouge">/dev/nvme0n1</code> as the block device representing your hard disk, which is because all XPS 13s come
+with NVME based M.2 SSDs. You can verify this by running <code class="language-plaintext highlighter-rouge">fdisk -l /dev/nvme0n1</code> which should output the list of Windows partition that already exist and the raw partitions.</p>
+
+<p>Carefully check the output of the fdisk command above, and figure out the partition number for the swap and / partitions that we created in Step 1. For me, the output looks like this.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fdisk -l /dev/nvme0n1
+
+Disk /dev/nvme0n1: 953.89 GiB, 1024209543168 bytes, 2000409264 sectors
+Disk model: PC601 NVMe SK hynix 1TB                 
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: gpt
+Disk identifier: 7EED0FB4-482A-45A9-A7CE-55E525352534
+
+Device              Start        End    Sectors   Size Type
+/dev/nvme0n1p1       2048    1394687    1392640   680M EFI System
+/dev/nvme0n1p2    1394688    1656831     262144   128M Microsoft reserved
+/dev/nvme0n1p3    1656832  944373759  942716928 449.5G Microsoft basic data
+/dev/nvme0n1p4  944373760  961150975   16777216     8G Microsoft basic data
+/dev/nvme0n1p5  961150976 1968371711 1007220736 480.3G Microsoft basic data
+/dev/nvme0n1p6 1968373760 1970401279    2027520   990M Windows recovery environment
+/dev/nvme0n1p7 1970401280 1997346815   26945536  12.9G Windows recovery environment
+/dev/nvme0n1p8 1997348864 2000408575    3059712   1.5G Windows recovery environment
+</code></pre></div></div>
+
+<p>I was able to figure out that <code class="language-plaintext highlighter-rouge">/dev/nvme0n1p4</code> was the 8GB partition I created for swap and the <code class="language-plaintext highlighter-rouge">/dev/nvme0n1p5</code> was the partition I created for root filesystem. Enable swap on the swap parititon
+and format the partition for root filesystem into ext4.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkfs.ext4 /dev/nvme0n1p5
+mkswap /dev/nvme0n1p4
+swapon /dev/nvme0n1p4
+</code></pre></div></div>
+
+<p>Now that we are ready with filesystems, we can go ahead mounting them and starting installation.</p>
+
+<h3 id="step-7-mount-partitions-and-install-needed-packages">Step 7: Mount partitions and install needed packages</h3>
+
+<p>Create a directory <code class="language-plaintext highlighter-rouge">/mnt/root</code> to mount the root filesystem and EFI system partition on <code class="language-plaintext highlighter-rouge">/mnt/root/boot</code>.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir</span> <span class="nt">-p</span> /mnt/root /mnt/root/boot
+mount /dev/nvme0n1p5 /mnt/root
+mount /dev/nvme0n1p1 /mnt/root/boot
+</code></pre></div></div>
+
+<p>Open the file <code class="language-plaintext highlighter-rouge">/etc/pacman.d/mirrorlist</code> in a text editor like <code class="language-plaintext highlighter-rouge">vim</code> or <code class="language-plaintext highlighter-rouge">nano</code>. Bring a few mirror URLs closest to you geographically to the top of the file. Since, I live on the west coast of USA,
+I brought a few US west coast pacman mirrors onto the top. This should ensure that the package installation command runs fast.</p>
+
+<p>Now install the necessary packages using pacstrap.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pacstrap /mnt/root base linux linux-firmware base-devel grub os-prober intel-ucode alsa deepin deepin-extra <span class="nb">sudo </span>lightdm lightdm-deepin-greeter
+</code></pre></div></div>
+
+<p>I like deepin as my desktop environment as it looks beautiful and has a perfect traditional desktop look and feel. If you want Gnome, or KDE, or LXDE, or LXQT, or XFCE or any other desktop environment
+instead, feel free to modify the above command and install corresponding packages.</p>
+
+<h3 id="step-8-configure-base-system">Step 8: Configure base system</h3>
+
+<p>Generate an fstab file by running <code class="language-plaintext highlighter-rouge">genfstab -U /mnt/root &gt;&gt; /mnt/root/etc/fstab</code>.</p>
+
+<p>Now chroot into the system to configure some other necessary stuff. Arch installation image has a handy chroot wrapper script named <code class="language-plaintext highlighter-rouge">arch-chroot</code>, which chroots into the installed root filesystem
+and also binds necessary virtual filesystem mounts like <code class="language-plaintext highlighter-rouge">proc</code>, <code class="language-plaintext highlighter-rouge">sys</code> and <code class="language-plaintext highlighter-rouge">dev</code> correctly from the currently running installation OS.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arch-chroot /mnt/root
+</code></pre></div></div>
+
+<h4 id="set-timezone">Set timezone</h4>
+
+<p>Set the time zone by creating a symlink to the zoneinfo file for your region at <code class="language-plaintext highlighter-rouge">/etc/localtime</code>. Command below is for US West Coast. You can change it according to your region.
+Also, set the clock to use UTC.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">ln</span> <span class="nt">-sf</span> /usr/share/zoneinfo/Americas/Los_Angeles
+hwclock <span class="nt">--systohc</span>
+</code></pre></div></div>
+
+<h4 id="set-locale">Set locale</h4>
+
+<p>Open <code class="language-plaintext highlighter-rouge">/etc/locale.gen</code> in vi or nano and uncomment the <code class="language-plaintext highlighter-rouge">en_US.UTF-8 UTF-8</code> line. Then run <code class="language-plaintext highlighter-rouge">locale-gen</code>. After this, open <code class="language-plaintext highlighter-rouge">/etc/locale.conf</code> and add a line <code class="language-plaintext highlighter-rouge">LANG=en_US.UTF-8</code>.</p>
+
+<h4 id="network-configurations">Network configurations</h4>
+
+<p>Create the hostname file <code class="language-plaintext highlighter-rouge">/etc/hostname</code> and add a name for your laptop, for example <code class="language-plaintext highlighter-rouge">my-xps</code>. Also update the hostname in <code class="language-plaintext highlighter-rouge">/etc/hosts</code> so it looks like below:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>127.0.0.1   localhost
+::1         localhost
+127.0.1.1   my-xps.localdomain my-xps
+</code></pre></div></div>
+
+<p>Deepin comes with NetworkManager but it didn’t work as expected for me for connecting to WiFi. So you might want to disable NetworkManager and install netctl.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>systemctl disable NetworkManager
+pacman <span class="nt">-S</span> netctl wpa_supplicant dhcpcd
+</code></pre></div></div>
+
+<p>You can also create a <code class="language-plaintext highlighter-rouge">netctl</code> profile right away so that you do not need to struggle connecting to the internet when you reboot after the installation is finished.</p>
+
+<p>Create a file named <code class="language-plaintext highlighter-rouge">/etc/netctl/MyWiFi</code> and put the following content. This assumes that your home WiFi network name is <code class="language-plaintext highlighter-rouge">MyWiFi</code>. I also faced lag and disconnection issues with
+5GHz wifi networks so for now I am using a 2.4GHz network only. I haven’t spent time figuring out the cause and fixing it, I may update this article when I do.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Description='My home WiFi connection'
+Interface=wlp2s0
+Connection=wireless
+
+Security=wpa
+IP=dhcp
+
+ESSID='MyWiFi'  # &lt;=== Put your WiFi network's name here
+Key='12345678' # &lt;== Put your WiFi password here
+</code></pre></div></div>
+
+<h4 id="build-initramfs">Build initramfs</h4>
+
+<p>Run <code class="language-plaintext highlighter-rouge">mkinitcpio -P</code> to build the initramfs.</p>
+
+<h3 id="set-root-password">Set root password</h3>
+
+<p>Set a root password by running the <code class="language-plaintext highlighter-rouge">passwd</code> command.</p>
+
+<h3 id="step-9-configure-grub">Step 9: Configure Grub</h3>
+
+<p>During pacstrap we installed <code class="language-plaintext highlighter-rouge">grub</code> and <code class="language-plaintext highlighter-rouge">os-prober</code> so, now we just need to install grub and create a config for it. If <code class="language-plaintext highlighter-rouge">os-prober</code> is installed, <code class="language-plaintext highlighter-rouge">grub-mkconfig</code> command automatically
+detects Windows partition, if any and adds an entry for booting into it in the boot menu.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>grub-install <span class="nt">--target</span><span class="o">=</span>x86_64-efi <span class="nt">--efi-directory</span><span class="o">=</span>/mnt/root/boot <span class="nt">--bootloader-id</span><span class="o">=</span>GRUB
+grub-mkconfig <span class="nt">-o</span> /boot/grub/grub.cfg
+</code></pre></div></div>
+
+<h3 id="step-10-create-a-user-and-enable-sudo">Step 10: Create a user and enable sudo</h3>
+
+<p>Create a non-root user and add it to necessary groups (at least <code class="language-plaintext highlighter-rouge">wheel</code>). Replace the username <code class="language-plaintext highlighter-rouge">master</code> in below command with your desired username.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>useradd <span class="nt">-m</span> <span class="nt">-G</span> wheel <span class="nt">-s</span> /bin/bash master
+</code></pre></div></div>
+
+<p>Also set a password for this account by running <code class="language-plaintext highlighter-rouge">passwd master</code>.</p>
+
+<p>Run <code class="language-plaintext highlighter-rouge">visudo</code> to open sudoers file. Find the line that allows members of group wheen to run sudo commands without password and uncomment it. It should look something like below:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>%wheel ALL=(ALL) NOPASSWD: ALL
+</code></pre></div></div>
+
+<p>However, it is not recommended for everybody to configure sudo without password. You might want to configure it to be used with password instead by uncommenting the following line instead.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>%wheel ALL=(ALL) ALL
+</code></pre></div></div>
+
+<h3 id="step-11-prepare-for-reboot">Step 11: Prepare for reboot</h3>
+
+<p>Now your arch installation is ready to boot into. But before that, we need to perform one final configuration, which is to configure <code class="language-plaintext highlighter-rouge">lightdm</code> - the display manager to use <code class="language-plaintext highlighter-rouge">deepin</code>’s greeter.</p>
+
+<p>Open the file <code class="language-plaintext highlighter-rouge">/etc/lightdm/lightdm.conf</code>. Find the line that says <code class="language-plaintext highlighter-rouge">#greeter-session</code>, uncomment it and update it to use deepin’s greeter as shown below.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>greeter-session=lightdm-deepin-greeter
+</code></pre></div></div>
+<p>Also, enable lightdm by running <code class="language-plaintext highlighter-rouge">systemctl enable lightm</code>. Now reboot by typing <code class="language-plaintext highlighter-rouge">reboot</code>. You should be greeted by a beautiful login screen. When you login, you will see a desktop resembling the below
+screenshot.</p>
+
+<p><img src="/images/deepin_desktop.png" alt="Deepin desktop" /></p>
+
+<p>Deepin desktop comes with a dock by default but I prefer a task bar instead. You can right click the dock and change the mode to <code class="language-plaintext highlighter-rouge">Efficient Mode</code>.</p>
+
+<p><img src="/images/dock_mode.png" alt="Deepin taskbar" /></p>
+
+<p>You might also want to change the size of icons to small instead of large.</p>
+
+<p><img src="/images/dock_size.png" alt="Deepin taskbar size" /></p>
+
+<p>If the font sizes look too small or too large, you can adjust the scaling factor by right clicking the desktop, choosing <code class="language-plaintext highlighter-rouge">Display Settings</code> as shown in the screenshot below.</p>
+
+<p><img src="/images/display_scale.png" alt="Display Scaling" /></p>
+
+<h3 id="step-13-fix-windows">Step 13: Fix windows</h3>
+
+<p>Since we overwrote Windows’s EFI partition, it will refuse to boot. But there is a simple trick to fix that. You just need to boot Windows in safe mode once and it figures out stuff automatically.
+Kudos to Microsoft for this! If you try booting Windows from the Grub menu it will get into the dreaded blue screen of death. But from there you will get an option to attempt to diagnose
+and fix boot problems. There you can choose to boot into safe mode. Once you have successfully made it into safe mode, you should also make a change in Windows registry so that it treats hardware
+clock to be in UTC. This way the time shown in Linux as well as Windows will be similar. For that, just open a command prompt with administrator privileges and run the following command:</p>
+
+<div class="language-bat highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">reg</span> <span class="kd">add</span> <span class="s2">"HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\TimeZoneInformation"</span> <span class="na">/v </span><span class="kd">RealTimeIsUniversal</span> <span class="na">/d </span><span class="m">1</span> <span class="na">/t </span><span class="kd">REG_QWORD</span> <span class="na">/f
+</span></code></pre></div></div>
+
+<p>Or you could open <code class="language-plaintext highlighter-rouge">regedit</code> and manually navigate to the above key and add a new QWORD value of 1 for <code class="language-plaintext highlighter-rouge">RealTimeIsUniversal</code>.</p>
+
+<h3 id="step-14-all-set">Step 14: All set</h3>
+
+<p>Assuming that you sailed through the process smoothly, congratulations! You now have your Dell XPS 13 with a dual boot setup of Windows 10 and Arch Linux. If you are a developer like me, you might want
+to change your shell to zsh, install Git, Vim, htop, Ruby, NodeJS, JDK, Postman, Docker, Visual Studio Code, IntelliJ Idea Community Edition and other development tools and platforms to facilitate your
+development workflow. As general utilities, you might want to install Gimp for photo editing, imagemagick, VLC media player, xarchiver, p7zip-full, unrar, Evince for PDF viewing, Chromium and Firefox
+for web browsing and Audacious for listening to your music collection.</p>
+
+<p>Here’s an obligatory screenshot (compressed JPEG) of my final setup.</p>
+
+<p><img src="/images/arch_desktop.jpg" alt="Arch Desktop" /></p>
+
+<h3 id="known-issues">Known Issues</h3>
+
+<p>I have found the following issues on my Dell XPS 13 (with factory installed Windows) while using Arch Linux:</p>
+
+<ul>
+  <li>Looses connection to 5G WiFi network intermittently (however 2.4GHz networks work perfectly)</li>
+  <li>Cannot use NetworkManager to connect to WiFi networks. Netctl works flawlessly, but to make your life easier install wifi-menu from AUR.</li>
+</ul>]]></content><author><name>Prabhakar Kumar</name></author><category term="archlinux" /><category term="dell-xps-13" /><summary type="html"><![CDATA[Intro]]></summary></entry><entry><title type="html">Run your webapps on Kubernetes for cheap</title><link href="http://localhost:4000/2019/04/11/run-your-webapps-on-kubernetes-for-cheap.html" rel="alternate" type="text/html" title="Run your webapps on Kubernetes for cheap" /><published>2019-04-11T09:48:53-07:00</published><updated>2019-04-11T09:48:53-07:00</updated><id>http://localhost:4000/2019/04/11/run-your-webapps-on-kubernetes-for-cheap</id><content type="html" xml:base="http://localhost:4000/2019/04/11/run-your-webapps-on-kubernetes-for-cheap.html"><![CDATA[<h3 id="tldr">TL;DR</h3>
+
+<p>This post details how to spin off a 3 node Kubernetes cluster on Google Cloud, paying close to 7 dollars a month for it and host multiple database backed dynamic websites and API apps.</p>
+
+<h3 id="disclaimer">Disclaimer</h3>
+
+<p>This is a hands on article to get started with Kubernetes. Some of the terminology and descriptions in this article have been simplified to make it approachable to people unfamiliar with
+Kubernetes. For technical purity, Kubernetes’s official documentation can be consulted.</p>
+
+<h3 id="intro">Intro</h3>
+
+<p>Kubernetes is the new cool kid on the block (bye bye blockchain!). Listing it as an skill in your LinkedIn profile will definitely get you some recruiter attention.
+It is <em>the solution</em> for all your dev-ops woes!</p>
+
+<p>I used to run all of my hobby projects in docker containers with lifecycles managed by docker-compose files. I had a VM from <a href="https://scaleway.com">scaleway</a> with 4 gigs of memory,
+100 gigs of SSD storage and dual core x86 CPU for which I used to pay around 5 Euros a month. I was happy until I learnt about Kubernetes and then I realized <em>ignorance is bliss</em>.
+After reading this post, you will be able to spin off a 3 node Kubernetes cluster on Google Cloud with 0.6GB memory each and 1 vCPU each and pay roughly ~7 dollars a month for it!
+If you want a beefier cluster you can choose a different configuration for nodes and for 40 dollars a month you get 11.25GB of memory at your disposal, three compute cores with which you can do
+wonders - host several high traffic webapps backed by different databases! Adding to that, with Google Cloud’s free trial program you can have this cluster running for free for almost an year!</p>
+
+<p>My three node cluster currently runs <code class="language-plaintext highlighter-rouge">mongodb</code>, <code class="language-plaintext highlighter-rouge">postgres</code>, <code class="language-plaintext highlighter-rouge">nginx</code>, two rails web applications, a nodeJS web application, a dotnetcore web application, a spring boot based Java REST API application
+which powers an Android app, and still has a lot of resources remaining to do 3-4 times more of what it currently does. All the web apps are fronted by nginx and configured with different server blocks
+for different domain names (a.k.a virtual hosts). All the domain names have their own letsencrypt https certificates that automatically renew every three months. Two of the apps use mongodb and
+the other two postgres.</p>
+
+<h4 id="single-vm-vs-cluster">Single VM vs Cluster</h4>
+
+<p>Running all your workloads in a single VM is like putting all the eggs in the same basket. If ever the VM is restarted for updating the Kernel, reclaim some leaked memory or something else;
+all the apps hosted on the box incur downtime. Running on Kubernetes is better, because:</p>
+
+<ol>
+  <li>Cloud provider (GCP) manages updates and patches on your VMs, so you don’t need to explicitly restart nodes. In case of node restarts, Kubernetes ensures relocating workloads running on the unavailable VM.</li>
+  <li>Kubernetes restarts containers automatically when underlying process crashes due to some issue.</li>
+  <li>Kubernetes handles load balancing of requests and scaling of resources to fulfill the requests. For example, you can tell Kubernetes declaratively to run more instances of your webapp when the load is higher.</li>
+  <li>Kubernetes sets up internal networking in the cluster so that your apps can talk to each other. This enables you to build microservices based large scale services.</li>
+</ol>
+
+<p>Besides, using Kubernetes to run your compute infrastructure is considered cool in 2019!</p>
+
+<h3 id="what-is-kubernetes">What is Kubernetes?</h3>
+
+<p>Kubernetes’s official website writes:</p>
+
+<blockquote>
+  <p>Kubernetes is a portable, extensible open-source platform for managing containerized workloads and services, that facilitates both declarative configuration and automation.</p>
+</blockquote>
+
+<p>This might not be quite an approachable description for everybody. Here is my attempt:</p>
+
+<blockquote>
+  <p>Kubernetes is like an operating system, for your distributed computing cluster that lets you run your scalable applications without being bothered about nodes in the cluster going down, request routing, load balancing, networking and other devops hassles.</p>
+</blockquote>
+
+<h3 id="lets-get-started">Let’s get started</h3>
+
+<h4 id="step-1-setup-a-3-node-cluster-on-google-cloud">Step 1: Setup a 3-node cluster on Google Cloud</h4>
+
+<p>Register on Google Cloud, if you already haven’t. Create a project, setup billing. Click the hamburger menu icon (<img src="/images/hamburger.png" alt="menu" />) on the top left, and in <em>Compute</em> section,
+click <em>Kubernetes Engine</em>. Click the <code class="language-plaintext highlighter-rouge">Create Clusters</code> button. Make sure in the left pane, cluster template is set to <code class="language-plaintext highlighter-rouge">Standard cluster</code>. In the right pane, name your cluster;
+for example <em>blog-cluster</em>. Fill in the settings as listed below:</p>
+
+<ul>
+  <li><em>Location type</em>: Zonal</li>
+  <li><em>Zone</em>: us-central1-a</li>
+</ul>
+
+<p>Under node pools:</p>
+
+<ul>
+  <li><em>Number of nodes</em>: 3</li>
+  <li><em>Machine type</em>: <code class="language-plaintext highlighter-rouge">n1-standard-1</code> (this will cost roughly $40/month for 3 nodes). Choose <code class="language-plaintext highlighter-rouge">f1-micro</code> for $7/month instead.</li>
+</ul>
+
+<p>Click <em>More node pool options</em> and ensure that the following are set:</p>
+
+<ul>
+  <li><em>Enable autoscaling</em>: off</li>
+  <li><em>Boot disk type</em>: Standard persistent disk</li>
+  <li><em>Boot disk size</em>: 10 GB</li>
+  <li><em>Enable pre-emptible nodes</em>: Yes - you must do this for cost cutting. These nodes get terminated within 24 hours and get replaced with another one and cost around one-fourth of regular nodes.
+Since Kubernetes can handle node downtimes, we need not worry about our app going down when GCP replaces a VM.</li>
+</ul>
+
+<p>Click <em>Availability, networking, security, and additional features</em> and ensure the following:</p>
+
+<ul>
+  <li><em>Enable HTTP load balancing</em>: No - this is costly! We will use Kubernetes’s default balancer</li>
+  <li><em>Enable Stackdriver Logging service</em>: No</li>
+  <li><em>Enable Stackdriver Monitoring service</em>: No</li>
+  <li><em>Enable Kubernetes Dashboard</em>: No</li>
+</ul>
+
+<p>Leave all the other settings to their sane defaults. Changing some of them might cost you extra money. Click the <code class="language-plaintext highlighter-rouge">Create</code> button and wait for the cluster to come up. The clusters page should
+show your newly created cluster.</p>
+
+<p><img src="/images/kubernetesclusters.png" alt="Clusters" /></p>
+
+<h4 id="step-2-connect-to-your-newly-minted-cluster">Step 2: Connect to your newly minted cluster</h4>
+
+<p>Install <code class="language-plaintext highlighter-rouge">kubectl</code> command line utility for your OS. In the <em>Clusters</em> page, click <em>Connect</em> and it will show you a <code class="language-plaintext highlighter-rouge">gcloud</code> command which downloads the necessary authentication information
+for the <code class="language-plaintext highlighter-rouge">kubectl</code> command. Run the command. Once you have done that, test your connection by running <code class="language-plaintext highlighter-rouge">kubectl get nodes</code> which should return you a list of three nodes.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>% kubectl get nodes
+NAME                                          STATUS   ROLES    AGE   VERSION
+gke-blog-cluster-default-pool-edcca0b2-4mf2   Ready    &lt;none&gt;   1m    v1.11.7-gke.12
+gke-blog-cluster-default-pool-edcca0b2-hd1p   Ready    &lt;none&gt;   1m    v1.11.7-gke.12
+gke-blog-cluster-default-pool-edcca0b2-z6f1   Ready    &lt;none&gt;   1m    v1.11.7-gke.12
+</code></pre></div></div>
+
+<h4 id="step-3-prepare-your-first-application">Step 3: Prepare your first application</h4>
+
+<p>Let’s prepare a rails application that uses a <code class="language-plaintext highlighter-rouge">postgresql</code> database to deploy on this cluster. We will name it <code class="language-plaintext highlighter-rouge">RailsPortal</code>, you are free to name whatever you want.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem <span class="nb">install </span>bundler
+gem <span class="nb">install </span>rails
+rails new RailsPortal
+bundle <span class="nb">exec </span>rails s
+</code></pre></div></div>
+
+<p>Last command should start a local server at port 3000 and you should be able to access it at <code class="language-plaintext highlighter-rouge">localhost:3000</code>. Stop the server by running <code class="language-plaintext highlighter-rouge">Ctrl-C</code>. Open <code class="language-plaintext highlighter-rouge">config/database.yml</code> and around the
+end change the production db connection settings so that they look like this:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>production:
+  &lt;&lt;: <span class="k">*</span>default
+  adapter: postgresql
+  url: &lt;%<span class="o">=</span> ENV[<span class="s1">'DATABASE_URL'</span><span class="o">]</span> %&gt;
+</code></pre></div></div>
+
+<p>Also, edit the <code class="language-plaintext highlighter-rouge">Gemfile</code> and add a line <code class="language-plaintext highlighter-rouge">gem 'pg'</code> then run <code class="language-plaintext highlighter-rouge">bundle update</code>. The above changes will configure the production instance of app to use postgresql instead of default sqlite and 
+will let us pass the <code class="language-plaintext highlighter-rouge">postgresql</code> connection string through an environment variable that Kubernetes will setup for us later.</p>
+
+<p>Let’s create a scaffold with two fields and see whether things are working fine.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle <span class="nb">exec </span>rails g scaffold User name:string about:string
+bin/rails db:migrate <span class="nv">RAILS_ENV</span><span class="o">=</span>development
+</code></pre></div></div>
+
+<p>This will generate necessary views and controllers which we can use to insert some data and ensure that things are working fine. Second command will commit pending database migrations.
+Start the server again  by running <code class="language-plaintext highlighter-rouge">bundle exec rails s</code> and access the url <code class="language-plaintext highlighter-rouge">http://localhost:3000/users</code> and click <code class="language-plaintext highlighter-rouge">New User</code> and try adding a new record.</p>
+
+<p>Now that our test application is ready, let’s containerize it. If you do not have docker installed, now is the time to install it and start the docker service.
+Once we build the container, we want to push it to a private docker repository. <a href="https://hub.docker.com">Docker Hub</a> lets you store container images for free. Register on their website then connect
+your local <code class="language-plaintext highlighter-rouge">docker</code> command to your docker hub account by running the following command:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker login <span class="nt">--username</span><span class="o">=</span>DockerHubUsername <span class="nt">--email</span><span class="o">=</span>DockerHubEmail
+</code></pre></div></div>
+
+<p>For building the container image, we need to create a file named <code class="language-plaintext highlighter-rouge">Dockerfile</code> which tells docker how to build the container. Create this <em>Dockerfile</em> in rails portal’s root directory.</p>
+
+<div class="language-docker highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">FROM</span><span class="s"> ruby:2.5-alpine</span>
+
+<span class="k">RUN </span>apk add <span class="nt">--no-cache</span> <span class="nt">--update</span> nodejs postgresql-dev libpq tzdata imagemagick
+<span class="k">RUN </span>apk add <span class="nt">--no-cache</span> <span class="nt">--update</span> <span class="nt">--virtual</span> build-deps build-base git
+<span class="k">RUN </span><span class="nb">cp</span> /usr/share/zoneinfo/UTC /etc/localtime
+
+<span class="k">COPY</span><span class="s"> . /app</span>
+
+<span class="k">WORKDIR</span><span class="s"> /app</span>
+<span class="k">RUN </span><span class="nb">echo</span> <span class="s1">'gem: --no-document'</span> <span class="o">&gt;</span> /etc/gemrc
+<span class="k">RUN </span>bundle <span class="nb">install</span> <span class="nt">--jobs</span> 4 <span class="nt">--without</span> development <span class="nb">test</span>
+
+<span class="k">RUN </span>apk del build-deps
+</code></pre></div></div>
+
+<p>Make sure the ruby version in Dockerfile is consistent with the one in Gemfile. Now build and push the container to docker hub by running following commands:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker build <span class="nt">-t</span> DockerHubUsername/RailsPortal <span class="nb">.</span>
+docker push DockerHubUsername/RailsPortal
+</code></pre></div></div>
+
+<h4 id="step-4-architect-your-infrastructure">Step 4. Architect your infrastructure</h4>
+
+<p><img src="/images/kube_rails.png" alt="Rails on Kubernetes" /></p>
+
+<p>We are going to use a simple architecture <em>client -&gt; Webserver (nginx) -&gt; Web app (rails) -&gt; Database (postgres)</em> which is quite popular for single VM setups too. Only difference is that instead
+of processes running on a VM, these will be containers and will be run on different nodes of the cluster by Kubernetes.</p>
+
+<h4 id="step-5-plan-kubernetes-resources">Step 5. Plan Kubernetes resources</h4>
+
+<p>Kubernetes has the concept of resources. The ones we are going to use in this project are:</p>
+
+<ul>
+  <li>Deployment</li>
+  <li>Service</li>
+  <li>StorageClass</li>
+  <li>PersitentVolumeClaim</li>
+  <li>PersistentVolume</li>
+  <li>Secret</li>
+  <li>ConfigMap</li>
+</ul>
+
+<p>A <em>deployment</em> describes a container to run along with the volumes it needs, environment variables, ports it should listen to, number of replicas of it Kubernetes should run in the cluster etc.
+There are many more things we can configure for a deployment, but these are the ones we are going to use in our little project. In this article, I might use the terms deployment and container
+interchangeably - because in practice a Kubernetes deployment is a container running in the cluster.</p>
+
+<p>A <em>service</em> fronts a deployment by giving it a stable private or public endpoint on which the deployment (running container) can be accessed. Private endpoints are exposed by service of type
+ClusterIP and public endpoints are exposed by service of type LoadBalancer. Private endpoints are accessible only inside the cluster, from other containers. For example, a postgres deployment
+should only be accessible from deployments running in the cluster, for example a web application.</p>
+
+<p>A <em>storage class</em> is to define the characteristics of volumes that can be created on demand. We create this once and create persistent volume claims that refer to it.</p>
+
+<p>A <em>persistent volume</em> is a storage accessible from any of the running containers on the cluster which are configured to access it. As containers are stateless, we need a reliable persistent store
+to store our stateful data, for example postgres’s data files.</p>
+
+<p>A <em>persistent volume claim</em> is an access mechanism for a container to access a persistent volume. We will talk about it ahead in the article when we need it.</p>
+
+<p>A <em>secret</em> is used to store authentication credentials and expose it to only the resources that need it.</p>
+
+<p>A <em>config map</em> is a keyvalue pair, that can be used to store configuration information in the cluster which can be used from a container.</p>
+
+<p>Kubernetes provides us a declarative way of telling it about the resources we need to create (a <em>goal state</em> of our infrastructure) and then it tries to create those resources (or achieve the
+<em>goal state</em>). We declare the properties for resources in <em>yaml</em> files and Kubernetes takes care of it.</p>
+
+<p>For our little project, we will be creating the following resources:</p>
+
+<ul>
+  <li>A deployment for nginx, which we will use to front our web applications (rails)</li>
+  <li>A service of type load balancer for nginx, such that users can access our applications from external the internet</li>
+  <li>A config map for the nginx configuration files</li>
+  <li>A secret to store authentication information for docker hub so that kubernetes can pull the rails application container that we pushed to our private docker hub repository</li>
+  <li>A deployment for rails portal, whose container we built in step 4</li>
+  <li>A service for rails portal, so that nginx can access it forward requests to it</li>
+  <li>A deployment for postgres, which will run the container</li>
+  <li>A service for postgres so that rails application can connect to it</li>
+  <li>A storage class for postgres that defines the kind of storage to be used for persistent volumes. E.g, SSD/magnetic etc.</li>
+  <li>A persistent volume claim for postgres so that the postgres deployment can access the persistent volume</li>
+  <li>A persistent volume for postgres, so that we can have postgres store its data files there</li>
+</ul>
+
+<h4 id="step-6-setting-up-nginx">Step 6. Setting up nginx</h4>
+
+<p>Let’s begin by creating a deployment for nginx. Create a directory named nginx. Below gist is for a yaml file that we will use to describe nginx deployment on Kubernetes. Copy
+its contents to a file named <code class="language-plaintext highlighter-rouge">nginx-dep.yml</code> on your local computer.</p>
+
+<noscript><pre>400: Invalid request</pre></noscript>
+<script src="https://gist.github.com/6e870acd7e91273a747996961a2a04c2.js"> </script>
+
+<p>It declares that we want to create a resource of type <code class="language-plaintext highlighter-rouge">Deployment</code>, label it with name <code class="language-plaintext highlighter-rouge">nginx</code>, use the container <code class="language-plaintext highlighter-rouge">nginx</code> with tag <code class="language-plaintext highlighter-rouge">mainline-alpine</code>, and expose the container’s port 80.
+By default the container image is pulled from docker hub. Now run <code class="language-plaintext highlighter-rouge">kubectl apply -f nginx-dep.yml</code> to let Kubernetes do its magic.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>% kubectl apply <span class="nt">-f</span> nginx-dep.yml
+deployment.apps/nginx-dep created
+% kubectl get pods
+NAME                         READY   STATUS    RESTARTS   AGE
+nginx-dep-776c646dc6-g4w9x   1/1     Running   0          25s
+</code></pre></div></div>
+
+<p>The output of last command tells us that an nginx deployment is running since 25 seconds. Yes, you just noticed that we used a new term <code class="language-plaintext highlighter-rouge">pods</code> in the command. A pod can be considered as an application
+for all practical purposes. You can find about it more in official Kubernetes documentation.</p>
+
+<p>Let’s create an LB now so that we can access the running container from outside. Copy the below contents to a file named <code class="language-plaintext highlighter-rouge">nginx-svc.yml</code>.</p>
+
+<noscript><pre>400: Invalid request</pre></noscript>
+<script src="https://gist.github.com/d76f720c5b9d666965e959861e5e33b3.js"> </script>
+
+<p>This file declares that we want a resource of kind <code class="language-plaintext highlighter-rouge">Service</code> of type <code class="language-plaintext highlighter-rouge">LoadBalancer</code> which should accept connections on port 80 and direct to port 80 of a service. Which service? The service is selected
+using the selector parameter which says to match it with the <code class="language-plaintext highlighter-rouge">app: nginx</code> which we had specified in our <code class="language-plaintext highlighter-rouge">nginx-dep.yml</code> file. Let’s deploy this file too.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>% kubectl apply <span class="nt">-f</span> nginx-svc.yml
+service/nginx-lb created
+% kubectl get svc
+NAME         TYPE           CLUSTER-IP      EXTERNAL-IP   PORT<span class="o">(</span>S<span class="o">)</span>        AGE
+kubernetes   ClusterIP      10.59.240.1     &lt;none&gt;        443/TCP        4m
+nginx-lb     LoadBalancer   10.59.240.108   &lt;pending&gt;     80:31463/TCP   24s
+</code></pre></div></div>
+
+<p>This shows that the resource with name nginx-lb and type LoadBalancer has been created. But it is pending an external ip. Wait for some time and run the command again to get the external ip.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>% kubectl get svc
+NAME         TYPE           CLUSTER-IP      EXTERNAL-IP    PORT<span class="o">(</span>S<span class="o">)</span>        AGE
+kubernetes   ClusterIP      10.59.240.1     &lt;none&gt;         443/TCP        5m
+nginx-lb     LoadBalancer   10.59.240.108   34.66.92.238   80:31463/TCP   1m
+</code></pre></div></div>
+
+<p>Now, if you try typing the shown external ip in a browser, you should be able to get the nginx’s welcome page! Awesome! You can change a domain’s A record to point to this IP address and this
+will be accessible from any browser through the domain name.</p>
+
+<h4 id="step-7-setting-up-postgres">Step 7. Setting up postgres</h4>
+
+<p>Our webapp will need Postgres to store its data. Since we need postgres’s data to be persistent across container and node restarts, we need to create a persistent volume. For that we first
+create a storage class with type SSD. Then we create a persistent volume claim that uses this newly created storage class. A persistent volume gets automatically created, when we try to create
+a persistent volume claim using the storage class of <code class="language-plaintext highlighter-rouge">kubernetes.io/gce-pd</code>. We can also club two related storage related declarations into a single yaml file as shown below.</p>
+
+<noscript><pre>400: Invalid request</pre></noscript>
+<script src="https://gist.github.com/45ddec715c5e9840e715db5d1b0282ab.js"> </script>
+
+<p>Let’s create the resources from this yml file and check their statuses.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>% kubectl apply <span class="nt">-f</span> postgres-storage.yml
+storageclass.storage.k8s.io/postgres-ssd created
+persistentvolumeclaim/postgres-disk-claim created
+% kubectl get pvc
+NAME                  STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+postgres-disk-claim   Bound    pvc-79f8200b-5c64-11e9-978f-42010a800070   1Gi        RWO            postgres-ssd   12s
+% kubectl get pv
+NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                         STORAGECLASS   REASON   AGE
+pvc-79f8200b-5c64-11e9-978f-42010a800070   1Gi        RWO            Delete           Bound    default/postgres-disk-claim   postgres-ssd            12s
+</code></pre></div></div>
+
+<p>Now that our storage for postgres is all set, we can create the deployment and service. Let’s club both the declarations in the same yaml file as we did with the storage. Its a good practice to 
+club logically related resources in a single file.</p>
+
+<noscript><pre>400: Invalid request</pre></noscript>
+<script src="https://gist.github.com/62e68cf0f42e24c09e9a91e6cf393b08.js"> </script>
+
+<p>In the deployment, we specify that we will run the <em>postgres</em> container with tag <em>10-alpine</em> from docker hub. We also set environment variables for username, password and data directory. You
+should note that we specify a volume mount and configure it to use the persistent volume claim we created earlier and we mount that 1GB storage volume at <em>/data</em> directory in the container.
+We also create a service (with type <code class="language-plaintext highlighter-rouge">ClusterIP</code> being the default) and configure its app selector to postgres and specify that port 5432 on the container be made available for other apps in the cluster.</p>
+
+<p>Let’s create the service and deployment and check the status on the cluster.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>% kubectl apply <span class="nt">-f</span> postgres-dep.yml
+deployment.extensions/postgres created
+service/postgres created
+% kubectl get pods
+NAME                         READY   STATUS    RESTARTS   AGE
+nginx-dep-776c646dc6-g4w9x   1/1     Running   0          8m
+postgres-6969669b9f-4f42h    1/1     Running   0          54s
+% kubectl get svc
+NAME         TYPE           CLUSTER-IP      EXTERNAL-IP    PORT<span class="o">(</span>S<span class="o">)</span>        AGE
+kubernetes   ClusterIP      10.59.240.1     &lt;none&gt;         443/TCP        15m
+nginx-lb     LoadBalancer   10.59.240.108   34.66.92.238   80:31463/TCP   7m
+postgres     ClusterIP      10.59.243.25    &lt;none&gt;         5432/TCP       48s
+</code></pre></div></div>
+
+<p>Great! We got postgres running and available on our cluster. Let’s login to the container and create a database that will be used by the rails portal to store its data.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>% kubectl get pods
+NAME                         READY   STATUS    RESTARTS   AGE
+nginx-dep-776c646dc6-g4w9x   1/1     Running   0          17m
+postgres-6969669b9f-4f42h    1/1     Running   0          2m
+% kubectl <span class="nb">exec</span> <span class="nt">-it</span> postgres-6969669b9f-4f42h <span class="nt">--</span> /bin/sh
+/ <span class="c"># su postgres</span>
+/ <span class="nv">$ </span>psql <span class="nt">-d</span> postgres
+<span class="nv">postgres</span><span class="o">=</span><span class="c"># CREATE DATABASE railsportal;</span>
+CREATE DATABASE
+</code></pre></div></div>
+
+<p>Through the first command we copied the name of the pod. Then the next command connected to the running container, and mounted its shell (tty) in interactive mode with our terminal and then ran /bin/sh
+on the terminal. This directly dropped us into the container’s shell, wehere we switched to the user <code class="language-plaintext highlighter-rouge">postgres</code>, then ran psql and created a database. Logging-in to a running container comes handy
+a lot during debugging sessions.</p>
+
+<h4 id="step-8-deploy-the-rails-application">Step 8. Deploy the rails application</h4>
+
+<p>Since, we pushed our rails application to a private docker repository on docker hub and we do not want the world to be able to access it because it has our intellectual property (;p),
+Kubernetes won’t be able to pull the image without authentication information. Let’s create a secret that stores our docker hub username and password.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl create secret docker-registry dockeraccess <span class="nt">--docker-server</span><span class="o">=</span>https://index.docker.io/v1/ <span class="nt">--docker-username</span><span class="o">=</span>YourDockerHubUsername <span class="nt">--docker-password</span><span class="o">=</span>YourDockerHubPassword <span class="nt">--docker-email</span><span class="o">=</span>YourDockerHubEmail
+</code></pre></div></div>
+
+<p>The deployment yml file looks as follows:</p>
+
+<noscript><pre>400: Invalid request</pre></noscript>
+<script src="https://gist.github.com/0da2905368a607196a02108e47628bee.js"> </script>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>% kubectl apply <span class="nt">-f</span> rails-portal-dep.yml
+deployment.extensions/railsportal created
+service/railsportal created
+% kubectl get pods
+NAME                           READY   STATUS    RESTARTS   AGE
+nginx-dep-776c646dc6-g4w9x     1/1     Running   0          1h
+postgres-6969669b9f-4f42h      1/1     Running   0          1h
+railsportal-7d6d74f865-n6x56   1/1     Running   0          31s
+</code></pre></div></div>
+<p>If your container status is CrashLoopBackoff because of some changes you made, you may debug by using the command <code class="language-plaintext highlighter-rouge">kubectl describe pod PodName</code>.</p>
+
+<p>We need to make changes to nginx config so that nginx forwards all the requests to RailsPortal. For that, let’s go back and change the config so that we pass a nginx config file
+while starting the container. Create a file named <code class="language-plaintext highlighter-rouge">nginx.conf</code> with the following content:</p>
+
+<noscript><pre>400: Invalid request</pre></noscript>
+<script src="https://gist.github.com/5a1c295e457121234407136c80a23bd2.js"> </script>
+
+<p>Create another file named <code class="language-plaintext highlighter-rouge">railsportal.nginx.conf</code> with the following content:</p>
+
+<noscript><pre>400: Invalid request</pre></noscript>
+<script src="https://gist.github.com/58a6630d678e0ffabfb88c4eece4caaa.js"> </script>
+
+<p>Now create two config maps for these files in the cluster:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>% kubectl create configmap nginxconfig <span class="nt">--from-file</span><span class="o">=</span>./nginx.conf
+configmap/nginxconfig created
+% kubectl create configmap railsportalnginxconfig <span class="nt">--from-file</span><span class="o">=</span>./railsportal.nginx.conf
+configmap/railsportalnginxconfig created
+</code></pre></div></div>
+
+<p>Update the <code class="language-plaintext highlighter-rouge">nginx-dep.yml</code> and append the config map settings at the end of the file so that it becomes like below:</p>
+
+<noscript><pre>400: Invalid request</pre></noscript>
+<script src="https://gist.github.com/739dfe55fa710d8c1cffd5bc63bb99c5.js"> </script>
+
+<p>Now apply the updated configuration for nginx to the cluster:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>% kubectl apply <span class="nt">-f</span> nginx-dep.yml
+deployment.apps/nginx-dep configured
+</code></pre></div></div>
+
+<p>Opening the website with the public IP should show the rails portal. You can check the logs by running <code class="language-plaintext highlighter-rouge">kubectl logs PodName</code> where PodName should be replaced with the name of the pod for rails
+portal that comes up when you run <code class="language-plaintext highlighter-rouge">kubectl get pods</code>. If things are not working as expected, you may try logging into the container and poke around.</p>
+
+<h3 id="home-work">Home work</h3>
+
+<p>You can try deploying another application on the same cluster. A ExpressJS webapp, talking to a mongoDB database would be a good exercise. You may also go ahead and figure out how to enable auto
+scaling. And you may try doing this on Azure or AWS and figure which one comes up cheapest.</p>
+
+<h3 id="next-steps">Next steps</h3>
+
+<p>Now that we have successfully setup our rails application in Kubernetes, in the next article we will do the following:</p>
+
+<ul>
+  <li>Enable HTTPS access with Letsencrypt certs and setup auto renew</li>
+  <li>Make nginx serve static assets, instead of Rails</li>
+  <li>Setup auto scaling for times of high load</li>
+</ul>]]></content><author><name>Prabhakar Kumar</name></author><category term="cloud" /><category term="kubernetes" /><category term="docker" /><summary type="html"><![CDATA[TL;DR]]></summary></entry><entry><title type="html">Make your if statements concise</title><link href="http://localhost:4000/2018/03/17/make-your-if-statements-concise.html" rel="alternate" type="text/html" title="Make your if statements concise" /><published>2018-03-17T07:47:27-07:00</published><updated>2018-03-17T07:47:27-07:00</updated><id>http://localhost:4000/2018/03/17/make-your-if-statements-concise</id><content type="html" xml:base="http://localhost:4000/2018/03/17/make-your-if-statements-concise.html"><![CDATA[<p>Sometimes you may encounter a situation where you need to do something if two conditions are satisfied or they both are not satisfied; and do something else
+if exactly one of them is satisfied. An example would be:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="o">((</span><span class="n">resultFromServer1</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">resultFromServer2</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">||</span> <span class="o">(</span><span class="n">resultFromServer1</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">resultFromServer2</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">))</span> <span class="o">{</span>
+    <span class="n">log</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="s">"Both servers are aware or unaware of the operation"</span><span class="o">);</span>
+    <span class="n">doSomething</span><span class="o">();</span>
+<span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">((</span><span class="n">resultFromServer1</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">resultFromServer2</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">||</span> <span class="o">(</span><span class="n">resultFromServer1</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">resultFromServer2</span> <span class="o">==</span> <span class="kc">null</span><span class="o">))</span> <span class="o">{</span>
+    <span class="n">log</span><span class="o">.</span><span class="na">err</span><span class="o">(</span><span class="s">"Only one server is aware of the operation"</span><span class="o">);</span>
+    <span class="n">doSomethingElse</span><span class="o">();</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>These conditions look messy. We can fix them using XOR! XOR returns true if two conditions are different and false if both conditions are same.
+So we can write the above complexity as:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="o">((</span><span class="n">resultFromServer1</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">^</span> <span class="o">(</span><span class="n">resultFromServer2</span> <span class="o">==</span> <span class="kc">null</span><span class="o">))</span> <span class="o">{</span>
+    <span class="n">log</span><span class="o">.</span><span class="na">err</span><span class="o">(</span><span class="s">"Only one server is aware of the operation"</span><span class="o">);</span>
+    <span class="n">doSomethingElse</span><span class="o">();</span>
+<span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+    <span class="n">log</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="s">"Both servers are aware or unaware of the operation"</span><span class="o">);</span>
+    <span class="n">doSomething</span><span class="o">();</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>The reverse of XOR is EX-NOR. And interesting thing about that is, in case of booleans EX-NOR is equivalent to both conditions being equal. So, it is also
+called as equality gate. Hence, we can write:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="o">((</span><span class="n">resultFromServer1</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">==</span> <span class="o">(</span><span class="n">resultFromServer2</span> <span class="o">==</span> <span class="kc">null</span><span class="o">))</span> <span class="o">{</span>
+    <span class="n">log</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="s">"Both servers are aware or unaware of the operation"</span><span class="o">);</span>
+    <span class="n">doSomething</span><span class="o">();</span>
+<span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+    <span class="n">log</span><span class="o">.</span><span class="na">err</span><span class="o">(</span><span class="s">"Only one server is aware of the operation"</span><span class="o">);</span>
+    <span class="n">doSomethingElse</span><span class="o">();</span>
+<span class="o">}</span>
+</code></pre></div></div>]]></content><author><name>Prabhakar Kumar</name></author><category term="programming" /><summary type="html"><![CDATA[Sometimes you may encounter a situation where you need to do something if two conditions are satisfied or they both are not satisfied; and do something else if exactly one of them is satisfied. An example would be:]]></summary></entry><entry><title type="html">Here’s a fluent builder in C#</title><link href="http://localhost:4000/2018/03/17/heres-a-fluent-builder-in-c-number.html" rel="alternate" type="text/html" title="Here’s a fluent builder in C#" /><published>2018-03-17T07:31:34-07:00</published><updated>2018-03-17T07:31:34-07:00</updated><id>http://localhost:4000/2018/03/17/heres-a-fluent-builder-in-c-number</id><content type="html" xml:base="http://localhost:4000/2018/03/17/heres-a-fluent-builder-in-c-number.html"><![CDATA[<p>A fluent builder makes creating objects more readable than constructors and more concise than setting properties through setters
+on an uninitialized object.
+Java devs can use Lombok’s <code class="language-plaintext highlighter-rouge">@Builder</code> annotation to get a fluent builder wired into their classes. Unfortunately, in C# world
+no such thing exists. So here’s how you can roll out your own.</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">Animal</span>
+<span class="p">{</span>
+  <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+  <span class="k">public</span> <span class="kt">string</span> <span class="n">Type</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+
+  <span class="err">#</span><span class="n">region</span> <span class="n">Fluent</span> <span class="n">builder</span>
+  <span class="k">public</span> <span class="k">static</span> <span class="n">Animal</span> <span class="nf">Builder</span><span class="p">()</span>
+  <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nf">Animal</span><span class="p">();</span>
+  <span class="p">}</span>
+
+  <span class="k">public</span> <span class="n">Animal</span> <span class="nf">WithName</span><span class="p">(</span><span class="kt">string</span> <span class="n">name</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="n">Name</span> <span class="p">=</span> <span class="n">name</span><span class="p">;</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">public</span> <span class="n">Animal</span> <span class="nf">WithType</span><span class="p">(</span><span class="kt">string</span> <span class="n">type</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="n">Type</span> <span class="p">=</span> <span class="n">type</span><span class="p">;</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">public</span> <span class="n">Animal</span> <span class="nf">Build</span><span class="p">()</span>
+  <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="err">#</span><span class="n">endregion</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>And, to construct and object you can simply use:</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Animal</span> <span class="n">a</span> <span class="p">=</span> <span class="n">Animal</span><span class="p">.</span><span class="nf">Builder</span><span class="p">().</span><span class="nf">WithName</span><span class="p">(</span><span class="s">"Tommy"</span><span class="p">).</span><span class="nf">WithType</span><span class="p">(</span><span class="s">"Dog"</span><span class="p">).</span><span class="nf">Build</span><span class="p">();</span>
+</code></pre></div></div>
+
+<h2 id="update">Update</h2>
+
+<p>C# doesn’t need this. I figured it out after reading and writing lot of C# code. C# already has a nice intializer which can be used instead
+of a fluent builder:</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Animal</span> <span class="n">a</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Animal</span>
+<span class="p">{</span>
+    <span class="n">Name</span> <span class="p">=</span> <span class="s">"Tommy"</span><span class="p">,</span>
+    <span class="n">Type</span> <span class="p">=</span> <span class="s">"Dog"</span>
+<span class="p">};</span>
+</code></pre></div></div>]]></content><author><name>Prabhakar Kumar</name></author><category term="c-sharp" /><category term="design-patterns" /><summary type="html"><![CDATA[A fluent builder makes creating objects more readable than constructors and more concise than setting properties through setters on an uninitialized object. Java devs can use Lombok’s @Builder annotation to get a fluent builder wired into their classes. Unfortunately, in C# world no such thing exists. So here’s how you can roll out your own.]]></summary></entry><entry><title type="html">Boot linux from grub rescue prompt</title><link href="http://localhost:4000/2018/01/14/boot-linux-from-grub-rescue-prompt.html" rel="alternate" type="text/html" title="Boot linux from grub rescue prompt" /><published>2018-01-14T06:50:50-08:00</published><updated>2018-01-14T06:50:50-08:00</updated><id>http://localhost:4000/2018/01/14/boot-linux-from-grub-rescue-prompt</id><content type="html" xml:base="http://localhost:4000/2018/01/14/boot-linux-from-grub-rescue-prompt.html"><![CDATA[<p>If you have a dual boot setup of a Linux based OS and Windows 10, and you have setup grub to choose which OS
+to boot; you might have experienced the <em>grub rescue prompt</em> which comes up after a Windows 10 update screws up
+with the boot files.</p>
+
+<p>Panic not, for it’s easy to get back to your beloved Linux distro and fix grub. Here are the steps.</p>
+
+<ul>
+  <li>Find out the Linux partition (skip, if you already know)
+    <ul>
+      <li>Run <code class="language-plaintext highlighter-rouge">ls</code> and it should show you a list of partitions like <code class="language-plaintext highlighter-rouge">(hd0,msdos1) (hd0,msdos2) ...</code> or in the form <code class="language-plaintext highlighter-rouge">(hd0,gpt1), (hd0,gpt2) ...</code></li>
+      <li>Run ls with the name of the partition followed by a / to see the files on the partition. Like so <code class="language-plaintext highlighter-rouge">ls (hd0,gpt1)/</code>. Remember, that forward slash is important. You have to do this for each parition until you find your linux partition - i.e. you see the list of files named <code class="language-plaintext highlighter-rouge">dev, proc, usr, etc, mnt</code> etc.</li>
+    </ul>
+  </li>
+  <li>Set the grub modules prefix
+    <ul>
+      <li>Run this <code class="language-plaintext highlighter-rouge">set prefix=(hd0,msdos3)/boot/grub</code>. This assumes, your Linux partition in previous step was msdos3.</li>
+    </ul>
+  </li>
+  <li>Set the root partition
+    <ul>
+      <li>You can set the linux partition as your root partition by running <code class="language-plaintext highlighter-rouge">set root=(hd0,msdos3)</code></li>
+    </ul>
+  </li>
+  <li>Load the needed modules
+    <ul>
+      <li>We need to load the linux module to be able to boot Linux. Run <code class="language-plaintext highlighter-rouge">insmod linux</code> to do that.</li>
+    </ul>
+  </li>
+  <li>Find where your kernel and initramfs are located
+    <ul>
+      <li>You can run <code class="language-plaintext highlighter-rouge">ls /boot/</code> and it should show a file named <code class="language-plaintext highlighter-rouge">vmlinuz-linux</code>. That’s your Kernel. At least that’s how it is named in Arch Linux and related distros like Antergos and Manjaro. Kernel and Ramdisk have different names on different distros. Centos, Fedora and RHEL have names similar to <code class="language-plaintext highlighter-rouge">vmlinuz-3.10.0-693.11.1.el7.x86_64</code> for the Kernel. I assume you are smart enough to figure the naming out.</li>
+      <li>You can similarly find your initramfs image. Usually it is named something like <code class="language-plaintext highlighter-rouge">initramfs-linux.img</code>.</li>
+      <li>Caveats to look out for when finding the Kernel and initramfs image files - Number one, if the file names are versioned, choose the latest ones. Number two, choose the same version for Kernel and initramfs. And the last and number three, don’t choose the names that contain <code class="language-plaintext highlighter-rouge">rescue</code> or <code class="language-plaintext highlighter-rouge">memtest</code>. They are not the ones we are interested in.</li>
+    </ul>
+  </li>
+  <li>Boot Linux!
+    <ul>
+      <li>Having found out the Kernel and Ramdisk images, let’s load them up. Run <code class="language-plaintext highlighter-rouge">linux /boot/vmlinuz-linux root=/dev/sda3 fb rw quiet</code>. sda3 can probably be hda3 if you have an older machine. And the digit at the end should be same as the root partition number we found in the first step i.e. msdos3 in my case. Now load the Ramdisk by running <code class="language-plaintext highlighter-rouge">initrd initramfs-linux.img</code>.</li>
+      <li>Having loaded ‘em both, let’s boot. Run <code class="language-plaintext highlighter-rouge">boot</code> and bingo, your system should now boot normally!</li>
+    </ul>
+  </li>
+  <li>Fix grub so that you don’t have to go through this ordeal next time
+    <ul>
+      <li>Running <code class="language-plaintext highlighter-rouge">sudo grub-install /dev/sda</code> or in some cases hda instead of sda, should reinstall grub correctly and fix your booting problems.</li>
+    </ul>
+  </li>
+</ul>]]></content><author><name>Prabhakar Kumar</name></author><category term="linux" /><summary type="html"><![CDATA[If you have a dual boot setup of a Linux based OS and Windows 10, and you have setup grub to choose which OS to boot; you might have experienced the grub rescue prompt which comes up after a Windows 10 update screws up with the boot files.]]></summary></entry><entry><title type="html">Ship a REST API with Node, ES6 and MongoDB - Part 1</title><link href="http://localhost:4000/2017/03/22/bootstrap-a-restful-api-app-with-node-es6-mongo-linux.html" rel="alternate" type="text/html" title="Ship a REST API with Node, ES6 and MongoDB - Part 1" /><published>2017-03-22T09:22:40-07:00</published><updated>2017-03-22T09:22:40-07:00</updated><id>http://localhost:4000/2017/03/22/bootstrap-a-restful-api-app-with-node-es6-mongo-linux</id><content type="html" xml:base="http://localhost:4000/2017/03/22/bootstrap-a-restful-api-app-with-node-es6-mongo-linux.html"><![CDATA[<h2 id="introduction">Introduction</h2>
+<p>NodeJS has been gaining a lot of traction recently, especially for web applications. Lots of new web applications
+are now being built with tools from  the Node ecosystem. A possible reason is the umpteen number of javascript
+developers out in the wild. Other one is  the blazing speed of
+<a href="https://en.wikipedia.org/wiki/V8_(JavaScript_engine)">V8 engine</a>. Heck, even shiny desktop apps are now being built
+with Node viz. Popcorn Time.</p>
+
+<p>In this post I will walk through everything I did to ship an API app. Ship as in - ready to serve production traffic.</p>
+
+<h3 id="about-the-stack">About the stack</h3>
+<p>We will be using <a href="https://expressjs.com/">Express</a> as our web app framework. Express is minimalistic, fast and quietly
+gets out of our way when you want to detour through the dirt road. It is unlike convention over configuration style in
+<a href="http://rubyonrails.org/">Rails</a> and <a href="https://playframework.com/">Play framework</a> where you are good as long as you
+follow the conventions recommended by the framework. Going gets tough, if you start deviating. There are frameworks
+built specifically for facilitating API building. An example would be <a href="http://restify.com/">Restify</a>. The reason of
+not choosing such a framework for this exercise is to understand the intricacies of building an API. Restify would
+shield us from understanding lots of stuff.</p>
+
+<p>Also, we wil be writing our javascript in <a href="http://es6-features.org/">ES6</a> which is cleaner and hands down a better
+language than the javascript specced in ES5. Latest version of node still doesn’t fully support ES6, so we will use a
+transpiler named <a href="http://babeljs.io/">Babel</a> which transpiles code written by us into code conforming to ES5 for which
+node has full support. In the future when node catches up, we can turn off transpilation and run our ES6 code directly
+with node.</p>
+
+<p><a href="https://www.mongodb.com/">MongoDB</a> will be our database. It is a document oriented NoSQL database. What that means
+is - it is unlike the RDBMSes like MySQL or Oracle which let you model the world by defining a schema in form
+of tables recording their properties and then linking them with primary and foreign keys. With MongoDB we model our
+worldly entities in form of documents which are similar to JSON objects . The biggest advantage of NoSQL databases like
+MongoDB is that they are designed to be horizontally scalable - whenever we need to increase performance, we just
+add few more machines to the DB cluster and the database engine takes care of redistributing data and query traffic
+across all available machines. RDBMSes are limited by theory, in terms of horizontal scalability. A discussion of this
+is beyond the scope of this article, but if you are interested in knowing more about it you can browse the interwebs
+for this nuisance called CAP theorem.</p>
+
+<h3 id="about-the-project">About the project</h3>
+<p>We are going to build an API which can power a web application and/or a mobile app. The app is a social code snippet
+sharing system where the users can share frequently encountered code snippets that are used in a developer’s day to
+day life for solving mundane problems which they are too lazy to code themselves. Usually, as developers we google for
+our problem, find link to a stackoverflow question and copy the snippet from there and use from. In our case we let
+the users share the snippet, enter a description, select the language, optionally add some tags and publish it. A user
+can also thumb up a snippet or mark it as junk. We also allow some experienced users to edit the snippets and/or
+descriptions for clarity. We define experience with a formula derived from number of upvotes to their questions by
+other users, their age on the site and their time spent on the site. Also, we do away with logins through passwords. 
+We provide OAuth based logins through Google, Facebook, Twitter etc. Apart from these functional features, we will
+also do some non-functional stuff like generate an SEO friendly URL for each snippet so that Googlebot can find our
+snippets and list in search results. Let’s wear the product manager hat for a moment and write down the high level
+product requirements for our application.</p>
+
+<h4 id="as-a-guest-user-i-should-be-able-to">As a guest user I should be able to</h4>
+
+<ul>
+  <li>search for snipppets through description and/or code matches</li>
+  <li>list snippets by language, and sort them by
+    <ul>
+      <li>most voted</li>
+      <li>most viewed</li>
+    </ul>
+  </li>
+  <li>login using Google, Facebook or Twitter auth</li>
+</ul>
+
+<h4 id="as-a-logged-in-user-i-should-be-able-to">As a logged-in user I should be able to</h4>
+
+<ul>
+  <li>perform snippet operations
+    <ul>
+      <li>post a snippet</li>
+      <li>edit my posted snippets</li>
+      <li>view a snippet and see all previous versions of a snippet, if they have been edited</li>
+    </ul>
+  </li>
+  <li>perform profile operations
+    <ul>
+      <li>view my profile</li>
+      <li>refresh upstream information in the profile</li>
+      <li>view others’ profiles</li>
+      <li>view activity of a user, like snippets posted, snippets upvoted, snippets edited etc.</li>
+    </ul>
+  </li>
+  <li>perform friendship operations
+    <ul>
+      <li>send friend requests to people</li>
+      <li>accept/reject others’ friend requests</li>
+      <li>ignore/block a user</li>
+    </ul>
+  </li>
+  <li>perform feed operations
+    <ul>
+      <li>view a feed which shows my friends’ activity on the website</li>
+      <li>like and comment on activities in the feed</li>
+    </ul>
+  </li>
+  <li>perform leaderboard operations
+    <ul>
+      <li>view leaderboard of snippets</li>
+      <li>view leaderboard of users</li>
+      <li>filter leaderboard by language, user location etc.</li>
+    </ul>
+  </li>
+  <li>perform messaging operations
+    <ul>
+      <li>send private messages to my friends</li>
+      <li>send private messages to non-friends</li>
+      <li>view my inbox, categorized with messages from friends/non-friends</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="why-api">Why API?</h3>
+<p>Let’s take a step back and understand why should we write an API? Why not a simple MVC web application? APIs are great
+for scaling, technically as well as logistically. With an API, we define a set of operations, which cover all the
+interactions of users and other systems with our application. Then we write client apps, which talk to the API and get
+the job done. So, next time you swipe left in gmail to archive an email, you should know that an API call has been
+made by the GMail app residing on your phone, to the GMail servers along with some parameters which did the actual
+archiving of the email.</p>
+
+<p>What is logistic stability? Ok, I just made up this term! With an API as contract in place, the client app can
+independently scale with the actual functional implementation. We can have different people (or teams) working on the
+different client apps. As long as they have the API spec they can work independently. Also, the same API can power a
+native iOS app, an Android app, a mobile website and a web application. These client apps make API calls to fetch and
+display relevant data and perform operations upon user interactions.</p>
+
+<p>In terms of technical scalability, the people working on the backend can independently scale the most used operations
+in the API. For instance, if we are getting millions of calls for our compute intensive <code class="language-plaintext highlighter-rouge">findBugs</code> operation in a
+day, we can intelligently increase the resources it needs. One way would be to have a dedicated independent machine of
+high configuration just for this operation in the API. And we leverage the power of distributed systems and horizontal
+scalability! We will get into the details of this when we talk about shipping once we are code complete.</p>
+
+<h2 id="dev-env-setup">Dev Env setup</h2>
+<p>Before we design our data model, let’s get our hands dirty a bit, write a hello world app with Express and get MongoDB
+setup on our workstation.</p>
+
+<p>I am an <a href="https://www.archlinux.org/">Arch Linux</a> devotee. The instructions here should work perfectly on Arch. The
+onus of changing the commands to suit your package manager(apt, yum, emerge, brew) is upto you.</p>
+
+<h3 id="install-node-npm-and-mongodb">Install node, npm and mongodb</h3>
+<p>The following commands will install <code class="language-plaintext highlighter-rouge">node</code>, <code class="language-plaintext highlighter-rouge">npm</code> and <code class="language-plaintext highlighter-rouge">mongodb</code> for us. <code class="language-plaintext highlighter-rouge">node</code> is the javascript runtime executable
+which is actually going to run our code. <code class="language-plaintext highlighter-rouge">npm</code> is the package manager which takes care of resolving dependencies on 
+third party libraries, downloading them and setting up their paths correctly so that we have a lot of pre-written
+code in form of modules available at our disposal.</p>
+
+<p>Mongodb will also be started and enabled for autostart. If you don’t want it to be auto started everytime you boot,
+don’t execute the last command.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>pacman <span class="nt">-Syu</span> node npm mongodb
+
+<span class="nb">sudo </span>systemctl start mongodb
+
+<span class="nb">sudo </span>systemctl <span class="nb">enable </span>mongodb
+</code></pre></div></div>
+
+<p>As of this writing, I got node 7.2, npm 4.0 and mongodb 3.2. The javascript ecosystem is a very fast moving one. Some
+of the code mentioned hereon might get obsolete in a couple of years but the general idea remains the same.</p>
+
+<h3 id="setup-the-initial-packagejson">Setup the initial package.json</h3>
+<p>In the node world <code class="language-plaintext highlighter-rouge">package.json</code> is the file which contains the details of our dependencies and run configurations.
+In Rails world, it is analogous to <code class="language-plaintext highlighter-rouge">Gemfile</code> but on steroids. In java world it is kind of analogous to <code class="language-plaintext highlighter-rouge">build.gradle</code>
+or a <code class="language-plaintext highlighter-rouge">pom.xml</code>.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir</span> <span class="nt">-p</span> ~/Documents/Projects/js-snipcode
+<span class="nb">cd</span> <span class="o">!</span><span class="err">$</span>
+npm init
+</code></pre></div></div>
+<p>The second command might seem unfamiliar. !$ represents the last paramter of previous command in bash and zsh. So it
+will just take you to the newly created directory from the previous step.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">npm init</code> is interactive and it will first ask you for a project name. Then configure the version and description.
+Next it asks for the entry point for the app. You can leave it as <code class="language-plaintext highlighter-rouge">index.js</code>. Keep pressing enter to accept the
+defaults for other fields or change if you like. For now we ignore the test command. A <code class="language-plaintext highlighter-rouge">package.json</code> file will be
+created in the end.</p>
+
+<h3 id="install-express">Install Express</h3>
+<p>Express is the web framework library that we are going to use. Now let’s add a dependency on Express, add babel
+transpilation of ES6 and get from zero to “Hello World!”.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm <span class="nb">install </span>express <span class="nt">--save</span>
+npm <span class="nb">install</span> <span class="nt">--save-dev</span> babel-cli babel-preset-latest
+</code></pre></div></div>
+
+<p>Running the above commands will download Express, babel-cli and babel’s latest preset. <code class="language-plaintext highlighter-rouge">--save</code> flag makes an entry in
+the <code class="language-plaintext highlighter-rouge">dependencies</code> section of package.json. Guess what does the <code class="language-plaintext highlighter-rouge">--save-dev</code> flag do? You got it right! It makes an
+entry in <code class="language-plaintext highlighter-rouge">devDependencies</code> in <code class="language-plaintext highlighter-rouge">package.json</code>. Dev dependencies are different from dependencies in that they
+are not required for running the app. They are only used during development, for instance for transpilation during
+build. Let’s also add two target scripts named <code class="language-plaintext highlighter-rouge">build</code> and <code class="language-plaintext highlighter-rouge">start</code> in the <code class="language-plaintext highlighter-rouge">package.json</code>. Running <code class="language-plaintext highlighter-rouge">npm run build</code> will
+tell babel to transpile everything in <code class="language-plaintext highlighter-rouge">src</code> directory recursively and output the transpiled files in <code class="language-plaintext highlighter-rouge">dist</code> directory.
+<code class="language-plaintext highlighter-rouge">npm run start</code> in the root directory of our project will start our web server by running the command
+<code class="language-plaintext highlighter-rouge">node dist/index.js</code>. Also, don’t forget <code class="language-plaintext highlighter-rouge">mkdir src; mv index.js src</code>. Here’s the updated <code class="language-plaintext highlighter-rouge">package.json</code>.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"js-snipcode"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0.0"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"API in NodeJS for the Snipcode project."</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"main"</span><span class="p">:</span><span class="w"> </span><span class="s2">"index.js"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"scripts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"test"</span><span class="p">:</span><span class="w"> </span><span class="s2">"echo </span><span class="se">\"</span><span class="s2">Error: no test specified</span><span class="se">\"</span><span class="s2"> &amp;&amp; exit 1"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"build"</span><span class="p">:</span><span class="w"> </span><span class="s2">"babel src -d dist --presets latest"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"node dist/index.js"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"author"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Prabhakar Kumar"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"license"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ISC"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"dependencies"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"express"</span><span class="p">:</span><span class="w"> </span><span class="s2">"^4.14.0"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"devDependencies"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"babel-cli"</span><span class="p">:</span><span class="w"> </span><span class="s2">"^6.18.0"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"babel-preset-latest"</span><span class="p">:</span><span class="w"> </span><span class="s2">"^6.18.0"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="zero-to-hello-world">Zero to Hello World!</h3>
+<p>Let’s edit our <code class="language-plaintext highlighter-rouge">src/index.js</code> and write relevant code to make a Hello World app.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">express</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">express</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">app</span> <span class="o">=</span> <span class="nf">express</span><span class="p">();</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span>
+  <span class="nx">res</span><span class="p">.</span><span class="nf">send</span><span class="p">(</span><span class="dl">'</span><span class="s1">Hello World!</span><span class="dl">'</span><span class="p">)</span>
+<span class="p">);</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nf">listen</span><span class="p">(</span><span class="mi">3000</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> 
+  <span class="nx">console</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Server is up on port 3000!</span><span class="dl">'</span><span class="p">)</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<p>Now let’s build and run.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm run build
+npm run start
+</code></pre></div></div>
+
+<p>If everything went well as we discussed, you will see a message on the console that says server is up on port 3000.
+Now if you fire up firefox or chromium and go to <a href="http://localhost:3000">localhost:3000</a>, you will see the evergreen
+‘Hello world!’ message staring at you on a white screen.</p>
+
+<p>Before we start writing more code, I’ll explain the meaning of the lines in our Hello World web app. But, before that
+let’s pivot and focus on learning our database and design a basic data model.</p>
+
+<h3 id="play-with-mongo-console">Play with mongo console</h3>
+<p>Let’s play with mongo console a bit to gain some familiarity with it.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ mongo
+MongoDB shell version: 3.2.10
+connecting to: test
+Welcome to the MongoDB shell.
+For interactive help, type "help".
+For more comprehensive documentation, see
+        http://docs.mongodb.org/
+Questions? Try the support group
+        http://groups.google.com/group/mongodb-user
+Server has startup warnings:
+2016-12-04T07:40:24.545-0500 I CONTROL  [initandlisten]
+2016-12-04T07:40:24.545-0500 I CONTROL  [initandlisten] ** WARNING: /sys/kernel/mm/transparent_hugepage/enabled is 'always'.
+2016-12-04T07:40:24.545-0500 I CONTROL  [initandlisten] **        We suggest setting it to 'never'
+2016-12-04T07:40:24.545-0500 I CONTROL  [initandlisten]
+&gt; show databases
+local  0.000GB
+&gt; use snipcode
+switched to db snipcode
+&gt; db.users.insert({name: "John Doe", country: "United States", "sex": 'M', dob: ISODate('1970-01-01')})
+WriteResult({ "nInserted" : 1 })
+&gt; db.users.find()
+{ "_id" : ObjectId("58441a27d01af6e5b1ae6f74"), "name" : "John Doe", "country" : "United States", "sex" : "M", "dob" : ISODate("1970-01-01T00:00:00Z") ers.insert({name: "Jane Doe", country: "United States", "sex": 'F', dob: ISODate('1970-01-01')})
+WriteResult({ "nInserted" : 1 })
+&gt; db.users.find()
+{ "_id" : ObjectId("58441a27d01af6e5b1ae6f74"), "name" : "John Doe", "country" : "United States", "sex" : "M", "dob" : ISODate("1970-01-01T00:00:00Z") }
+{ "_id" : ObjectId("58441a5bd01af6e5b1ae6f75"), "name" : "Jane Doe", "country" : "United States", "sex" : "F", "dob" : ISODate("1970-01-01T00:00:00Z") }
+&gt; db.users.find({sex: 'F'})
+{ "_id" : ObjectId("58441a5bd01af6e5b1ae6f75"), "name" : "Jane Doe", "country" : "United States", "sex" : "F", "dob" : ISODate("1970-01-01T00:00:00Z") }
+</code></pre></div></div>
+
+<p>Similar to MySQL and friends (MariaDB, Aurora), Mongodb organizes it’s data in databases. We don’t need to explicitly
+create a database unlike MySQL. It gets created as soon as we try to write something to it. Inside a Mongodb database,
+the database is organized in collections. A collection is analogous to tables in RDBMS, and more flexible. A
+collection doesn’t have a fixed schema. So, one document (record/row in RDBMS) can have fields different from others
+in the same collection. In the above example, we switched to database named <code class="language-plaintext highlighter-rouge">snipcode</code>. Then we inserted a document
+describing a user named ‘John Doe’. Upon doing a <code class="language-plaintext highlighter-rouge">find()</code> (which is analogous to SQL’s SELECT) on that collection we
+got the record, along with a unique record ID called ObjectID. Then we inserted another record for <code class="language-plaintext highlighter-rouge">Jane Doe</code>. Then we
+ran a query which returns all female users. For this, we provided the query condition <code class="language-plaintext highlighter-rouge">sex: 'F'</code> which is similar to
+WHERE sex = ‘F’ in SQL.</p>
+
+<p>As of now, this much familiarity is enough for us to get started. We will dive deeper as and when we need.</p>
+
+<h2 id="next-part">Next part</h2>
+
+<p>In this part we got bootstrapped and got our hands dirty. In the next part we will start with data modeling and
+continue further. Stay tuned for it.</p>]]></content><author><name>Prabhakar Kumar</name></author><category term="linux" /><category term="nodejs" /><category term="mongodb" /><category term="es6" /><summary type="html"><![CDATA[Introduction NodeJS has been gaining a lot of traction recently, especially for web applications. Lots of new web applications are now being built with tools from the Node ecosystem. A possible reason is the umpteen number of javascript developers out in the wild. Other one is the blazing speed of V8 engine. Heck, even shiny desktop apps are now being built with Node viz. Popcorn Time.]]></summary></entry><entry><title type="html">Elegant solutions to common interview problems - Part 1 - Linked Lists</title><link href="http://localhost:4000/2017/03/10/elegant-solutions-to-common-interview-problems.html" rel="alternate" type="text/html" title="Elegant solutions to common interview problems - Part 1 - Linked Lists" /><published>2017-03-10T10:48:24-08:00</published><updated>2017-03-10T10:48:24-08:00</updated><id>http://localhost:4000/2017/03/10/elegant-solutions-to-common-interview-problems</id><content type="html" xml:base="http://localhost:4000/2017/03/10/elegant-solutions-to-common-interview-problems.html"><![CDATA[<blockquote>
+  <p>Define a linked list node for integers</p>
+</blockquote>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Node</span> <span class="p">{</span>
+    <span class="nl">public:</span>
+    <span class="kt">int</span> <span class="n">data</span><span class="p">;</span>
+    <span class="n">Node</span><span class="o">*</span> <span class="n">next</span><span class="p">;</span>
+<span class="p">};</span></code></pre></figure>
+
+<blockquote>
+  <p>Reverse a singly linked list in-place iteratively</p>
+</blockquote>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="n">Node</span><span class="o">*</span> <span class="nf">reverseIterative</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">head</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Initialize two pointers, current(ptr) and previous</span>
+    <span class="n">Node</span><span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="n">head</span><span class="p">;</span>
+    <span class="n">Node</span><span class="o">*</span> <span class="n">prev</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="c1">// At each node, we point it's next to previous</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">ptr</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">Node</span><span class="o">*</span> <span class="n">next</span> <span class="o">=</span> <span class="n">ptr</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+        <span class="n">ptr</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">prev</span><span class="p">;</span>
+        <span class="c1">// Advance both pointers</span>
+        <span class="n">prev</span> <span class="o">=</span> <span class="n">ptr</span><span class="p">;</span>
+        <span class="n">ptr</span> <span class="o">=</span> <span class="n">next</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="c1">// Point head to last node</span>
+    <span class="n">head</span> <span class="o">=</span> <span class="n">prev</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">head</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure>
+
+<blockquote>
+  <p>Reverse a singly linked list in-place recursively</p>
+</blockquote>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="n">Node</span><span class="o">*</span> <span class="nf">reverseRecursive</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">head</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">head</span> <span class="o">||</span> <span class="o">!</span><span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">head</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">Node</span><span class="o">*</span> <span class="n">rest</span> <span class="o">=</span> <span class="n">reverseRecursive</span><span class="p">(</span><span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">);</span>
+    <span class="c1">// Point head's next node towards head</span>
+    <span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">head</span><span class="p">;</span>
+    <span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">rest</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure>
+
+<blockquote>
+  <p>Traverse a linked list recursively</p>
+</blockquote>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">traverse</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">head</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">head</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">head</span><span class="o">-&gt;</span><span class="n">data</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">traverse</span><span class="p">(</span><span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">);</span>
+<span class="p">}</span></code></pre></figure>
+
+<blockquote>
+  <p>Traverse a linked list recursively in reverse order</p>
+</blockquote>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">traverseReverse</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">head</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">head</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">traverseReverse</span><span class="p">(</span><span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">);</span>
+    <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">head</span><span class="o">-&gt;</span><span class="n">data</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure>
+
+<blockquote>
+  <p>Print nth element of linked list (counted from 1)</p>
+</blockquote>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">printNthElement</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">head</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">head</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">head</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">printNthElement</span><span class="p">(</span><span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span></code></pre></figure>
+
+<blockquote>
+  <p>Print nth element from last in linked list</p>
+</blockquote>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">printNthLastElement</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">head</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">head</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">printNthLastElement</span><span class="p">(</span><span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span>
+    <span class="o">*</span><span class="n">n</span> <span class="o">=</span> <span class="o">*</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">head</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">;</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>]]></content><author><name>Prabhakar Kumar</name></author><category term="computer-science" /><summary type="html"><![CDATA[Define a linked list node for integers]]></summary></entry><entry><title type="html">Compile goaccess from source on CentOS 7</title><link href="http://localhost:4000/2016/07/07/compile-goaccess-from-source-on-centos-7.html" rel="alternate" type="text/html" title="Compile goaccess from source on CentOS 7" /><published>2016-07-07T19:00:32-07:00</published><updated>2016-07-07T19:00:32-07:00</updated><id>http://localhost:4000/2016/07/07/compile-goaccess-from-source-on-centos-7</id><content type="html" xml:base="http://localhost:4000/2016/07/07/compile-goaccess-from-source-on-centos-7.html"><![CDATA[<p><a href="https://goaccess.io">Goaccess</a> is a neat little utility which scans through your web server (I use nginx) logs and generates a nice HTML report of 
+your site’s access statistics. Here is a <a href="http://rt.goaccess.io">sample from their site</a>. I run CentOS 7 on an EC2 Instance where I run a pet project. I wanted a light web analyzer that just works. I have
+<a href="https://fedoraproject.org/wiki/EPEL">epel</a> enabled on my instance so I just installed goaccess by <code class="language-plaintext highlighter-rouge">sudo yum install goaccess</code>. It worked and I was able
+to see some stats. But then I figured out that the version from repositories is quite an old one at 0.9.8. The latest one is 1.0.2 from the website.
+So, I just uninstalled it <code class="language-plaintext highlighter-rouge">sudo yum remove goaccess</code>.</p>
+
+<p>I downloaded the source tarball and after a few hiccups I was able to get it running. There are two quirks you need to watch out for. First one is
+that, enabling geoip in goaccess requires installation of maxmind’s geoip database. The installed database from yum is very small, so you need to
+update it and change symlink /usr/share/GeoIP/GeoIP.dat to point to /usr/share/GeoIP/GeoLiteCountry.dat. Second quirk is that by default the configure
+script doesn’t figure out the geoip devel libs path so you need to manually point to it while configuring.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>yum <span class="nb">install </span>GeoIP
+geoipupdate
+<span class="nb">sudo rm</span> /usr/share/GeoIP.dat
+<span class="nb">sudo ln</span> <span class="nt">-s</span> /usr/share/<span class="o">{</span>GeoLiteCountry,GeoIP<span class="o">}</span>.dat 
+
+wget http://tar.goaccess.io/goaccess-1.0.2.tar.gz
+<span class="nb">tar</span> <span class="nt">-xzvf</span> goaccess-1.0.2.tar.gz
+<span class="nb">cd </span>goaccess-1.0.2
+<span class="nv">LD_FLAGS</span><span class="o">=</span><span class="s1">'-L/usr/lib64/'</span> ./configure <span class="nt">--enable-utf8</span> <span class="nt">--enable-geoip</span>
+make
+<span class="nb">sudo </span>make <span class="nb">install</span>
+</code></pre></div></div>
+
+<p>I also created a daily crontab entry to generate reports daily and put it in my <code class="language-plaintext highlighter-rouge">public</code> folder of rails directory, all the files in which I serve
+statically from nginx. So I can just type http://mydomain.com/access.html and see the reports. Here is my crontab entry.</p>
+
+<p><code class="language-plaintext highlighter-rouge">sh crontab
+@daily /bin/zcat -f /var/log/nginx/access.log* | /usr/local/bin/goaccess -a -o /home/ec2-user/my_rails_dir/public/access.html
+</code></p>]]></content><author><name>Prabhakar Kumar</name></author><category term="linux" /><category term="web-apps" /><summary type="html"><![CDATA[Goaccess is a neat little utility which scans through your web server (I use nginx) logs and generates a nice HTML report of your site’s access statistics. Here is a sample from their site. I run CentOS 7 on an EC2 Instance where I run a pet project. I wanted a light web analyzer that just works. I have epel enabled on my instance so I just installed goaccess by sudo yum install goaccess. It worked and I was able to see some stats. But then I figured out that the version from repositories is quite an old one at 0.9.8. The latest one is 1.0.2 from the website. So, I just uninstalled it sudo yum remove goaccess.]]></summary></entry><entry><title type="html">Configure DatabaseCleaner with Rspec for Mongoid 5 and beyond</title><link href="http://localhost:4000/2016/06/26/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond.html" rel="alternate" type="text/html" title="Configure DatabaseCleaner with Rspec for Mongoid 5 and beyond" /><published>2016-06-26T18:05:22-07:00</published><updated>2016-06-26T18:05:22-07:00</updated><id>http://localhost:4000/2016/06/26/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond</id><content type="html" xml:base="http://localhost:4000/2016/06/26/configure-database-cleaner-with-rspec-for-mongoid-5-and-beyond.html"><![CDATA[<p><a href="https://github.com/DatabaseCleaner/database_cleaner">Database Cleaner</a> is a nifty gem for streamlining tests. Configuring it is straightforward
+but it didn’t work for me out of the box for Mongoid 5.</p>
+
+<p>Here’s my Gemfile segment for testing.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">group</span> <span class="ss">:test</span> <span class="k">do</span>
+  <span class="n">gem</span> <span class="s2">"factory_girl_rails"</span>
+  <span class="n">gem</span> <span class="s2">"rspec-rails"</span><span class="p">,</span> <span class="s1">'~&gt; 3.4'</span>
+  <span class="n">gem</span> <span class="s1">'faker'</span>
+  <span class="n">gem</span> <span class="s1">'database_cleaner'</span><span class="p">,</span> <span class="ss">git: </span><span class="s1">'git://github.com/DatabaseCleaner/database_cleaner.git'</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>I added a <code class="language-plaintext highlighter-rouge">require 'support/database_cleaner'</code> in my <code class="language-plaintext highlighter-rouge">spec_helper</code>. And here’s my <code class="language-plaintext highlighter-rouge">database_cleaner.rb</code>.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">RSpec</span><span class="p">.</span><span class="nf">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+
+  <span class="n">config</span><span class="p">.</span><span class="nf">before</span><span class="p">(</span><span class="ss">:suite</span><span class="p">)</span> <span class="k">do</span>
+    <span class="no">DatabaseCleaner</span><span class="p">.</span><span class="nf">strategy</span> <span class="o">=</span> <span class="ss">:truncation</span>
+    <span class="no">DatabaseCleaner</span><span class="p">.</span><span class="nf">clean</span>
+  <span class="k">end</span>
+
+  <span class="n">config</span><span class="p">.</span><span class="nf">before</span><span class="p">(</span><span class="ss">:each</span><span class="p">)</span> <span class="k">do</span>
+    <span class="no">DatabaseCleaner</span><span class="p">.</span><span class="nf">start</span>
+  <span class="k">end</span>
+
+  <span class="n">config</span><span class="p">.</span><span class="nf">after</span><span class="p">(</span><span class="ss">:each</span><span class="p">)</span> <span class="k">do</span>
+    <span class="no">DatabaseCleaner</span><span class="p">.</span><span class="nf">clean</span>
+  <span class="k">end</span>
+
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>When I ran my spec, I was greeted with an unexpected ugly error.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/home/prabhakar/.rbenv/versions/2.3.0/lib/ruby/gems/2.3.0/bundler/gems/database_cleaner-f052d64d3be9/lib/database_cleaner/mongo2/truncation_mixin.rb:29:in `collections': undefined method `collections' for #&lt;Mongo::Client:0x47021052998580 cluster=127.0.0.1:27017&gt; (NoMethodError)
+	from /home/prabhakar/.rbenv/versions/2.3.0/lib/ruby/gems/2.3.0/bundler/gems/database_cleaner-f052d64d3be9/lib/database_cleaner/mongo2/truncation_mixin.rb:9:in `clean'
+	from /home/prabhakar/.rbenv/versions/2.3.0/lib/ruby/gems/2.3.0/bundler/gems/database_cleaner-f052d64d3be9/lib/database_cleaner/base.rb:92:in `clean'
+	from /home/prabhakar/.rbenv/versions/2.3.0/lib/ruby/gems/2.3.0/bundler/gems/database_cleaner-f052d64d3be9/lib/database_cleaner/configuration.rb:79:in `block in clean'
+	from /home/prabhakar/.rbenv/versions/2.3.0/lib/ruby/gems/2.3.0/bundler/gems/database_cleaner-f052d64d3be9/lib/database_cleaner/configuration.rb:79:in `each'
+	from /home/prabhakar/.rbenv/versions/2.3.0/lib/ruby/gems/2.3.0/bundler/gems/database_cleaner-f052d64d3be9/lib/database_cleaner/configuration.rb:79:in `clean'
+</code></pre></div></div>
+
+<p>After looking at the code in the gem, I finally found out what was wrong in it. I created a
+<a href="https://github.com/prabhakar97/database_cleaner/commit/3cf0d1b81e4a118fd173d697f032a9aff4f431de">commit for fix</a> and submitted a pull request to
+the maintainer. Looking at my commit and the relevant files <a href="https://github.com/DatabaseCleaner/database_cleaner/blob/master/lib/database_cleaner/mongoid/truncation.rb">truncation.rb</a> and <a href="https://github.com/DatabaseCleaner/database_cleaner/blob/master/lib/database_cleaner/mongo2/truncation_mixin.rb">truncation_mixin.rb</a>, you should be able to piece together the problem.</p>
+
+<p>Meanwhile, if you are using Mongoid 5 and aren’t able to get it working you could simply point to my fork of database_cleaner by updating your Gemfile
+to have:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">gem</span> <span class="s1">'database_cleaner'</span><span class="p">,</span> <span class="ss">git: </span><span class="s1">'git://github.com/prabhakar97/database_cleaner.git'</span>
+</code></pre></div></div>]]></content><author><name>Prabhakar Kumar</name></author><category term="rails" /><category term="ruby" /><category term="mongodb" /><summary type="html"><![CDATA[Database Cleaner is a nifty gem for streamlining tests. Configuring it is straightforward but it didn’t work for me out of the box for Mongoid 5.]]></summary></entry><entry><title type="html">Starting with Yesod on Arch Linux</title><link href="http://localhost:4000/2016/06/23/starting-with-yesod-on-arch-linux.html" rel="alternate" type="text/html" title="Starting with Yesod on Arch Linux" /><published>2016-06-23T16:59:39-07:00</published><updated>2016-06-23T16:59:39-07:00</updated><id>http://localhost:4000/2016/06/23/starting-with-yesod-on-arch-linux</id><content type="html" xml:base="http://localhost:4000/2016/06/23/starting-with-yesod-on-arch-linux.html"><![CDATA[<p>As part of my eagerness to learn Haskell, I thought it might be a good idea to start building real world applications in Haskell. I chose
+<a href="http://www.yesodweb.com/">Yesod</a> to start building a dynamic web application backed by as database. However, the getting started page on
+Yesod website didn’t exactly work as advertised, probably because the <a href="http://docs.haskellstack.org/en/stable/README/">Haskell Stack</a>
+had some API change. These steps worked for me.</p>
+
+<ul>
+  <li>Install haskell-stack. It lets you develop, build and test Haskell apps without creating dependency version issues across projects.
+If you are coming from a ruby world, it is similar to rbenv.</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">sudo pacman -S haskell-stack</code></p>
+
+<ul>
+  <li>Checkout the <em>yesod-mongodb</em> template. This is going to create a <code class="language-plaintext highlighter-rouge">haskell-webapp</code> directory and checkout stuff from the <code class="language-plaintext highlighter-rouge">yesod-mongo</code> template.
+Make sure that you don’t provide a directory name which is the name of a package, like yesod, ghci etc.</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">stack new haskell-webapp yesod-mongo</code></p>
+
+<ul>
+  <li>
+    <p>Install <a href="https://aur.archlinux.org/packages/libtinfo/">libtinfo from AUR</a> because Arch screwed up (from stack perspective). There is
+another nuance to take care of. Edit the <em>PKGBUILD</em> and ensure that the line that simlinks <code class="language-plaintext highlighter-rouge">/usr/lib/libtinfo.so.5</code> is uncommented. Otherwise
+the next step doesn’t work.</p>
+  </li>
+  <li>
+    <p>Setup GHCi and friends.</p>
+  </li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">stack build yesod-bin cabal-install --install-ghc</code></p>
+
+<ul>
+  <li>Build the libs.</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">stack build</code></p>
+
+<ul>
+  <li>Hello World!</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">stack exec -- yesod devel</code></p>
+
+<p>To access your server visit <a href="http://localhost:3000">http://localhost:3000</a></p>]]></content><author><name>Prabhakar Kumar</name></author><category term="haskell" /><category term="web-apps" /><summary type="html"><![CDATA[As part of my eagerness to learn Haskell, I thought it might be a good idea to start building real world applications in Haskell. I chose Yesod to start building a dynamic web application backed by as database. However, the getting started page on Yesod website didn’t exactly work as advertised, probably because the Haskell Stack had some API change. These steps worked for me.]]></summary></entry></feed>
