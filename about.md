@@ -7,13 +7,10 @@ sharing: false
 category: page
 footer: true
 ---
-I am a software engineer who loves building and scaling big systems from scratch using modern technologies. I am good at architecting, designing and implementing
-backend infrastructure (workflows, services, asynchrony) with Java, Ruby, Javascript and C#.
+I am a software engineer with passion for building and scaling large scale systems. I am currently employed at a big tech company at Staff Software Engineer level.
 
-I am a fan of Arch Linux as my OS, vim as my editor and prefer it for Ruby, Perl and Javascript. For Java, I use IntelliJ Idea which is an amazing IDE.
+Gentoo and Arch are my daily drivers. Vim is my preferred editor. 
 
-I am a fan of the novel [The Blue Nowhere](https://www.amazon.com/dp/0671042262) by Jeffrey Deaver.
-I have recently read [Sapiens](https://www.amazon.in/Sapiens-Humankind-Yuval-Noah-Harari/dp/0062316095) and my mind was blown by the ideas communicated elegantly
-by the author [Yuval Noah Harari](https://www.goodreads.com/author/show/395812.Yuval_Noah_Harari).
+My favorite novels are [The Blue Nowhere](https://www.goodreads.com/book/show/343995.The_Blue_Nowhere) and [Project Hail Mary](https://www.goodreads.com/book/show/54493401-project-hail-mary). Another book I loved and worth mentioning is [How to Invent Everything](https://www.goodreads.com/book/show/39026990-how-to-invent-everything?ref=nav_sb_ss_1_18).
 
 Some of my favorite movies are [The Man From Earth](https://www.imdb.com/title/tt0756683/), [Interstellar](https://www.imdb.com/title/tt0816692/) and [Back to the Future](https://www.imdb.com/title/tt0088763/).
