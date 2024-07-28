@@ -22,6 +22,9 @@ baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://techbeat.in" # the base hostname & protocol for your site, e.g. http://example.com
 #twitter_username: prab97
 github_username: prabhakar97
+mastodon:
+  - username: prab97
+    instance: toot.techbeat.in
 facebook_username:
 linkedin_username:
 instagram_username:
