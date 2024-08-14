@@ -54,6 +54,7 @@ public static <T> int binSearch(Function<T, Integer> testFunc, IntFunction<T> el
 
 Armed with this implementation, can we solve some common Leetcode problems that require binary search?
 
+
 Let's try LC 74 [Search a 2D Matrix](https://leetcode.com/problems/search-a-2d-matrix/description/). 
 {% highlight java %}
 import java.util.function.Function;
@@ -86,6 +87,44 @@ class Solution {
 Wow! What was that? Driver function was just three lines (excluding the bad input check) in Java which is considered a very verbose language. That's the magic of higher order functions :-)
 [Submission Link](https://leetcode.com/problems/search-a-2d-matrix/submissions/1354960780/)
 ![Submission](/images/LC74_Accepted.png)
+
+Let's try another one. LC 69 [Sqrt(x)](https://leetcode.com/problems/sqrtx/).
+
+{% highlight java %}
+import java.util.function.Function;
+import java.util.function.IntFunction;
+class Solution {
+
+    public int mySqrt(int x) {
+        if (x == 0 || x == 1)
+            return x;
+        IntFunction<Integer> elementAt = (i) -> i;
+        Function<Integer, Integer> sqrtCheck = i -> {
+            if (x / i == i || (x / (i + 1)  == i))
+                return 0;
+            else if (x / i > i)
+                return 1;
+            return -1;
+        };
+        return binSearch(sqrtCheck, elementAt, 0, x / 2 + 1);
+    }
+
+    public static <T> int binSearch(Function<T, Integer> testFunc, IntFunction<T> elementAt, int start, int end) {
+        if (end < start) {
+            return -1;
+        }
+        int mid = start + (end - start) / 2;
+        int compResult = testFunc.apply(elementAt.apply(mid));
+        if (compResult == 0) {
+            return mid;
+        } else if (compResult < 0) {
+            return binSearch(testFunc, elementAt, start, mid - 1);
+        }
+        return binSearch(testFunc, elementAt, mid + 1, end);
+    }
+
+}
+{% endhighlight %}
 
 Let's try LC 35 [Search Insert Position](https://leetcode.com/problems/search-insert-position/description/). This one is slightly
 trickier to implement with our generic bin search function because in the comparison function we also need to compare with element
