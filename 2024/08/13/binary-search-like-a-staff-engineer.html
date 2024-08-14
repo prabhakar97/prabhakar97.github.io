@@ -61,11 +61,11 @@
 <p>Every FAANG SWE is familiar with binary search. When it is time to code, most solutions, even by senior candidates appear to be
 rote memorized and reproduced to find an integer (or not) in an array. These implementations are one offs and can’t be reused for
 other problems. This article attempts to build a generic implementation and then use this to solve multiple problems. What is better
-than Leetcode problems to test the correctness and efficience of this implementation?! That’s what a FAANG Staff SWE would do! Right?</p>
+than Leetcode problems to test the correctness and efficiency of this implementation?! That’s what a FAANG Staff SWE would do! Right?</p>
 
 <h3 id="key-idea">Key Idea</h3>
 
-<p>I am not going to talk about binary search in great detail since if you have reached until this point, you are most likely aware of its inner workings.
+<p>I am not going to talk about binary search in great detail since by reaching until this point, you have proven you know its inner workings.
 If not, please consult any of the umpteen number of references on this topic available on the interwebs.</p>
 
 <p>Instead I am going to talk about how an abstract binary search implementation can be written that can be applied on multiple problems.</p>
@@ -75,7 +75,7 @@ If not, please consult any of the umpteen number of references on this topic ava
 <ul>
   <li>A comparison function, that can be executed on the middle element to decide whether we have found the target element or whether we should look in
 left half of the search space, or the right half</li>
-  <li>A function that gives us <code class="language-plaintext highlighter-rouge">i</code>th element in the list. For an array, it just gives the element at ith index.</li>
+  <li>A function that gives us <code class="language-plaintext highlighter-rouge">i</code>th element in the list. For an array, it just gives the element at <code class="language-plaintext highlighter-rouge">i</code>th index.</li>
   <li>A <code class="language-plaintext highlighter-rouge">startIndex</code> and an <code class="language-plaintext highlighter-rouge">endIndex</code> that set the boundaries of the list we are looking into.</li>
 </ul>
 
@@ -102,7 +102,7 @@ left half of the search space, or the right half</li>
     <span class="k">return</span> <span class="nf">binSearch</span><span class="o">(</span><span class="n">testFunc</span><span class="o">,</span> <span class="n">elementAt</span><span class="o">,</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">end</span><span class="o">);</span>
 <span class="o">}</span></code></pre></figure>
 
-<p>Armed with this, can we solve some common Leetcode problems related to binary search?</p>
+<p>Armed with this implementation, can we solve some common Leetcode problems that require binary search?</p>
 
 <p>Let’s try LC 74 <a href="https://leetcode.com/problems/search-a-2d-matrix/description/">Search a 2D Matrix</a>.</p>
 
