@@ -11,11 +11,11 @@ tags: [leetcode, binary-search, programming, computer-science]
 Every FAANG SWE is familiar with binary search. When it is time to code, most solutions, even by senior candidates appear to be
 rote memorized and reproduced to find an integer (or not) in an array. These implementations are one offs and can't be reused for
 other problems. This article attempts to build a generic implementation and then use this to solve multiple problems. What is better
-than Leetcode problems to test the correctness and efficience of this implementation?! That's what a FAANG Staff SWE would do! Right?
+than Leetcode problems to test the correctness and efficiency of this implementation?! That's what a FAANG Staff SWE would do! Right?
 
 ### Key Idea
 
-I am not going to talk about binary search in great detail since if you have reached until this point, you are most likely aware of its inner workings.
+I am not going to talk about binary search in great detail since by reaching until this point, you have proven you know its inner workings.
 If not, please consult any of the umpteen number of references on this topic available on the interwebs.
 
 Instead I am going to talk about how an abstract binary search implementation can be written that can be applied on multiple problems.
@@ -24,7 +24,7 @@ A binary search can be parameterized with the following:
 
 * A comparison function, that can be executed on the middle element to decide whether we have found the target element or whether we should look in
 left half of the search space, or the right half
-* A function that gives us `i`th element in the list. For an array, it just gives the element at ith index. 
+* A function that gives us `i`th element in the list. For an array, it just gives the element at `i`th index. 
 * A `startIndex` and an `endIndex` that set the boundaries of the list we are looking into.
 
 With these parameters, let's attempt to write a generic implementation of binary search.
@@ -52,7 +52,7 @@ public static <T> int binSearch(Function<T, Integer> testFunc, IntFunction<T> el
 }
 {% endhighlight %}
 
-Armed with this, can we solve some common Leetcode problems related to binary search?
+Armed with this implementation, can we solve some common Leetcode problems that require binary search?
 
 Let's try LC 74 [Search a 2D Matrix](https://leetcode.com/problems/search-a-2d-matrix/description/). 
 {% highlight java %}
