@@ -140,7 +140,7 @@ if you want to verify.
 
 The driver function here is slightly longer with the indexCheck method taking up a few lines. Still, the program is very easy to understand!
 
-Let's try LC 153 [Find min in Rotated Sorted Array(https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/submissions/1355057450/)
+Let's try LC 153 [Find min in Rotated Sorted Array](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/submissions/1355057450/)
 
 {% highlight java %}
 import java.util.function.Function;
