@@ -140,7 +140,8 @@ if you want to verify.
 
 The driver function here is slightly longer with the indexCheck method taking up a few lines. Still, the program is very easy to understand!
 
-Let's try LC 153 [Find min in Rotated Sorted Array](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/description/)
+Let's try LC 153 [Find min in Rotated Sorted Array](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/description/). This
+involves finding the index at which array is pivoted i.e. rotated and then returning the element at that index.
 
 {% highlight java %}
 import java.util.function.Function;
@@ -194,7 +195,7 @@ class Solution {
 
 
 Let's try LC 33 [Search in Rotated Sorted Array](https://leetcode.com/problems/search-in-rotated-sorted-array/description/). This one
-uses the logic for finding pivot element and then builds on top of that.
+uses the logic for finding pivot element from the previous problem and then builds on top of that.
 
 {% highlight java %}
 import java.util.function.Function;
