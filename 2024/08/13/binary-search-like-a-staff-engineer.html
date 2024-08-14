@@ -136,6 +136,42 @@ left half of the search space, or the right half</li>
 <a href="https://leetcode.com/problems/search-a-2d-matrix/submissions/1354960780/">Submission Link</a>
 <img src="/images/LC74_Accepted.png" alt="Submission" /></p>
 
+<p>Let’s try another one. LC 69 <a href="https://leetcode.com/problems/sqrtx/">Sqrt(x)</a>.</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nn">java.util.function.Function</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.function.IntFunction</span><span class="o">;</span>
+<span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">mySqrt</span><span class="o">(</span><span class="kt">int</span> <span class="n">x</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">x</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span>
+            <span class="k">return</span> <span class="n">x</span><span class="o">;</span>
+        <span class="nc">IntFunction</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">elementAt</span> <span class="o">=</span> <span class="o">(</span><span class="n">i</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">i</span><span class="o">;</span>
+        <span class="nc">Function</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">sqrtCheck</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-&gt;</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">x</span> <span class="o">/</span> <span class="n">i</span> <span class="o">==</span> <span class="n">i</span> <span class="o">||</span> <span class="o">(</span><span class="n">x</span> <span class="o">/</span> <span class="o">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span>  <span class="o">==</span> <span class="n">i</span><span class="o">))</span>
+                <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+            <span class="k">else</span> <span class="nf">if</span> <span class="o">(</span><span class="n">x</span> <span class="o">/</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">i</span><span class="o">)</span>
+                <span class="k">return</span> <span class="mi">1</span><span class="o">;</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="o">};</span>
+        <span class="k">return</span> <span class="nf">binSearch</span><span class="o">(</span><span class="n">sqrtCheck</span><span class="o">,</span> <span class="n">elementAt</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">x</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="kt">int</span> <span class="nf">binSearch</span><span class="o">(</span><span class="nc">Function</span><span class="o">&lt;</span><span class="no">T</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">testFunc</span><span class="o">,</span> <span class="nc">IntFunction</span><span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="n">elementAt</span><span class="o">,</span> <span class="kt">int</span> <span class="n">start</span><span class="o">,</span> <span class="kt">int</span> <span class="n">end</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">end</span> <span class="o">&lt;</span> <span class="n">start</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="o">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="o">)</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">compResult</span> <span class="o">=</span> <span class="n">testFunc</span><span class="o">.</span><span class="na">apply</span><span class="o">(</span><span class="n">elementAt</span><span class="o">.</span><span class="na">apply</span><span class="o">(</span><span class="n">mid</span><span class="o">));</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">compResult</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">mid</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">compResult</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="nf">binSearch</span><span class="o">(</span><span class="n">testFunc</span><span class="o">,</span> <span class="n">elementAt</span><span class="o">,</span> <span class="n">start</span><span class="o">,</span> <span class="n">mid</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="nf">binSearch</span><span class="o">(</span><span class="n">testFunc</span><span class="o">,</span> <span class="n">elementAt</span><span class="o">,</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">end</span><span class="o">);</span>
+    <span class="o">}</span>
+
+<span class="o">}</span></code></pre></figure>
+
 <p>Let’s try LC 35 <a href="https://leetcode.com/problems/search-insert-position/description/">Search Insert Position</a>. This one is slightly
 trickier to implement with our generic bin search function because in the comparison function we also need to compare with element
 before mid position to ascertain the rightful place for the <code class="language-plaintext highlighter-rouge">target</code>. I modified the <code class="language-plaintext highlighter-rouge">testFunc</code> parameter to be a <code class="language-plaintext highlighter-rouge">BiFunction</code> instead of 
