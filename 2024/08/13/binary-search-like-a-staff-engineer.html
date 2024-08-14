@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Binary Search like a Staff SWE | Show me the code!</title>
+<meta name="generator" content="Jekyll v4.3.3" />
+<meta property="og:title" content="Binary Search like a Staff SWE" />
+<meta name="author" content="Prabhakar Kumar" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Intro" />
+<meta property="og:description" content="Intro" />
+<meta property="og:site_name" content="Show me the code!" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-08-13T06:25:00-07:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Binary Search like a Staff SWE" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Prabhakar Kumar"},"dateModified":"2024-08-13T06:25:00-07:00","datePublished":"2024-08-13T06:25:00-07:00","description":"Intro","headline":"Binary Search like a Staff SWE","mainEntityOfPage":{"@type":"WebPage","@id":"/2024/08/13/binary-search-like-a-staff-engineer.html"},"url":"/2024/08/13/binary-search-like-a-staff-engineer.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Show me the code!" /><script async src="https://www.googletagmanager.com/gtag/js?id=UA-20481925-1"></script>
+<script>
+  window['ga-disable-UA-20481925-1'] = window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1";
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){window.dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-20481925-1');
+</script>
+
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Show me the code!</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about.html">About Me</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Binary Search like a Staff SWE</h1>
+    <p class="post-meta"><time class="dt-published" datetime="2024-08-13T06:25:00-07:00" itemprop="datePublished">
+        Aug 13, 2024
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h3 id="intro">Intro</h3>
+
+<p>Every FAANG SWE is familiar with binary search. When it is time to code, most solutions, even by senior candidates appear to be
+rote memorized and reproduced to find an integer (or not) in an array. These implementations are one offs and can’t be reused for
+other problems. This article attempts to build a generic implementation and then use this to solve multiple problems. What is better
+than Leetcode problems to test the correctness and efficience of this implementation?! That’s what a FAANG Staff SWE would do! Right?</p>
+
+<h3 id="key-idea">Key Idea</h3>
+
+<p>I am not going to talk about binary search in great detail since if you have reached until this point, you are most likely aware of its inner workings.
+If not, please consult any of the umpteen number of references on this topic available on the interwebs.</p>
+
+<p>Instead I am going to talk about how an abstract binary search implementation can be written that can be applied on multiple problems.</p>
+
+<p>A binary search can be parameterized with the following:</p>
+
+<ul>
+  <li>A comparison function, that can be executed on the middle element to decide whether we have found the target element or whether we should look in
+left half of the search space, or the right half</li>
+  <li>A function that gives us <code class="language-plaintext highlighter-rouge">i</code>th element in the list. For an array, it just gives the element at ith index.</li>
+  <li>A <code class="language-plaintext highlighter-rouge">startIndex</code> and an <code class="language-plaintext highlighter-rouge">endIndex</code> that set the boundaries of the list we are looking into.</li>
+</ul>
+
+<p>With these parameters, let’s attempt to write a generic implementation of binary search.</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="cm">/**
+* Given a comparison function, a function to get element at provided index and the start and end bounds of the search space, returns the index
+* of element that satisfies the comparison function.
+* The `testFunc` should return 0 upon success, a negative integer upon indicating that the element is less than the middle element and positive
+* integer indicating that the element is greater than the middle element.
+* Returns the index of the element if found, else returns -1.
+*/</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="kt">int</span> <span class="nf">binSearch</span><span class="o">(</span><span class="nc">Function</span><span class="o">&lt;</span><span class="no">T</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">testFunc</span><span class="o">,</span> <span class="nc">IntFunction</span><span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="n">elementAt</span><span class="o">,</span> <span class="kt">int</span> <span class="n">start</span><span class="o">,</span> <span class="kt">int</span> <span class="n">end</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">end</span> <span class="o">&lt;</span> <span class="n">start</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="o">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="o">)</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">compResult</span> <span class="o">=</span> <span class="n">testFunc</span><span class="o">.</span><span class="na">apply</span><span class="o">(</span><span class="n">elementAt</span><span class="o">.</span><span class="na">apply</span><span class="o">(</span><span class="n">mid</span><span class="o">));</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">compResult</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">mid</span><span class="o">;</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">compResult</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="nf">binSearch</span><span class="o">(</span><span class="n">testFunc</span><span class="o">,</span> <span class="n">elementAt</span><span class="o">,</span> <span class="n">start</span><span class="o">,</span> <span class="n">mid</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="k">return</span> <span class="nf">binSearch</span><span class="o">(</span><span class="n">testFunc</span><span class="o">,</span> <span class="n">elementAt</span><span class="o">,</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">end</span><span class="o">);</span>
+<span class="o">}</span></code></pre></figure>
+
+<p>Armed with this, can we solve some common Leetcode problems related to binary search?</p>
+
+<p>Let’s try LC 74 <a href="https://leetcode.com/problems/search-a-2d-matrix/description/">Search a 2D Matrix</a>.</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nn">java.util.function.Function</span><span class="o">;</span>
+
+<span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">searchMatrix</span><span class="o">(</span><span class="kt">int</span><span class="o">[][]</span> <span class="n">matrix</span><span class="o">,</span> <span class="kt">int</span> <span class="n">target</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">matrix</span><span class="o">.</span><span class="na">length</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span>
+            <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="nc">Function</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">testFunc</span> <span class="o">=</span> <span class="o">(</span><span class="n">elem</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">compare</span><span class="o">(</span><span class="n">target</span><span class="o">,</span> <span class="n">elem</span><span class="o">);</span>
+        <span class="nc">IntFunction</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">elementAt</span> <span class="o">=</span> <span class="o">(</span><span class="n">i</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">matrix</span><span class="o">[</span><span class="n">i</span> <span class="o">/</span> <span class="n">matrix</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">length</span><span class="o">][</span><span class="n">i</span> <span class="o">%</span> <span class="n">matrix</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">length</span><span class="o">];</span>
+        <span class="k">return</span> <span class="nf">binSearch</span><span class="o">(</span><span class="n">testFunc</span><span class="o">,</span> <span class="n">elementAt</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">matrix</span><span class="o">.</span><span class="na">length</span> <span class="o">*</span> <span class="n">matrix</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="kt">int</span> <span class="nf">binSearch</span><span class="o">(</span><span class="nc">Function</span><span class="o">&lt;</span><span class="no">T</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">testFunc</span><span class="o">,</span> <span class="nc">IntFunction</span><span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="n">elementAt</span><span class="o">,</span> <span class="kt">int</span> <span class="n">start</span><span class="o">,</span> <span class="kt">int</span> <span class="n">end</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">end</span> <span class="o">&lt;</span> <span class="n">start</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="o">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="o">)</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">compResult</span> <span class="o">=</span> <span class="n">testFunc</span><span class="o">.</span><span class="na">apply</span><span class="o">(</span><span class="n">elementAt</span><span class="o">.</span><span class="na">apply</span><span class="o">(</span><span class="n">mid</span><span class="o">));</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">compResult</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">mid</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">compResult</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="nf">binSearch</span><span class="o">(</span><span class="n">testFunc</span><span class="o">,</span> <span class="n">elementAt</span><span class="o">,</span> <span class="n">start</span><span class="o">,</span> <span class="n">mid</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="nf">binSearch</span><span class="o">(</span><span class="n">testFunc</span><span class="o">,</span> <span class="n">elementAt</span><span class="o">,</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">end</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></figure>
+
+<p>Wow! What was that? Driver function was just three lines (excluding the bad input check) in Java which is considered a very verbose language. That’s the magic of higher order functions :-)
+<a href="https://leetcode.com/problems/search-a-2d-matrix/submissions/1354960780/">Submission Link</a>
+<img src="/images/LC74_Accepted.png" alt="Submission" /></p>
+
+<p>Let’s try LC 35 <a href="https://leetcode.com/problems/search-insert-position/description/">Search Insert Position</a>. This one is slightly
+trickier to implement with our generic bin search function because in the comparison function we also need to compare with element
+before mid position to ascertain the rightful place for the <code class="language-plaintext highlighter-rouge">target</code>. I modified the <code class="language-plaintext highlighter-rouge">testFunc</code> parameter to be a <code class="language-plaintext highlighter-rouge">BiFunction</code> instead of 
+a <code class="language-plaintext highlighter-rouge">Function</code> so that we can make the <code class="language-plaintext highlighter-rouge">mid</code> index available inside the function which can be used to lookup the element just before the element
+at mid index.</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nn">java.util.function.Function</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.function.BiFunction</span><span class="o">;</span>
+
+<span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">searchInsert</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">,</span> <span class="kt">int</span> <span class="n">target</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// Get the edge cases out</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">target</span> <span class="o">&gt;</span> <span class="n">nums</span><span class="o">[</span><span class="n">nums</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">])</span>
+            <span class="k">return</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">target</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="o">[</span><span class="mi">0</span><span class="o">])</span>
+            <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+        
+        <span class="c1">// For an integer array, elementAt should return element at i</span>
+        <span class="nc">IntFunction</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">elementAt</span> <span class="o">=</span> <span class="o">(</span><span class="n">i</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+        <span class="nc">BiFunction</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">indexCheck</span> <span class="o">=</span> <span class="o">(</span><span class="n">elem</span><span class="o">,</span> <span class="n">mid</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">elem</span> <span class="o">==</span> <span class="n">target</span> <span class="o">||</span> <span class="o">(</span><span class="n">elem</span> <span class="o">&gt;</span> <span class="n">target</span> <span class="o">&amp;&amp;</span> <span class="n">nums</span><span class="o">[</span><span class="n">mid</span> <span class="o">-</span> <span class="mi">1</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">target</span><span class="o">))</span> <span class="o">{</span>
+                <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+            <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">elem</span> <span class="o">&lt;</span> <span class="n">target</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">return</span> <span class="mi">1</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="o">};</span>
+        <span class="k">return</span> <span class="nf">binSearch</span><span class="o">(</span><span class="n">indexCheck</span><span class="o">,</span> <span class="n">elementAt</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="kt">int</span> <span class="nf">binSearch</span><span class="o">(</span><span class="nc">BiFunction</span><span class="o">&lt;</span><span class="no">T</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">testFunc</span><span class="o">,</span> <span class="nc">IntFunction</span><span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="n">elementAt</span><span class="o">,</span> <span class="kt">int</span> <span class="n">start</span><span class="o">,</span> <span class="kt">int</span> <span class="n">end</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">end</span> <span class="o">&lt;</span> <span class="n">start</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="o">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="o">)</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">compResult</span> <span class="o">=</span> <span class="n">testFunc</span><span class="o">.</span><span class="na">apply</span><span class="o">(</span><span class="n">elementAt</span><span class="o">.</span><span class="na">apply</span><span class="o">(</span><span class="n">mid</span><span class="o">),</span> <span class="n">mid</span><span class="o">);</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">compResult</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">mid</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">compResult</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="nf">binSearch</span><span class="o">(</span><span class="n">testFunc</span><span class="o">,</span> <span class="n">elementAt</span><span class="o">,</span> <span class="n">start</span><span class="o">,</span> <span class="n">mid</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="nf">binSearch</span><span class="o">(</span><span class="n">testFunc</span><span class="o">,</span> <span class="n">elementAt</span><span class="o">,</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">end</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></figure>
+
+<p>This too runs in 1ms and beats 100% of the solutions in runtime. Here’s the <a href="https://leetcode.com/problems/search-insert-position/submissions/1354993527/">submission link</a>
+if you want to verify.
+<img src="/images/LC35_Accepted.png" alt="Submission" /></p>
+
+<p>The driver function here is slightly longer with the indexCheck method taking up a few lines. Still, the program is very easy to understand!</p>
+
+<p>Let’s try LC 153 [Find min in Rotated Sorted Array(https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/submissions/1355057450/)</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nn">java.util.function.Function</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.function.IntFunction</span><span class="o">;</span>
+
+<span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">findMin</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">nums</span><span class="o">.</span><span class="na">length</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="c1">// Search the pivot index first</span>
+        <span class="kt">int</span> <span class="n">pivotIndex</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">nums</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="o">[</span><span class="n">nums</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">])</span> <span class="o">{</span>
+            <span class="c1">// array is not pivoted</span>
+            <span class="n">pivotIndex</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">pivotIndex</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+            <span class="nc">IntFunction</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">elementAt</span> <span class="o">=</span> <span class="o">(</span><span class="n">i</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+            <span class="nc">BiFunction</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">pivotCheck</span> <span class="o">=</span> <span class="o">(</span><span class="n">elem</span><span class="o">,</span> <span class="n">mid</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">mid</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">nums</span><span class="o">[</span><span class="n">mid</span> <span class="o">-</span> <span class="mi">1</span><span class="o">]</span> <span class="o">&gt;</span> <span class="n">elem</span><span class="o">)</span>
+                    <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+                <span class="k">else</span> <span class="nf">if</span> <span class="o">(</span><span class="n">elem</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="o">[</span><span class="n">nums</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="n">elem</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="o">[</span><span class="mi">0</span><span class="o">])</span>
+                    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+                <span class="k">else</span> <span class="nf">if</span> <span class="o">((</span><span class="n">elem</span> <span class="o">&gt;</span> <span class="n">nums</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="n">elem</span> <span class="o">&gt;</span> <span class="n">nums</span><span class="o">[</span><span class="n">nums</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">])</span> <span class="o">||</span> <span class="o">(</span><span class="n">mid</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">nums</span><span class="o">[</span><span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">elem</span><span class="o">))</span>
+                    <span class="k">return</span> <span class="mi">1</span><span class="o">;</span>
+                <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+            <span class="o">};</span>
+            <span class="n">pivotIndex</span> <span class="o">=</span> <span class="n">binSearch</span><span class="o">(</span><span class="n">pivotCheck</span><span class="o">,</span> <span class="n">elementAt</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">nums</span><span class="o">[</span><span class="n">pivotIndex</span><span class="o">];</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="kt">int</span> <span class="nf">binSearch</span><span class="o">(</span><span class="nc">BiFunction</span><span class="o">&lt;</span><span class="no">T</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">testFunc</span><span class="o">,</span> <span class="nc">IntFunction</span><span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="n">elementAt</span><span class="o">,</span> <span class="kt">int</span> <span class="n">start</span><span class="o">,</span> <span class="kt">int</span> <span class="n">end</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">end</span> <span class="o">&lt;</span> <span class="n">start</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="o">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="o">)</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">compResult</span> <span class="o">=</span> <span class="n">testFunc</span><span class="o">.</span><span class="na">apply</span><span class="o">(</span><span class="n">elementAt</span><span class="o">.</span><span class="na">apply</span><span class="o">(</span><span class="n">mid</span><span class="o">),</span> <span class="n">mid</span><span class="o">);</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">compResult</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">mid</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">compResult</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="nf">binSearch</span><span class="o">(</span><span class="n">testFunc</span><span class="o">,</span> <span class="n">elementAt</span><span class="o">,</span> <span class="n">start</span><span class="o">,</span> <span class="n">mid</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="nf">binSearch</span><span class="o">(</span><span class="n">testFunc</span><span class="o">,</span> <span class="n">elementAt</span><span class="o">,</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">end</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></figure>
+
+<p><a href="https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/submissions/1355057450/">Submission Link</a></p>
+
+<p>Let’s try LC 33 <a href="https://leetcode.com/problems/search-in-rotated-sorted-array/description/">Search in Rotated Sorted Array</a>. This one
+uses the logic for finding pivot element and then builds on top of that.</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nn">java.util.function.Function</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.function.IntFunction</span><span class="o">;</span>
+
+<span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">search</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">,</span> <span class="kt">int</span> <span class="n">target</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">nums</span><span class="o">.</span><span class="na">length</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="c1">// Search the pivot index first</span>
+        <span class="kt">int</span> <span class="n">pivotIndex</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">nums</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="o">[</span><span class="n">nums</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">])</span> <span class="o">{</span>
+            <span class="c1">// array is not pivoted</span>
+            <span class="n">pivotIndex</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">pivotIndex</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+            <span class="nc">IntFunction</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">elementAt</span> <span class="o">=</span> <span class="o">(</span><span class="n">i</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+            <span class="nc">BiFunction</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">pivotCheck</span> <span class="o">=</span> <span class="o">(</span><span class="n">elem</span><span class="o">,</span> <span class="n">mid</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">mid</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">nums</span><span class="o">[</span><span class="n">mid</span> <span class="o">-</span> <span class="mi">1</span><span class="o">]</span> <span class="o">&gt;</span> <span class="n">elem</span><span class="o">)</span>
+                    <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+                <span class="k">else</span> <span class="nf">if</span> <span class="o">(</span><span class="n">elem</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="o">[</span><span class="n">nums</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="n">elem</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="o">[</span><span class="mi">0</span><span class="o">])</span>
+                    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+                <span class="k">else</span> <span class="nf">if</span> <span class="o">((</span><span class="n">elem</span> <span class="o">&gt;</span> <span class="n">nums</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="n">elem</span> <span class="o">&gt;</span> <span class="n">nums</span><span class="o">[</span><span class="n">nums</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">])</span> <span class="o">||</span> <span class="o">(</span><span class="n">mid</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">nums</span><span class="o">[</span><span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">elem</span><span class="o">))</span>
+                    <span class="k">return</span> <span class="mi">1</span><span class="o">;</span>
+                <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+            <span class="o">};</span>
+            <span class="n">pivotIndex</span> <span class="o">=</span> <span class="n">binSearch</span><span class="o">(</span><span class="n">pivotCheck</span><span class="o">,</span> <span class="n">elementAt</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="kd">final</span> <span class="kt">int</span> <span class="n">pivot</span> <span class="o">=</span> <span class="n">pivotIndex</span><span class="o">;</span>
+        <span class="nc">IntFunction</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">elementAt</span> <span class="o">=</span> <span class="o">(</span><span class="n">i</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">nums</span><span class="o">[(</span><span class="n">i</span> <span class="o">+</span> <span class="n">pivot</span><span class="o">)</span> <span class="o">%</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">];</span>
+        <span class="nc">BiFunction</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">numCheck</span> <span class="o">=</span> <span class="o">(</span><span class="n">elem</span><span class="o">,</span> <span class="n">mid</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">compare</span><span class="o">(</span><span class="n">target</span><span class="o">,</span> <span class="n">elem</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">searchResult</span> <span class="o">=</span> <span class="n">binSearch</span><span class="o">(</span><span class="n">numCheck</span><span class="o">,</span> <span class="n">elementAt</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">searchResult</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">?</span> <span class="o">(</span><span class="n">searchResult</span> <span class="o">+</span> <span class="n">pivot</span><span class="o">)</span> <span class="o">%</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span> <span class="o">:</span> <span class="n">searchResult</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="kt">int</span> <span class="nf">binSearch</span><span class="o">(</span><span class="nc">BiFunction</span><span class="o">&lt;</span><span class="no">T</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">testFunc</span><span class="o">,</span> <span class="nc">IntFunction</span><span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="n">elementAt</span><span class="o">,</span> <span class="kt">int</span> <span class="n">start</span><span class="o">,</span> <span class="kt">int</span> <span class="n">end</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">end</span> <span class="o">&lt;</span> <span class="n">start</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="o">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="o">)</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">compResult</span> <span class="o">=</span> <span class="n">testFunc</span><span class="o">.</span><span class="na">apply</span><span class="o">(</span><span class="n">elementAt</span><span class="o">.</span><span class="na">apply</span><span class="o">(</span><span class="n">mid</span><span class="o">),</span> <span class="n">mid</span><span class="o">);</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">compResult</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">mid</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">compResult</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="nf">binSearch</span><span class="o">(</span><span class="n">testFunc</span><span class="o">,</span> <span class="n">elementAt</span><span class="o">,</span> <span class="n">start</span><span class="o">,</span> <span class="n">mid</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="nf">binSearch</span><span class="o">(</span><span class="n">testFunc</span><span class="o">,</span> <span class="n">elementAt</span><span class="o">,</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">end</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></figure>
+
+<p><a href="https://leetcode.com/problems/search-in-rotated-sorted-array/submissions/1355048370/">Submission Link</a></p>
+
+<p><img src="/images/LC33_Accepted.png" alt="AcceptedImage" /></p>
+
+<p>With these few examples communicating the idea, I leave it to the reader to solve other binary search problems with this generic template.</p>
+
+  </div>
+
+	<span>Tags: [
+		
+			
+			<a href="/tag/leetcode"><code class="highligher-rouge"><nobr>leetcode</nobr></code></a>
+		
+			
+			<a href="/tag/binary-search"><code class="highligher-rouge"><nobr>binary-search</nobr></code></a>
+		
+			
+			<a href="/tag/programming"><code class="highligher-rouge"><nobr>programming</nobr></code></a>
+		
+			
+			<a href="/tag/computer-science"><code class="highligher-rouge"><nobr>computer-science</nobr></code></a>
+		
+	]</span><div id="disqus_thread"></div>
+  <script>
+    var disqus_config = function () {
+      this.page.url = '';
+      this.page.identifier = '/2024/08/13/binary-search-like-a-staff-engineer.html';
+    };
+
+    (function() {
+      var d = document, s = d.createElement('script');
+
+      s.src = 'https://techbite.disqus.com/embed.js';
+
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript><a class="u-url" href="/2024/08/13/binary-search-like-a-staff-engineer.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+        <ul class="contact-list">
+          <li class="p-name">Prabhakar Kumar</li>
+          </ul>
+      </div>
+      <div class="footer-col">
+        <p>Talk is cheap, show me the code!</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li>
+  <a rel="me" href="https://github.com/prabhakar97" target="_blank" title="github">
+    <svg class="svg-icon grey">
+      <use xlink:href="/assets/minima-social-icons.svg#github"></use>
+    </svg>
+  </a>
+</li>
+<li>
+  <a rel="me" href="https://toot.techbeat.in/prab97" target="_blank" title="mastodon">
+    <svg class="svg-icon grey">
+      <use xlink:href="/assets/minima-social-icons.svg#mastodon"></use>
+    </svg>
+  </a>
+</li>
+</ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
