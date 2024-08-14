@@ -14,30 +14,20 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 title: Show me the code!
-author: Prabhakar Kumar
-email: prab@techbeat.in
+author:
+  name: Prabhakar Kumar
+
 description: >- # this means to ignore newlines until "baseurl:"
   Talk is cheap, show me the code!
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://techbeat.in" # the base hostname & protocol for your site, e.g. http://example.com
-#twitter_username: prab97
-github_username: prabhakar97
-mastodon:
-  - username: prab97
-    instance: toot.techbeat.in
-facebook_username:
-linkedin_username:
-instagram_username:
 
 google_analytics: UA-20481925-1
-
-# Disqus Comments
-disqus_shortname: techbite
 adsense_enabled: false
 
-# Build settings
-#markdown: kramdown
-theme: minima
+# Disqus Comments
+disqus:
+  shortname: techbite
+
+
 plugins:
   - jekyll-feed
   - jekyll-youtube
@@ -45,6 +35,14 @@ plugins:
   - jekyll-archives
   - jekyll-gist
   - jekyll-sitemap
+
+theme: minima
+
+minima:
+  social_links:
+    - {platform: github, user_url: https://github.com/prabhakar97}
+    - {platform: mastodon, user_url: https://toot.techbeat.in/prab97}
+
 
 jekyll-archives:
   enabled: ['tags']
