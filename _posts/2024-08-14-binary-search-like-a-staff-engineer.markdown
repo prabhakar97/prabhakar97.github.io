@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Binary Search like a Staff SWE"
-date: 2024-08-13 05:55:00 -0730
+date: 2024-08-14 05:55:00 -0730
 comments: true
 tags: [leetcode, binary-search, programming, computer-science]
 ---
@@ -125,6 +125,42 @@ class Solution {
 
 }
 {% endhighlight %}
+
+Let's try LC 162 [Find Peak Element](https://leetcode.com/problems/find-peak-element/).
+
+{% highlight java %}
+class Solution {
+    public int findPeakElement(int[] nums) {
+        IntFunction<Integer> elementAt = (i) -> nums[i];
+		BiFunction<Integer, Integer, Integer> peakCheck = (elem, i) -> {
+            if ((i == 0 || elem > elementAt.apply(i - 1)) &&
+                (i == nums.length - 1 || elem > elementAt.apply(i + 1)))
+                return 0;
+            if (elem < elementAt.apply(i + 1))
+				return 1;
+            return -1;
+		};
+		return binSearch(peakCheck, elementAt, 0, nums.length - 1);
+    }
+
+    public static <T> int binSearch(BiFunction<T, Integer, Integer> testFunc, IntFunction<T> elementAt, int start, int end) {
+        if (end < start) {
+            return -1;
+        }
+        int mid = start + (end - start) / 2;
+        int compResult = testFunc.apply(elementAt.apply(mid), mid);
+        if (compResult == 0) {
+            return mid;
+        } else if (compResult < 0) {
+            return binSearch(testFunc, elementAt, start, mid - 1);
+        }
+        return binSearch(testFunc, elementAt, mid + 1, end);
+    }
+}
+{% endhighlight %}
+[Submission Link](https://leetcode.com/problems/find-peak-element/submissions/1355459214/)
+
+![Submission Stats](/images/LC162_Accepted.png)
 
 Let's try LC 35 [Search Insert Position](https://leetcode.com/problems/search-insert-position/description/). This one is slightly
 trickier to implement with our generic bin search function because in the comparison function we also need to compare with element
