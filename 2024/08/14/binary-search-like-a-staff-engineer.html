@@ -10,17 +10,24 @@
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Intro" />
 <meta property="og:description" content="Intro" />
-<link rel="canonical" href="http://localhost:4000/2024/08/14/binary-search-like-a-staff-engineer.html" />
-<meta property="og:url" content="http://localhost:4000/2024/08/14/binary-search-like-a-staff-engineer.html" />
 <meta property="og:site_name" content="Show me the code!" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2024-08-14T06:25:00-07:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Binary Search like a Staff SWE" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Prabhakar Kumar"},"dateModified":"2024-08-14T06:25:00-07:00","datePublished":"2024-08-14T06:25:00-07:00","description":"Intro","headline":"Binary Search like a Staff SWE","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2024/08/14/binary-search-like-a-staff-engineer.html"},"url":"http://localhost:4000/2024/08/14/binary-search-like-a-staff-engineer.html"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Prabhakar Kumar"},"dateModified":"2024-08-14T06:25:00-07:00","datePublished":"2024-08-14T06:25:00-07:00","description":"Intro","headline":"Binary Search like a Staff SWE","mainEntityOfPage":{"@type":"WebPage","@id":"/2024/08/14/binary-search-like-a-staff-engineer.html"},"url":"/2024/08/14/binary-search-like-a-staff-engineer.html"}</script>
 <!-- End Jekyll SEO tag -->
-<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Show me the code!" />
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Show me the code!" /><script async src="https://www.googletagmanager.com/gtag/js?id=UA-20481925-1"></script>
+<script>
+  window['ga-disable-UA-20481925-1'] = window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1";
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){window.dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-20481925-1');
+</script>
+
 </head>
 <body><header class="site-header">
 
@@ -418,25 +425,6 @@ uses the logic for finding pivot element from the previous problem and then buil
         <span class="p">}</span>
         <span class="k">return</span> <span class="n">hoursToEat</span> <span class="p">&lt;=</span> <span class="n">permittedHours</span><span class="p">;</span>
     <span class="p">}</span>
-
-    <span class="k">private</span> <span class="k">static</span> <span class="kt">int</span> <span class="n">BinSearch</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;(</span><span class="n">Func</span><span class="p">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="kt">int</span><span class="p">&gt;</span> <span class="n">testFunc</span><span class="p">,</span> <span class="n">Func</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="n">T</span><span class="p">&gt;</span> <span class="n">elementAt</span><span class="p">,</span> <span class="kt">int</span> <span class="n">start</span><span class="p">,</span> <span class="kt">int</span> <span class="n">end</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">end</span> <span class="p">&lt;</span> <span class="n">start</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">return</span> <span class="p">-</span><span class="m">1</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kt">int</span> <span class="n">mid</span> <span class="p">=</span> <span class="n">start</span> <span class="p">+</span> <span class="p">(</span><span class="n">end</span> <span class="p">-</span> <span class="n">start</span><span class="p">)</span> <span class="p">/</span> <span class="m">2</span><span class="p">;</span>
-        <span class="kt">int</span> <span class="n">compResult</span> <span class="p">=</span> <span class="nf">testFunc</span><span class="p">(</span><span class="nf">elementAt</span><span class="p">(</span><span class="n">mid</span><span class="p">));</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">compResult</span> <span class="p">==</span> <span class="m">0</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="k">return</span> <span class="n">mid</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">compResult</span> <span class="p">&lt;</span> <span class="m">0</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="k">return</span> <span class="nf">BinSearch</span><span class="p">(</span><span class="n">testFunc</span><span class="p">,</span> <span class="n">elementAt</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">mid</span> <span class="p">-</span> <span class="m">1</span><span class="p">);</span>
-        <span class="p">}</span>
-        <span class="k">return</span> <span class="nf">BinSearch</span><span class="p">(</span><span class="n">testFunc</span><span class="p">,</span> <span class="n">elementAt</span><span class="p">,</span> <span class="n">mid</span> <span class="p">+</span> <span class="m">1</span><span class="p">,</span> <span class="n">end</span><span class="p">);</span>
-    <span class="p">}</span>
-
 <span class="p">}</span></code></pre></figure>
 
 <p><a href="https://leetcode.com/problems/koko-eating-bananas/submissions/1363612732/">Submission Link</a></p>
@@ -459,7 +447,23 @@ uses the logic for finding pivot element from the previous problem and then buil
 			
 			<a href="/tag/computer-science"><code class="highligher-rouge"><nobr>computer-science</nobr></code></a>
 		
-	]</span><a class="u-url" href="/2024/08/14/binary-search-like-a-staff-engineer.html" hidden></a>
+	]</span><div id="disqus_thread"></div>
+  <script>
+    var disqus_config = function () {
+      this.page.url = '';
+      this.page.identifier = '/2024/08/14/binary-search-like-a-staff-engineer.html';
+    };
+
+    (function() {
+      var d = document, s = d.createElement('script');
+
+      s.src = 'https://techbite.disqus.com/embed.js';
+
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript><a class="u-url" href="/2024/08/14/binary-search-like-a-staff-engineer.html" hidden></a>
 </article>
 
       </div>
@@ -471,7 +475,7 @@ uses the logic for finding pivot element from the previous problem and then buil
     <div class="footer-col-wrapper">
       <div class="footer-col">
         <p class="feed-subscribe">
-          <a href="http://localhost:4000/feed.xml">
+          <a href="/feed.xml">
             <svg class="svg-icon orange">
               <use xlink:href="/assets/minima-social-icons.svg#rss"></use>
             </svg><span>Subscribe</span>

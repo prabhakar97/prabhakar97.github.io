@@ -10,17 +10,24 @@
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="A fluent builder makes creating objects more readable than constructors and more concise than setting properties through setters on an uninitialized object. Java devs can use Lombok’s @Builder annotation to get a fluent builder wired into their classes. Unfortunately, in C# world no such thing exists. So here’s how you can roll out your own." />
 <meta property="og:description" content="A fluent builder makes creating objects more readable than constructors and more concise than setting properties through setters on an uninitialized object. Java devs can use Lombok’s @Builder annotation to get a fluent builder wired into their classes. Unfortunately, in C# world no such thing exists. So here’s how you can roll out your own." />
-<link rel="canonical" href="http://localhost:4000/2018/03/17/heres-a-fluent-builder-in-c-number.html" />
-<meta property="og:url" content="http://localhost:4000/2018/03/17/heres-a-fluent-builder-in-c-number.html" />
 <meta property="og:site_name" content="Show me the code!" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2018-03-17T07:31:34-07:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Here’s a fluent builder in C#" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Prabhakar Kumar"},"dateModified":"2018-03-17T07:31:34-07:00","datePublished":"2018-03-17T07:31:34-07:00","description":"A fluent builder makes creating objects more readable than constructors and more concise than setting properties through setters on an uninitialized object. Java devs can use Lombok’s @Builder annotation to get a fluent builder wired into their classes. Unfortunately, in C# world no such thing exists. So here’s how you can roll out your own.","headline":"Here’s a fluent builder in C#","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2018/03/17/heres-a-fluent-builder-in-c-number.html"},"url":"http://localhost:4000/2018/03/17/heres-a-fluent-builder-in-c-number.html"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Prabhakar Kumar"},"dateModified":"2018-03-17T07:31:34-07:00","datePublished":"2018-03-17T07:31:34-07:00","description":"A fluent builder makes creating objects more readable than constructors and more concise than setting properties through setters on an uninitialized object. Java devs can use Lombok’s @Builder annotation to get a fluent builder wired into their classes. Unfortunately, in C# world no such thing exists. So here’s how you can roll out your own.","headline":"Here’s a fluent builder in C#","mainEntityOfPage":{"@type":"WebPage","@id":"/2018/03/17/heres-a-fluent-builder-in-c-number.html"},"url":"/2018/03/17/heres-a-fluent-builder-in-c-number.html"}</script>
 <!-- End Jekyll SEO tag -->
-<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Show me the code!" />
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Show me the code!" /><script async src="https://www.googletagmanager.com/gtag/js?id=UA-20481925-1"></script>
+<script>
+  window['ga-disable-UA-20481925-1'] = window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1";
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){window.dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-20481925-1');
+</script>
+
 </head>
 <body><header class="site-header">
 
@@ -114,7 +121,23 @@ of a fluent builder:</p>
 			
 			<a href="/tag/design-patterns"><code class="highligher-rouge"><nobr>design-patterns</nobr></code></a>
 		
-	]</span><a class="u-url" href="/2018/03/17/heres-a-fluent-builder-in-c-number.html" hidden></a>
+	]</span><div id="disqus_thread"></div>
+  <script>
+    var disqus_config = function () {
+      this.page.url = '';
+      this.page.identifier = '/2018/03/17/heres-a-fluent-builder-in-c-number.html';
+    };
+
+    (function() {
+      var d = document, s = d.createElement('script');
+
+      s.src = 'https://techbite.disqus.com/embed.js';
+
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript><a class="u-url" href="/2018/03/17/heres-a-fluent-builder-in-c-number.html" hidden></a>
 </article>
 
       </div>
@@ -126,7 +149,7 @@ of a fluent builder:</p>
     <div class="footer-col-wrapper">
       <div class="footer-col">
         <p class="feed-subscribe">
-          <a href="http://localhost:4000/feed.xml">
+          <a href="/feed.xml">
             <svg class="svg-icon orange">
               <use xlink:href="/assets/minima-social-icons.svg#rss"></use>
             </svg><span>Subscribe</span>
