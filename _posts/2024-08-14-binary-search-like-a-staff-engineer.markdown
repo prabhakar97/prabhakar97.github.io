@@ -50,10 +50,67 @@ public static <T> int binSearch(Function<T, Integer> testFunc, IntFunction<T> el
     }
     return binSearch(testFunc, elementAt, mid + 1, end);
 }
+
+public static <T> int binSearch(BiFunction<T, Integer, Integer> testFunc, IntFunction<T> elementAt, int start, int end) {
+    if (end < start) {
+        return -1;
+    }
+    int mid = start + (end - start) / 2;
+    int compResult = testFunc.apply(elementAt.apply(mid), mid);
+    if (compResult == 0) {
+        return mid;
+    } else if (compResult < 0) {
+        return binSearch(testFunc, elementAt, start, mid - 1);
+    }
+    return binSearch(testFunc, elementAt, mid + 1, end);
+}
+{% endhighlight %}
+
+The second overload uses a `BiFunction` instead of a `Function` and passes the current index of `mid` as the second parameter
+so that in certain problems `mid` is made available to the `testFunc`. In this pattern of problems `testFunc` needs to check for a
+condition with any of the elements adjacent to mid.
+
+Here are the equivalent C# implementations.
+
+{% highlight csharp %}
+public static int BinSearch<T>(Func<T, int> testFunc, Func<int, T> elementAt, int start, int end)
+{
+    if (end < start) {
+        return -1;
+    }
+    int mid = start + (end - start) / 2;
+    int compResult = testFunc(elementAt(mid));
+    if (compResult == 0)
+    {
+        return mid;
+    }
+    else if (compResult < 0)
+    {
+        return BinSearch(testFunc, elementAt, start, mid - 1);
+    }
+    return BinSearch(testFunc, elementAt, mid + 1, end);
+}
+
+public static int BinSearch<T>(Func<T, int, int> testFunc, Func<int, T> elementAt, int start, int end)
+{
+    if (end < start) {
+        return -1;
+    }
+    int mid = start + (end - start) / 2;
+    int compResult = testFunc(elementAt(mid), mid);
+    if (compResult == 0)
+    {
+        return mid;
+    }
+    else if (compResult < 0)
+    {
+        return BinSearch(testFunc, elementAt, start, mid - 1);
+    }
+    return BinSearch(testFunc, elementAt, mid + 1, end);
+}
 {% endhighlight %}
 
 Armed with this implementation, can we solve some common Leetcode problems that require binary search?
-
 
 Let's try LC 74 [Search a 2D Matrix](https://leetcode.com/problems/search-a-2d-matrix/description/). 
 {% highlight java %}
@@ -66,20 +123,6 @@ class Solution {
         Function<Integer, Integer> testFunc = (elem) -> Integer.compare(target, elem);
         IntFunction<Integer> elementAt = (i) -> matrix[i / matrix[0].length][i % matrix[0].length];
         return binSearch(testFunc, elementAt, 0, matrix.length * matrix[0].length - 1) != -1;
-    }
-
-    public static <T> int binSearch(Function<T, Integer> testFunc, IntFunction<T> elementAt, int start, int end) {
-        if (end < start) {
-            return -1;
-        }
-        int mid = start + (end - start) / 2;
-        int compResult = testFunc.apply(elementAt.apply(mid));
-        if (compResult == 0) {
-            return mid;
-        } else if (compResult < 0) {
-            return binSearch(testFunc, elementAt, start, mid - 1);
-        }
-        return binSearch(testFunc, elementAt, mid + 1, end);
     }
 }
 {% endhighlight %}
@@ -108,21 +151,6 @@ class Solution {
         };
         return binSearch(sqrtCheck, elementAt, 0, x / 2 + 1);
     }
-
-    public static <T> int binSearch(Function<T, Integer> testFunc, IntFunction<T> elementAt, int start, int end) {
-        if (end < start) {
-            return -1;
-        }
-        int mid = start + (end - start) / 2;
-        int compResult = testFunc.apply(elementAt.apply(mid));
-        if (compResult == 0) {
-            return mid;
-        } else if (compResult < 0) {
-            return binSearch(testFunc, elementAt, start, mid - 1);
-        }
-        return binSearch(testFunc, elementAt, mid + 1, end);
-    }
-
 }
 {% endhighlight %}
 
@@ -132,29 +160,15 @@ Let's try LC 162 [Find Peak Element](https://leetcode.com/problems/find-peak-ele
 class Solution {
     public int findPeakElement(int[] nums) {
         IntFunction<Integer> elementAt = (i) -> nums[i];
-		BiFunction<Integer, Integer, Integer> peakCheck = (elem, i) -> {
+        BiFunction<Integer, Integer, Integer> peakCheck = (elem, i) -> {
             if ((i == 0 || elem > elementAt.apply(i - 1)) &&
                 (i == nums.length - 1 || elem > elementAt.apply(i + 1)))
                 return 0;
             if (elem < elementAt.apply(i + 1))
-				return 1;
+                return 1;
             return -1;
-		};
-		return binSearch(peakCheck, elementAt, 0, nums.length - 1);
-    }
-
-    public static <T> int binSearch(BiFunction<T, Integer, Integer> testFunc, IntFunction<T> elementAt, int start, int end) {
-        if (end < start) {
-            return -1;
-        }
-        int mid = start + (end - start) / 2;
-        int compResult = testFunc.apply(elementAt.apply(mid), mid);
-        if (compResult == 0) {
-            return mid;
-        } else if (compResult < 0) {
-            return binSearch(testFunc, elementAt, start, mid - 1);
-        }
-        return binSearch(testFunc, elementAt, mid + 1, end);
+        };
+        return binSearch(peakCheck, elementAt, 0, nums.length - 1);
     }
 }
 {% endhighlight %}
@@ -162,11 +176,7 @@ class Solution {
 
 ![Submission Stats](/images/LC162_Accepted.png)
 
-Let's try LC 35 [Search Insert Position](https://leetcode.com/problems/search-insert-position/description/). This one is slightly
-trickier to implement with our generic bin search function because in the comparison function we also need to compare with element
-before mid position to ascertain the rightful place for the `target`. I modified the `testFunc` parameter to be a `BiFunction` instead of 
-a `Function` so that we can make the `mid` index available inside the function which can be used to lookup the element just before the element
-at mid index.
+Let's try LC 35 [Search Insert Position](https://leetcode.com/problems/search-insert-position/description/).
 
 {% highlight java %}
 import java.util.function.Function;
@@ -193,19 +203,6 @@ class Solution {
         return binSearch(indexCheck, elementAt, 0, nums.length - 1);
     }
 
-    public static <T> int binSearch(BiFunction<T, Integer, Integer> testFunc, IntFunction<T> elementAt, int start, int end) {
-        if (end < start) {
-            return -1;
-        }
-        int mid = start + (end - start) / 2;
-        int compResult = testFunc.apply(elementAt.apply(mid), mid);
-        if (compResult == 0) {
-            return mid;
-        } else if (compResult < 0) {
-            return binSearch(testFunc, elementAt, start, mid - 1);
-        }
-        return binSearch(testFunc, elementAt, mid + 1, end);
-    }
 }
 {% endhighlight %}
 
@@ -248,20 +245,6 @@ class Solution {
             pivotIndex = binSearch(pivotCheck, elementAt, 0, nums.length - 1);
         }
         return nums[pivotIndex];
-    }
-
-    public static <T> int binSearch(BiFunction<T, Integer, Integer> testFunc, IntFunction<T> elementAt, int start, int end) {
-        if (end < start) {
-            return -1;
-        }
-        int mid = start + (end - start) / 2;
-        int compResult = testFunc.apply(elementAt.apply(mid), mid);
-        if (compResult == 0) {
-            return mid;
-        } else if (compResult < 0) {
-            return binSearch(testFunc, elementAt, start, mid - 1);
-        }
-        return binSearch(testFunc, elementAt, mid + 1, end);
     }
 }
 {% endhighlight %}
@@ -307,24 +290,126 @@ class Solution {
         int searchResult = binSearch(numCheck, elementAt, 0, nums.length - 1);
         return searchResult >= 0 ? (searchResult + pivot) % nums.length : searchResult;
     }
-
-    public static <T> int binSearch(BiFunction<T, Integer, Integer> testFunc, IntFunction<T> elementAt, int start, int end) {
-        if (end < start) {
-            return -1;
-        }
-        int mid = start + (end - start) / 2;
-        int compResult = testFunc.apply(elementAt.apply(mid), mid);
-        if (compResult == 0) {
-            return mid;
-        } else if (compResult < 0) {
-            return binSearch(testFunc, elementAt, start, mid - 1);
-        }
-        return binSearch(testFunc, elementAt, mid + 1, end);
-    }
 }
 {% endhighlight %}
 [Submission Link](https://leetcode.com/problems/search-in-rotated-sorted-array/submissions/1355048370/)
 
 ![AcceptedImage](/images/LC33_Accepted.png)
+
+How about LC 981 [Time Based Key-Value Store](https://leetcode.com/problems/time-based-key-value-store/description/)
+{% highlight csharp %}
+public class TimeMap
+{
+    private struct Pair
+    {
+        public int Timestamp;
+        public string Value;
+    }
+    private Dictionary<string, List<Pair>> data = new();
+
+    public void Set(string key, string value, int timestamp)
+    {
+        List<Pair> list;
+         try
+         {
+             list = data[key];
+         }   
+         catch (KeyNotFoundException)
+         {
+             list = new();
+             data[key] = list;
+         }
+        list.Add(new Pair{Timestamp = timestamp, Value = value});
+    }
+    
+    public string Get(string key, int timestamp)
+    {
+        try
+        {
+            var dataList = data[key];
+            if (timestamp < dataList[0].Timestamp)
+                return "";
+            int foundIndex = BinSearch((elem, mid) =>
+                {
+                    if (elem.Timestamp == timestamp || 
+                            (elem.Timestamp < timestamp && mid == dataList.Count - 1) ||
+                            (elem.Timestamp < timestamp && dataList[mid + 1].Timestamp > timestamp))
+                        return 0;
+                    if (elem.Timestamp > timestamp)
+                        return -1;
+                    return 1;
+                },
+                (i) => dataList[i],
+                0,
+                dataList.Count - 1);
+            if (foundIndex == -1)
+                return "";
+            return dataList[foundIndex].Value;
+        }
+        catch (KeyNotFoundException)
+        {
+            return "";
+        }
+    }
+}
+{% endhighlight %}
+
+[Submission Link](https://leetcode.com/problems/time-based-key-value-store/submissions/1360430234/)
+
+How about LC 875 [Koko Eating Bananas](https://leetcode.com/problems/koko-eating-bananas/)?
+
+{% highlight csharp %}
+public class Solution
+{
+    public int MinEatingSpeed(int[] piles, int h)
+    {
+        int max = piles.Max() + 1;
+        Func<int, int> elementAt = (i) => i; 
+        Func<int, int> testFunc = (mid) =>
+        {
+            if (!CanEatWithinHours(piles, h, mid))
+                return 1;
+            if (CanEatWithinHours(piles, h, mid))
+            {
+                if (mid == 1 || !CanEatWithinHours(piles, h, mid - 1))
+                    return 0;
+            }
+            return -1;
+        };
+        return BinSearch(testFunc, elementAt, 1, max);
+    }
+
+    private static bool CanEatWithinHours(int[] piles, int permittedHours, int eatingSpeed)
+    {
+        int hoursToEat = 0;
+        for (int i = 0; i < piles.Count(); i++)
+        {
+            bool finishEvenly = piles[i] % eatingSpeed == 0;
+            hoursToEat += (piles[i] / eatingSpeed) + (finishEvenly ? 0 : 1);
+        }
+        return hoursToEat <= permittedHours;
+    }
+
+    private static int BinSearch<T>(Func<T, int> testFunc, Func<int, T> elementAt, int start, int end)
+    {
+        if (end < start) {
+            return -1;
+        }
+        int mid = start + (end - start) / 2;
+        int compResult = testFunc(elementAt(mid));
+        if (compResult == 0)
+        {
+            return mid;
+        }
+        else if (compResult < 0)
+        {
+            return BinSearch(testFunc, elementAt, start, mid - 1);
+        }
+        return BinSearch(testFunc, elementAt, mid + 1, end);
+    }
+
+}
+{% endhighlight %}
+[Submission Link](https://leetcode.com/problems/koko-eating-bananas/submissions/1363612732/)
 
 With these few examples communicating the idea, I leave it to the reader to solve other binary search problems with this generic template.
