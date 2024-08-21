@@ -389,25 +389,6 @@ public class Solution
         }
         return hoursToEat <= permittedHours;
     }
-
-    private static int BinSearch<T>(Func<T, int> testFunc, Func<int, T> elementAt, int start, int end)
-    {
-        if (end < start) {
-            return -1;
-        }
-        int mid = start + (end - start) / 2;
-        int compResult = testFunc(elementAt(mid));
-        if (compResult == 0)
-        {
-            return mid;
-        }
-        else if (compResult < 0)
-        {
-            return BinSearch(testFunc, elementAt, start, mid - 1);
-        }
-        return BinSearch(testFunc, elementAt, mid + 1, end);
-    }
-
 }
 {% endhighlight %}
 [Submission Link](https://leetcode.com/problems/koko-eating-bananas/submissions/1363612732/)
