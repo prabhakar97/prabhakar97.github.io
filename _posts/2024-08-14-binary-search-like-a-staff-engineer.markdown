@@ -331,9 +331,10 @@ public class TimeMap
                 return "";
             int foundIndex = BinSearch((elem, mid) =>
                 {
-                    if (elem.Timestamp == timestamp || 
-                            (elem.Timestamp < timestamp && mid == dataList.Count - 1) ||
-                            (elem.Timestamp < timestamp && dataList[mid + 1].Timestamp > timestamp))
+                    if (elem.Timestamp == timestamp) 
+                        return 0;
+                    if  ((elem.Timestamp < timestamp) &&
+                            ((mid == dataList.Count - 1) || dataList[mid + 1].Timestamp > timestamp))
                         return 0;
                     if (elem.Timestamp > timestamp)
                         return -1;
