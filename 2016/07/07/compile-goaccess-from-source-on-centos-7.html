@@ -10,24 +10,17 @@
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Goaccess is a neat little utility which scans through your web server (I use nginx) logs and generates a nice HTML report of your site’s access statistics. Here is a sample from their site. I run CentOS 7 on an EC2 Instance where I run a pet project. I wanted a light web analyzer that just works. I have epel enabled on my instance so I just installed goaccess by sudo yum install goaccess. It worked and I was able to see some stats. But then I figured out that the version from repositories is quite an old one at 0.9.8. The latest one is 1.0.2 from the website. So, I just uninstalled it sudo yum remove goaccess." />
 <meta property="og:description" content="Goaccess is a neat little utility which scans through your web server (I use nginx) logs and generates a nice HTML report of your site’s access statistics. Here is a sample from their site. I run CentOS 7 on an EC2 Instance where I run a pet project. I wanted a light web analyzer that just works. I have epel enabled on my instance so I just installed goaccess by sudo yum install goaccess. It worked and I was able to see some stats. But then I figured out that the version from repositories is quite an old one at 0.9.8. The latest one is 1.0.2 from the website. So, I just uninstalled it sudo yum remove goaccess." />
+<link rel="canonical" href="http://localhost:4000/2016/07/07/compile-goaccess-from-source-on-centos-7.html" />
+<meta property="og:url" content="http://localhost:4000/2016/07/07/compile-goaccess-from-source-on-centos-7.html" />
 <meta property="og:site_name" content="Show me the code!" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2016-07-07T19:00:32-07:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Compile goaccess from source on CentOS 7" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Prabhakar Kumar"},"dateModified":"2016-07-07T19:00:32-07:00","datePublished":"2016-07-07T19:00:32-07:00","description":"Goaccess is a neat little utility which scans through your web server (I use nginx) logs and generates a nice HTML report of your site’s access statistics. Here is a sample from their site. I run CentOS 7 on an EC2 Instance where I run a pet project. I wanted a light web analyzer that just works. I have epel enabled on my instance so I just installed goaccess by sudo yum install goaccess. It worked and I was able to see some stats. But then I figured out that the version from repositories is quite an old one at 0.9.8. The latest one is 1.0.2 from the website. So, I just uninstalled it sudo yum remove goaccess.","headline":"Compile goaccess from source on CentOS 7","mainEntityOfPage":{"@type":"WebPage","@id":"/2016/07/07/compile-goaccess-from-source-on-centos-7.html"},"url":"/2016/07/07/compile-goaccess-from-source-on-centos-7.html"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Prabhakar Kumar"},"dateModified":"2016-07-07T19:00:32-07:00","datePublished":"2016-07-07T19:00:32-07:00","description":"Goaccess is a neat little utility which scans through your web server (I use nginx) logs and generates a nice HTML report of your site’s access statistics. Here is a sample from their site. I run CentOS 7 on an EC2 Instance where I run a pet project. I wanted a light web analyzer that just works. I have epel enabled on my instance so I just installed goaccess by sudo yum install goaccess. It worked and I was able to see some stats. But then I figured out that the version from repositories is quite an old one at 0.9.8. The latest one is 1.0.2 from the website. So, I just uninstalled it sudo yum remove goaccess.","headline":"Compile goaccess from source on CentOS 7","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2016/07/07/compile-goaccess-from-source-on-centos-7.html"},"url":"http://localhost:4000/2016/07/07/compile-goaccess-from-source-on-centos-7.html"}</script>
 <!-- End Jekyll SEO tag -->
-<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Show me the code!" /><script async src="https://www.googletagmanager.com/gtag/js?id=UA-20481925-1"></script>
-<script>
-  window['ga-disable-UA-20481925-1'] = window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1";
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){window.dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-20481925-1');
-</script>
-
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Show me the code!" />
 </head>
 <body><header class="site-header">
 
@@ -97,23 +90,7 @@ statically from nginx. So I can just type http://mydomain.com/access.html and se
 			
 			<a href="/tag/web-apps"><code class="highligher-rouge"><nobr>web-apps</nobr></code></a>
 		
-	]</span><div id="disqus_thread"></div>
-  <script>
-    var disqus_config = function () {
-      this.page.url = '';
-      this.page.identifier = '/2016/07/07/compile-goaccess-from-source-on-centos-7.html';
-    };
-
-    (function() {
-      var d = document, s = d.createElement('script');
-
-      s.src = 'https://techbite.disqus.com/embed.js';
-
-      s.setAttribute('data-timestamp', +new Date());
-      (d.head || d.body).appendChild(s);
-    })();
-  </script>
-  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript><a class="u-url" href="/2016/07/07/compile-goaccess-from-source-on-centos-7.html" hidden></a>
+	]</span><a class="u-url" href="/2016/07/07/compile-goaccess-from-source-on-centos-7.html" hidden></a>
 </article>
 
       </div>
@@ -125,7 +102,7 @@ statically from nginx. So I can just type http://mydomain.com/access.html and se
     <div class="footer-col-wrapper">
       <div class="footer-col">
         <p class="feed-subscribe">
-          <a href="/feed.xml">
+          <a href="http://localhost:4000/feed.xml">
             <svg class="svg-icon orange">
               <use xlink:href="/assets/minima-social-icons.svg#rss"></use>
             </svg><span>Subscribe</span>
