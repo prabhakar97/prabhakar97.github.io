@@ -41,7 +41,7 @@ theme: minima
 minima:
   social_links:
     - {platform: github, user_url: https://github.com/prabhakar97}
-    - {platform: mastodon, user_url: https://toot.techbeat.in/prab97}
+    - {platform: mastodon, user_url: https://toot.techbeat.in/@prab97}
 
 
 jekyll-archives:
