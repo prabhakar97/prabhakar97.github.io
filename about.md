@@ -7,9 +7,9 @@ sharing: false
 category: page
 footer: true
 ---
-I am a software engineer with passion for building and scaling large scale systems. I am currently employed at a big tech company as a Senior SWE.
+I am the Chief Technology Officer @ Hooli Corp.
 
-Gentoo and Arch are my daily drivers. Vim is my preferred editor. Golang, Java, Ruby and C# are the languages I am most proficient with.
+Gentoo and Arch are my daily drivers. Vim is my preferred editor. Golang, Java, C# and Ruby are the languages I speak.
 
 My favorite novels are [The Blue Nowhere](https://www.goodreads.com/book/show/343995.The_Blue_Nowhere) and [Project Hail Mary](https://www.goodreads.com/book/show/54493401-project-hail-mary). Another book I loved and find worth mentioning is [How to Invent Everything](https://www.goodreads.com/book/show/39026990-how-to-invent-everything?ref=nav_sb_ss_1_18).
 
